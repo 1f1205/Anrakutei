@@ -8,7 +8,6 @@ public class Shot {
 	private int width = 5;
 	private int height = 20;
 	private int speed = 20;
-	private boolean isStored;
 	
 	public float getShotPosX() {
 		return posX;	

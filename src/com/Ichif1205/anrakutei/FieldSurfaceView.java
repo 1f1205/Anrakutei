@@ -1,5 +1,8 @@
 package com.Ichif1205.anrakutei;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -22,6 +25,7 @@ public class FieldSurfaceView extends SurfaceView
 	private Player mPlayer;
 	private Shot mShot;
 	private Thread mThread;
+	private ArrayList <Shot> mShotList;
 	
 	public FieldSurfaceView(Context context) {
 		super(context);
@@ -53,8 +57,7 @@ public class FieldSurfaceView extends SurfaceView
 		mPlayer.setPlayerPosY(getHeight()*7/8);		
 		
 		mShot = new Shot();
-		mShot.setShotPosX(getWidth()/2);		
-		mShot.setShotPosY(getHeight()*6/8);		
+		mShotList = new ArrayList<Shot>();
 		
 		onDraw();
 	}
@@ -70,12 +73,15 @@ public class FieldSurfaceView extends SurfaceView
 		mCanvas = getHolder().lockCanvas();
 		mCanvas.drawColor(Color.BLACK);
 		drawPlayer();
-		float shotPosY = mShot.getShotPosY();
-		int shotVy = mShot.getShotSpeed();
-		if (shotPosY > 0) {
-			shotPosY -= shotVy;
-			drawShot();
-			mShot.setShotPosY(shotPosY);
+		for (int i=0; i<mShotList.size(); i++) {
+			Shot shot = mShotList.get(i);
+			float shotPosY = shot.getShotPosY();
+			int shotVy = shot.getShotSpeed();
+			if (shotPosY > 0) {
+				shotPosY -= shotVy;
+				drawShot();
+				shot.setShotPosY(shotPosY);
+			}
 		}
 		getHolder().unlockCanvasAndPost(mCanvas);
 	}
@@ -120,11 +126,11 @@ public class FieldSurfaceView extends SurfaceView
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			//mPlayer.setPlayerPosX(event.getX());
 			//弾発射
 			mShot = new Shot();
 			mShot.setShotPosX(mPlayer.getPlayerPosX());
 			mShot.setShotPosY(mPlayer.getPlayerPosY());
+			mShotList.add(mShot);
 			
 		} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
 			mPlayer.setPlayerPosX(event.getX());
