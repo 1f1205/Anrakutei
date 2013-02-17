@@ -53,8 +53,8 @@ public class FieldSurfaceView extends SurfaceView
 		mPlayer.setPlayerPosY(getHeight()*7/8);		
 		
 		mShot = new Shot();
-		//mShot.setShotPosX(getWidth()/2);		
-		//mShot.setShotPosY(getHeight()*6/8);		
+		mShot.setShotPosX(getWidth()/2);		
+		mShot.setShotPosY(getHeight()*6/8);		
 		
 		onDraw();
 	}
@@ -70,7 +70,13 @@ public class FieldSurfaceView extends SurfaceView
 		mCanvas = getHolder().lockCanvas();
 		mCanvas.drawColor(Color.BLACK);
 		drawPlayer();
-		drawShot();
+		float shotPosY = mShot.getShotPosY();
+		int shotVy = mShot.getShotSpeed();
+		if (shotPosY > 0) {
+			shotPosY -= shotVy;
+			drawShot();
+			mShot.setShotPosY(shotPosY);
+		}
 		getHolder().unlockCanvasAndPost(mCanvas);
 	}
 	
@@ -132,14 +138,7 @@ public class FieldSurfaceView extends SurfaceView
 	@Override
 	public void run() {			
 		while (isAttached) {
-			float shotPosY = mShot.getShotPosY();
-			int shotVy = mShot.getShotSpeed();
-
-			if (shotPosY > 0) {
-				shotPosY -= shotVy;
-				mShot.setShotPosY(shotPosY);
-				onDraw();
-			}
+			onDraw();
 		}
 	}
 
