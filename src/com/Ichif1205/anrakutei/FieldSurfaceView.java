@@ -21,9 +21,7 @@ public class FieldSurfaceView extends SurfaceView
 	private SurfaceHolder mHolder;
 	private Canvas mCanvas;
 	private Paint mPaint;
-	//private Path mPath;
 	private Player mPlayer;
-	private Shot mShot;
 	private Thread mThread;
 	private ArrayList <Shot> mShotList;
 	
@@ -56,7 +54,6 @@ public class FieldSurfaceView extends SurfaceView
 		mPlayer.setPlayerPosX(getWidth()/2);		
 		mPlayer.setPlayerPosY(getHeight()*7/8);		
 		
-		mShot = new Shot();
 		mShotList = new ArrayList<Shot>();
 		
 		onDraw();
@@ -79,7 +76,7 @@ public class FieldSurfaceView extends SurfaceView
 			int shotVy = shot.getShotSpeed();
 			if (shotPosY > 0) {
 				shotPosY -= shotVy;
-				drawShot();
+				drawShot(shot);
 				shot.setShotPosY(shotPosY);
 			}
 		}
@@ -111,11 +108,11 @@ public class FieldSurfaceView extends SurfaceView
 	}
 	
 	//弾描画
-	protected void drawShot() {
-		float shotPosX = mShot.getShotPosX(); 
-		float shotPosY = mShot.getShotPosY(); 
-		int shotW = mShot.getShotWidth(); 
-		int shotH = mShot.getShotHeight();
+	protected void drawShot(Shot shot) {
+		float shotPosX = shot.getShotPosX(); 
+		float shotPosY = shot.getShotPosY(); 
+		int shotW = shot.getShotWidth(); 
+		int shotH = shot.getShotHeight();
 
 		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		RectF rectf = new RectF(shotPosX-shotW/2, shotPosY-shotH/2, 
@@ -127,10 +124,10 @@ public class FieldSurfaceView extends SurfaceView
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			//弾発射
-			mShot = new Shot();
-			mShot.setShotPosX(mPlayer.getPlayerPosX());
-			mShot.setShotPosY(mPlayer.getPlayerPosY());
-			mShotList.add(mShot);
+			Shot shot = new Shot();
+			shot.setShotPosX(mPlayer.getPlayerPosX());
+			shot.setShotPosY(mPlayer.getPlayerPosY());
+			mShotList.add(shot);
 			
 		} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
 			mPlayer.setPlayerPosX(event.getX());
