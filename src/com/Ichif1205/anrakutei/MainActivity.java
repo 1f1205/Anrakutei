@@ -3,13 +3,25 @@ package com.Ichif1205.anrakutei;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
+import android.view.SurfaceView;
+import android.view.Window;
+import android.view.WindowManager;
 
 public class MainActivity extends Activity {
+	
+	//private SurfaceView mSurfaceView;
+	private FieldSurfaceView mFieldSurfaceView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		//setContentView(R.layout.activity_main);
+		
+		//mSurfaceView = (SurfaceView)findViewById(R.id.FieldSurfaceView_id);
+		//mFieldSurfaceView = new FieldSurfaceView(this, mSurfaceView);
+		mFieldSurfaceView = new FieldSurfaceView(this);
+		setContentView(mFieldSurfaceView);
+		
 	}
 
 	
