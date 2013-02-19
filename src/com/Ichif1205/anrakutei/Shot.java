@@ -1,5 +1,7 @@
 package com.Ichif1205.anrakutei;
 
+import android.graphics.RectF;
+
 
 public class Shot {
 
@@ -36,5 +38,4 @@ public class Shot {
 	public void setShotHeight(int h) {
 		height = h;
 	}
-	
 }

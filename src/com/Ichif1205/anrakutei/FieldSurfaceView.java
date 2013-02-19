@@ -1,9 +1,10 @@
 package com.Ichif1205.anrakutei;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -22,6 +23,8 @@ public class FieldSurfaceView extends SurfaceView
 	private Canvas mCanvas;
 	private Paint mPaint;
 	private Player mPlayer;
+	private Invader mInvader;
+	private Bitmap mBitmap;
 	private Thread mThread;
 	private ArrayList <Shot> mShotList;
 	
@@ -54,6 +57,11 @@ public class FieldSurfaceView extends SurfaceView
 		mPlayer.setPlayerPosX(getWidth()/2);		
 		mPlayer.setPlayerPosY(getHeight()*7/8);		
 		
+		mInvader = new Invader();
+		mInvader.setInvaderPosX(getWidth()/8);		
+		mInvader.setInvaderPosY(getHeight()/8);		
+		mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.suraimu);
+		
 		mShotList = new ArrayList<Shot>();
 		
 		onDraw();
@@ -70,6 +78,7 @@ public class FieldSurfaceView extends SurfaceView
 		mCanvas = getHolder().lockCanvas();
 		mCanvas.drawColor(Color.BLACK);
 		drawPlayer();
+		drawInvader();
 		for (int i=0; i<mShotList.size(); i++) {
 			Shot shot = mShotList.get(i);
 			float shotPosY = shot.getShotPosY();
@@ -85,28 +94,23 @@ public class FieldSurfaceView extends SurfaceView
 	
 	//自機描画
 	protected void drawPlayer() {
-		float posX = mPlayer.getPlayerPosX();
-		float posY = mPlayer.getPlayerPosY();
-		int width  = mPlayer.getPlayerWidth();
-		int height = mPlayer.getPlayerHeight();
-		
-
-		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		Path path = new Path();
-		path.moveTo(posX, posY);
-		//左下から反時計回りに描画
-		path.lineTo(posX-width/2, posY+height/4);
-		path.lineTo(posX+width/2, posY+height/4);
-		path.lineTo(posX+width/2, posY-height/4);
-		path.lineTo(posX+width/6, posY-height/4);
-		path.lineTo(posX+width/6, posY-height*3/4);
-		path.lineTo(posX-width/6, posY-height*3/4);
-		path.lineTo(posX-width/6, posY-height/4);
-		path.lineTo(posX-width/2, posY-height/4);
-		path.lineTo(posX-width/2, posY+height/4);
-		mCanvas.drawPath(path, mPaint);
+		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+		mCanvas.drawPath(mPlayer.draw(path), mPaint);
 	}
-	
+	//敵描画
+	protected void drawInvader() {
+		float invPosX = mInvader.getInvaderPosX();
+		float invPosY = mInvader.getInvaderPosY();
+		int invSpeed = mInvader.getInvaderSpeed();
+		invPosX += invSpeed;
+		mInvader.setInvaderPosX(invPosX);
+		if (invPosX > getWidth() || invPosX < 0) {
+			invSpeed = -invSpeed;
+			mInvader.setInvaderSpeed(invSpeed);
+		}
+		mCanvas.drawBitmap(mBitmap, invPosX, invPosY, mPaint);
+	}
 	//弾描画
 	protected void drawShot(Shot shot) {
 		float shotPosX = shot.getShotPosX(); 
@@ -114,9 +118,10 @@ public class FieldSurfaceView extends SurfaceView
 		int shotW = shot.getShotWidth(); 
 		int shotH = shot.getShotHeight();
 
-		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		RectF rectf = new RectF(shotPosX-shotW/2, shotPosY-shotH/2, 
-				shotPosX+shotW/2, shotPosY+shotH/2);
+				shotPosX+shotW/2, shotPosY+shotH/2);;
+		
+		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		mCanvas.drawRect(rectf, mPaint);
 	}
 	
