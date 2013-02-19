@@ -31,6 +31,10 @@
             android:name="com.Ichif1205.anrakutei.RankingActivity"
             android:label="@string/title_activity_ranking" >
         </activity>
+        <activity
+            android:name="com.Ichif1205.anrakutei.SelectPlayer"
+            android:label="@string/title_activity_select_player" >
+        </activity>
     </application>
 
 </manifest>

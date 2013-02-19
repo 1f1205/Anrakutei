@@ -9,5 +9,6 @@
     <string name="title_activity_field_surface_view">FieldSurfaceView</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_activity_ranking">RankingActivity</string>
+    <string name="title_activity_select_player">SelectPlayer</string>
 
 </resources>
