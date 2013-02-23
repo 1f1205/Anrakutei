@@ -18,7 +18,6 @@ import android.view.SurfaceView;
 public class FieldSurfaceView extends SurfaceView 
 		implements SurfaceHolder.Callback, Runnable{
 
-	private boolean isAttached;
 	private SurfaceHolder mHolder;
 	private Canvas mCanvas;
 	private Paint mPaint;
@@ -30,7 +29,6 @@ public class FieldSurfaceView extends SurfaceView
 	
 	public FieldSurfaceView(Context context) {
 		super(context);
-		isAttached = true;
 		
 		mHolder = getHolder();
 		mHolder.addCallback(this);
@@ -53,15 +51,9 @@ public class FieldSurfaceView extends SurfaceView
 		mPaint.setColor(Color.GREEN);
 		mPaint.setAntiAlias(true);
 		
-		mPlayer = new Player();
-		mPlayer.setPlayerPosX(getWidth()/2);		
-		mPlayer.setPlayerPosY(getHeight()*7/8);		
-		
-		mInvader = new Invader();
-		mInvader.setInvaderPosX(getWidth()/8);		
-		mInvader.setInvaderPosY(getHeight()/8);		
+		mPlayer = new Player(getWidth()/2, getHeight()*7/8);
+		mInvader = new Invader(getWidth()/8, getHeight()/8);
 		mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.suraimu);
-		
 		mShotList = new ArrayList<Shot>();
 		
 		onDraw();
@@ -70,7 +62,6 @@ public class FieldSurfaceView extends SurfaceView
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		// TODO 自動生成されたメソッド・スタブ
-		isAttached = false;
 		mThread = null;
 	}
 	
@@ -78,15 +69,23 @@ public class FieldSurfaceView extends SurfaceView
 		mCanvas = getHolder().lockCanvas();
 		mCanvas.drawColor(Color.BLACK);
 		drawPlayer();
-		drawInvader();
+		if (mInvader.getInvaderExistFlag()) {
+			drawInvader();
+		}
 		for (int i=0; i<mShotList.size(); i++) {
 			Shot shot = mShotList.get(i);
+			//弾が的に当たっているか判定
+			float shotPosX = shot.getShotPosX(); 
 			float shotPosY = shot.getShotPosY();
-			int shotVy = shot.getShotSpeed();
-			if (shotPosY > 0) {
-				shotPosY -= shotVy;
+			boolean isShooted = mInvader.isShooted(shotPosX, shotPosY);
+			if (isShooted){
+				shot.setShotPosY(0);
+				mInvader.remove();
+			}
+			//弾が画面上からはみ出るまで表示させ続ける
+			else if (shotPosY > 0) {
+				shot.updatePosition();
 				drawShot(shot);
-				shot.setShotPosY(shotPosY);
 			}
 		}
 		getHolder().unlockCanvasAndPost(mCanvas);
@@ -100,27 +99,16 @@ public class FieldSurfaceView extends SurfaceView
 	}
 	//敵描画
 	protected void drawInvader() {
-		float invPosX = mInvader.getInvaderPosX();
-		float invPosY = mInvader.getInvaderPosY();
-		int invSpeed = mInvader.getInvaderSpeed();
-		invPosX += invSpeed;
-		mInvader.setInvaderPosX(invPosX);
-		if (invPosX > getWidth() || invPosX < 0) {
-			invSpeed = -invSpeed;
-			mInvader.setInvaderSpeed(invSpeed);
+		mInvader.updatePosition();
+		if (mInvader.isBoundary(getWidth())) {
+			mInvader.reverseSpeedDirection();
 		}
-		mCanvas.drawBitmap(mBitmap, invPosX, invPosY, mPaint);
+		mCanvas.drawBitmap(mBitmap, mInvader.getInvaderPosX(), 
+				mInvader.getInvaderPosY(), mPaint);
 	}
 	//弾描画
 	protected void drawShot(Shot shot) {
-		float shotPosX = shot.getShotPosX(); 
-		float shotPosY = shot.getShotPosY(); 
-		int shotW = shot.getShotWidth(); 
-		int shotH = shot.getShotHeight();
-
-		RectF rectf = new RectF(shotPosX-shotW/2, shotPosY-shotH/2, 
-				shotPosX+shotW/2, shotPosY+shotH/2);;
-		
+		RectF rectf = shot.createRectangle();
 		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		mCanvas.drawRect(rectf, mPaint);
 	}
@@ -129,11 +117,8 @@ public class FieldSurfaceView extends SurfaceView
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			//弾発射
-			Shot shot = new Shot();
-			shot.setShotPosX(mPlayer.getPlayerPosX());
-			shot.setShotPosY(mPlayer.getPlayerPosY());
+			Shot shot = new Shot(mPlayer.getPlayerPosX(), mPlayer.getPlayerPosY());
 			mShotList.add(shot);
-			
 		} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
 			mPlayer.setPlayerPosX(event.getX());
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -145,7 +130,7 @@ public class FieldSurfaceView extends SurfaceView
 	
 	@Override
 	public void run() {			
-		while (isAttached) {
+		while (mThread != null) {
 			onDraw();
 		}
 	}

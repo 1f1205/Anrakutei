@@ -10,6 +10,11 @@ public class Player {
 	private int width = 60;
 	private int height = 40;
 	
+	Player(int x, int y) {
+		posX = x;
+		posY = y;
+	}
+	
 	public float getPlayerPosX() {
 		return posX;	
 	}

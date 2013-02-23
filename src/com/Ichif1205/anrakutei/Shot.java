@@ -11,6 +11,11 @@ public class Shot {
 	private int height = 20;
 	private int speed = 20;
 	
+	Shot(float x, float y) {
+		posX = x;
+		posY = y;
+	}
+	
 	public float getShotPosX() {
 		return posX;	
 	}
@@ -38,4 +43,13 @@ public class Shot {
 	public void setShotHeight(int h) {
 		height = h;
 	}
+	public void updatePosition() {
+		posY -= speed;
+	}
+	public RectF createRectangle(){
+		RectF rectf = new RectF(posX-width/2, posY-height/2, 
+				posX+width/2, posY+height/2);
+		return rectf;
+	}
+
 }
