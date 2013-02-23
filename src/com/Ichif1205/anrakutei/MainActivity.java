@@ -3,9 +3,6 @@ package com.Ichif1205.anrakutei;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
-import android.view.SurfaceView;
-import android.view.Window;
-import android.view.WindowManager;
 
 public class MainActivity extends Activity {
 	

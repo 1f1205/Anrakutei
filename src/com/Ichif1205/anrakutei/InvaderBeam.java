@@ -3,48 +3,48 @@ package com.Ichif1205.anrakutei;
 import android.graphics.RectF;
 
 
-public class Shot {
+public class InvaderBeam {
 
 	private float posX;
 	private float posY;
 	private int width = 5;
 	private int height = 20;
-	private int speed = 20;
+	private int speed = 5;
 	
-	Shot(float x, float y) {
+	InvaderBeam(float x, float y) {
 		posX = x;
 		posY = y;
 	}
 	
-	public float getShotPosX() {
+	public float getInvBeamPosX() {
 		return posX;	
 	}
-	public float getShotPosY() {
+	public float getInvBeamPosY() {
 		return posY;	
 	}
-	public int getShotWidth() {
+	public int getInvBeamWidth() {
 		return width;	
 	}
-	public int getShotHeight() {
+	public int getInvBeamHeight() {
 		return height;	
 	}
-	public int getShotSpeed() {
+	public int getInvBeamSpeed() {
 		return speed;
 	}
-	public void setShotPosX(float x) {
+	public void setInvBeamPosX(float x) {
 		posX = x;
 	}
-	public void setShotPosY(float y) {
+	public void setInvBeamPosY(float y) {
 		posY = y;
 	}
-	public void setShotWidth(int w) {
+	public void setInvBeamWidth(int w) {
 		width = w;
 	}
-	public void setShotHeight(int h) {
+	public void setInvBeamHeight(int h) {
 		height = h;
 	}
 	public void updatePosition() {
-		posY -= speed;
+		posY += speed;
 	}
 	public RectF createRectangle(){
 		RectF rectf = new RectF(posX-width/2, posY-height/2, 
@@ -52,7 +52,6 @@ public class Shot {
 		return rectf;
 	}
 	public void remove() {
-		posY = 0;
+		posY = 1000;
 	}
-
 }

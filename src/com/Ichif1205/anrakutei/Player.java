@@ -9,10 +9,11 @@ public class Player {
 	private float posY;
 	private int width = 60;
 	private int height = 40;
-	
+	private boolean existFlag;
 	Player(int x, int y) {
 		posX = x;
 		posY = y;
+		existFlag = true;
 	}
 	
 	public float getPlayerPosX() {
@@ -32,6 +33,9 @@ public class Player {
 	}
 	public void setPlayerPosY(float y) {
 		posY = y;
+	}
+	public boolean getPlayerExistFlag() {
+		return existFlag;
 	}
 	public void setPlayerWidth(int w) {
 		width = w;
@@ -53,5 +57,16 @@ public class Player {
 		path.lineTo(posX-width/2, posY+height/4);
 		
 		return path;
+	}
+	public boolean isShooted(float shotX, float shotY) {
+		if ((posX-width/2 <= shotX && posX+width/2 >= shotX)
+				&& (posY-height/2 <= shotY && posY+height/2 >= shotY)){
+			return true;
+		}
+		return false;
+	}
+	public void remove() {
+		posY = -100;
+		existFlag = false;
 	}
 }

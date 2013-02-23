@@ -7,7 +7,7 @@ public class Invader {
 
 	private float posX;
 	private float posY;
-	private int width = 60;
+	private int width = 30;
 	private int height = 60;
 	private int speed = 5;
 	private boolean existFlag;
@@ -61,7 +61,7 @@ public class Invader {
 		}
 		return false;
 	}
-	public boolean isBoundary(int width) {
+	public boolean isOverBoundary(int width) {
 		if (posX > width || posX < 0) {
 			return true;
 		}
