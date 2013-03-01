@@ -2,6 +2,8 @@ package com.Ichif1205.anrakutei;
 
 import java.util.ArrayList;
 
+import com.Ichif1205.anrakutei.Invader.InvarderListener;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,7 +20,7 @@ import android.view.SurfaceView;
 
 
 public class FieldSurfaceView extends SurfaceView 
-		implements SurfaceHolder.Callback, Runnable{
+		implements SurfaceHolder.Callback, Runnable, InvarderListener{
 	private final String TAG = FieldSurfaceView.class.getSimpleName();
 
 	private SurfaceHolder mHolder;
@@ -63,11 +65,12 @@ public class FieldSurfaceView extends SurfaceView
 		mPaint.setColor(Color.GREEN);
 		mPaint.setAntiAlias(true);
 		
+		mInvBeamList = new ArrayList<InvaderBeam>();
+		
 		mPlayer = new Player(getWidth()/2, getHeight()*7/8);
-		mInvader = new Invader(getWidth()/8, getHeight()/8);
+		mInvader = new Invader(getWidth()/8, getHeight()/8, this);
 		mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.suraimu);
 		mShotList = new ArrayList<Shot>();
-		mInvBeamList = new ArrayList<InvaderBeam>();
 		
 		onDraw();
 	}
@@ -158,8 +161,8 @@ public class FieldSurfaceView extends SurfaceView
 			//弾発射
 			Shot shot = new Shot(mPlayer.getPlayerPosX(), mPlayer.getPlayerPosY());
 			mShotList.add(shot);
-			InvaderBeam invBeam = new InvaderBeam(mInvader.getInvaderPosX(), mInvader.getInvaderPosY());
-			mInvBeamList.add(invBeam);
+//			InvaderBeam invBeam = new InvaderBeam(mInvader.getInvaderPosX(), mInvader.getInvaderPosY());
+//			mInvBeamList.add(invBeam);
 		} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
 			mPlayer.setPlayerPosX(event.getX());
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -174,6 +177,12 @@ public class FieldSurfaceView extends SurfaceView
 		while (mThread != null) {
 			onDraw();
 		}
+	}
+
+	@Override
+	public void shootBeamEvent(float shotX, float shotY) {
+		InvaderBeam invBeam = new InvaderBeam(shotX, shotY);
+		mInvBeamList.add(invBeam);
 	}
 
 }
