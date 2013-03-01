@@ -1,7 +1,7 @@
 package com.Ichif1205.anrakutei;
 
-import android.graphics.Path;
-
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Invader {
 
@@ -11,11 +11,18 @@ public class Invader {
 	private int height = 60;
 	private int speed = 5;
 	private boolean existFlag;
+	private InvarderListener mIl;
+	private int mTerm = 1000;
+	private Timer mTimer;
 	
-	Invader(int x, int y) {
+	Invader(int x, int y, InvarderListener li) {
 		posX = x;
 		posY = y;
 		existFlag = true;
+		mIl = li;
+		
+		 mTimer = new Timer();
+	     mTimer.schedule(new Task1(), mTerm); 
 	}
 	
 	public float getInvaderPosX() {
@@ -77,5 +84,17 @@ public class Invader {
 		posY = -100;
 		existFlag = false;
 	}
+	
+	public interface InvarderListener {
+		public void shootBeamEvent(float shotX, float shotY);
+	}
+	
+	class Task1 extends TimerTask {
+	    public void run() {
+	    	mIl.shootBeamEvent(posX, posY);
+	    	mTerm = mTerm + 2000;
+	    	mTimer.schedule(new Task1(), mTerm); 
+	    }
+	}	
 	
 }
