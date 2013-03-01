@@ -10,6 +10,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -17,6 +19,7 @@ import android.view.SurfaceView;
 
 public class FieldSurfaceView extends SurfaceView 
 		implements SurfaceHolder.Callback, Runnable{
+	private final String TAG = FieldSurfaceView.class.getSimpleName();
 
 	private SurfaceHolder mHolder;
 	private Canvas mCanvas;
@@ -30,7 +33,15 @@ public class FieldSurfaceView extends SurfaceView
 	
 	public FieldSurfaceView(Context context) {
 		super(context);
-		
+		Log.d(TAG, "Start");
+		mHolder = getHolder();
+		mHolder.addCallback(this);
+		mHolder.setFixedSize(getWidth(), getHeight());	
+	}
+	
+	public FieldSurfaceView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		Log.d(TAG, "Start");
 		mHolder = getHolder();
 		mHolder.addCallback(this);
 		mHolder.setFixedSize(getWidth(), getHeight());

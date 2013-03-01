@@ -12,12 +12,12 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_main);
 		
-		//mSurfaceView = (SurfaceView)findViewById(R.id.FieldSurfaceView_id);
+//		mFieldSurfaceView = (FieldSurfaceView)findViewById(R.id.FieldSurfaceView_id);
 		//mFieldSurfaceView = new FieldSurfaceView(this, mSurfaceView);
-		mFieldSurfaceView = new FieldSurfaceView(this);
-		setContentView(mFieldSurfaceView);
+//		mFieldSurfaceView = new FieldSurfaceView(this);
+//		setContentView(mFieldSurfaceView);
 		
 	}
 
