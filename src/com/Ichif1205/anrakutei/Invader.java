@@ -1,5 +1,6 @@
 package com.Ichif1205.anrakutei;
 
+//import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -10,6 +11,7 @@ public class Invader {
 	private int width = 30;
 	private int height = 60;
 	private int speed = 5;
+	//private int pattern;
 	private boolean existFlag;
 	private InvarderListener mIl;
 	private int mTerm = 1000;
@@ -20,6 +22,8 @@ public class Invader {
 		posY = y;
 		existFlag = true;
 		mIl = li;
+		//Random rand = new Random();
+		//pattern = rand.nextInt(2);
 		
 		 mShootTimer = new Timer();
 	     mShootTimer.schedule(new ShootTask(), mTerm); 
@@ -78,8 +82,19 @@ public class Invader {
 		speed =- speed;
 	}
 	public void updatePosition() {
+		//異なる移動パターンを実行
 		posX += speed;
+			//moveLR();
+		/*if(pattern == 0) {
+			moveLR();
+		} else {
+			moveSkew();
+		}*/ 
 	}
+	/*private void moveSkew() {
+		posX += speed;
+		posY += speed;
+	}*/
 	public void remove() {
 		posY = -100;
 		existFlag = false;

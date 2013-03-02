@@ -10,5 +10,6 @@
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_activity_ranking">RankingActivity</string>
     <string name="title_activity_select_player">SelectPlayer</string>
+    <string name="title_activity_result">ResultActivity</string>
 
 </resources>

@@ -35,6 +35,10 @@
             android:name="com.Ichif1205.anrakutei.SelectPlayer"
             android:label="@string/title_activity_select_player" >
         </activity>
+        <activity
+            android:name="com.Ichif1205.anrakutei.ResultActivity"
+            android:label="@string/title_activity_result" >
+        </activity>
     </application>
 
 </manifest>
