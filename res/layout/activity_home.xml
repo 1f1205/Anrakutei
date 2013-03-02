@@ -14,30 +14,24 @@
         android:text="Welcome!!" />
 
     <Button
-        android:id="@+id/ranking"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:background="#ffffff"
-        android:text="Ranking" />
-
-    <Button
         android:id="@+id/play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:layout_below="@id/ranking"
+        style="@style/CommonButtonStyle"
+        android:layout_centerVertical="true"
         android:text="Play" />
     
     <Button
+        android:id="@+id/ranking"
+        style="@style/CommonButtonStyle"
+        android:layout_below="@id/play"
+        android:layout_marginTop="20dp"
+        android:text="Ranking" />
+
+    
+    <Button
         android:id="@+id/result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textView1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="52dp"
+        style="@style/CommonButtonStyle"
+        android:layout_below="@id/ranking"
+        android:layout_marginTop="20dp"
         android:text="Result" />
 
 </RelativeLayout>
