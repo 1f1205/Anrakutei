@@ -16,6 +16,7 @@ public class HomeActivity extends Activity {
 		
 		Button button_play = (Button)findViewById(R.id.play);
         Button button_rank = (Button)findViewById(R.id.ranking);
+        Button button_result = (Button)findViewById(R.id.result);
         
         button_play.setOnClickListener(new View.OnClickListener() {
         	public void onClick(View view) {
@@ -28,6 +29,14 @@ public class HomeActivity extends Activity {
         	public void onClick(View view) {
         		Intent intent = new Intent(HomeActivity.this, RankingActivity.class);
         		intent.putExtra("Count", 20);
+        		startActivity(intent);
+        	}
+        }); 
+        button_result.setOnClickListener(new View.OnClickListener() {
+        	public void onClick(View view) {
+        		Intent intent = new Intent(HomeActivity.this, ResultActivity.class);
+        		intent.putExtra("score", 30);
+        		intent.putExtra("date", 20120301);
         		startActivity(intent);
         	}
         }); 
