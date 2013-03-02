@@ -27,7 +27,8 @@ public class FieldSurfaceView extends SurfaceView implements
 	private Canvas mCanvas;
 	private Paint mPaint;
 	private Player mPlayer;
-	private Bitmap mBitmap;
+	private final Bitmap mBitmap = BitmapFactory.decodeResource(getResources(),
+			R.drawable.invader);;
 	private Thread mThread;
 	private ArrayList<Shot> mShotList;
 	private ArrayList<InvaderBeam> mInvBeamList;
@@ -75,9 +76,7 @@ public class FieldSurfaceView extends SurfaceView implements
 			mInvaderList.add(invader);
 		}
 		
-		mBitmap = BitmapFactory.decodeResource(getResources(),
-				R.drawable.invader);
-		Log.d(TAG, "[mBitmap_res]"+String.valueOf(mBitmap));
+		
 		mShotList = new ArrayList<Shot>();
 
 		//onDraw();
@@ -91,6 +90,7 @@ public class FieldSurfaceView extends SurfaceView implements
 
 	protected void onDraw() {
 		mCanvas = getHolder().lockCanvas();
+		mCanvas.save();
 		mCanvas.drawColor(Color.BLACK);
 		// 自機の描画
 		if (mPlayer.getPlayerExistFlag()) {
@@ -117,7 +117,6 @@ public class FieldSurfaceView extends SurfaceView implements
 			}
 		}
 		
-		Log.d(TAG, "[mBitmap_res2]"+String.valueOf(mBitmap));
 		for (Invader invader : mInvaderList) {
 			// 敵の描画
 			if (invader.getInvaderExistFlag()) {
@@ -141,6 +140,7 @@ public class FieldSurfaceView extends SurfaceView implements
 			}
 		}
 		
+		mCanvas.restore();
 		getHolder().unlockCanvasAndPost(mCanvas);
 	}
 
