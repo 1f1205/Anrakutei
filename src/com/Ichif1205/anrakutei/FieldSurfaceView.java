@@ -2,8 +2,6 @@ package com.Ichif1205.anrakutei;
 
 import java.util.ArrayList;
 
-import com.Ichif1205.anrakutei.Invader.InvarderListener;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,10 +11,11 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import com.Ichif1205.anrakutei.Invader.InvarderListener;
 
 public class FieldSurfaceView extends SurfaceView implements
 		SurfaceHolder.Callback, Runnable, InvarderListener {
@@ -33,6 +32,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	private ArrayList<Shot> mShotList;
 	private ArrayList<InvaderBeam> mInvBeamList;
 	private ArrayList<Invader> mInvaderList;
+	private ArrayList<Item> mItem;
 
 	public FieldSurfaceView(Context context) {
 		super(context);
@@ -66,6 +66,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		mInvBeamList = new ArrayList<InvaderBeam>();
 		mShotList = new ArrayList<Shot>();
 		mInvaderList = new ArrayList<Invader>();
+		mItem = new ArrayList<Item>();
 
 		mPlayer = new Player(getWidth() / 2, getHeight() * 7 / 8);
 
@@ -93,6 +94,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		if (mPlayer.getPlayerExistFlag()) {
 			drawPlayer();
 		}
+
 		for (int i = 0; i < mShotList.size(); i++) {
 			Shot shot = mShotList.get(i);
 			float shotPosX = shot.getShotPosX();
@@ -175,6 +177,13 @@ public class FieldSurfaceView extends SurfaceView implements
 	// 敵のビーム描画
 	protected void drawInvBeam(InvaderBeam invBeam) {
 		RectF rectf = invBeam.createRectangle();
+		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+		mCanvas.drawRect(rectf, mPaint);
+	}
+
+	// Item生成
+	protected void drawItem(Item item) {
+		RectF rectf = item.createRectangle();
 		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		mCanvas.drawRect(rectf, mPaint);
 	}
