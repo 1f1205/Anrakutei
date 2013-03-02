@@ -21,12 +21,12 @@ import android.view.SurfaceView;
 public class FieldSurfaceView extends SurfaceView implements
 		SurfaceHolder.Callback, Runnable, InvarderListener {
 	private final String TAG = FieldSurfaceView.class.getSimpleName();
+	private final int MAX_INVADER_NUM = 9;
 
 	private SurfaceHolder mHolder;
 	private Canvas mCanvas;
 	private Paint mPaint;
 	private Player mPlayer;
-	private Invader mInvader;
 	private Bitmap mBitmap;
 	private Thread mThread;
 	private ArrayList<Shot> mShotList;
@@ -67,8 +67,9 @@ public class FieldSurfaceView extends SurfaceView implements
 		mInvaderList = new ArrayList<Invader>();
 
 		mPlayer = new Player(getWidth() / 2, getHeight() * 7 / 8);
-		// TODO ここでInvaderをListに追加
-		for (int i = 2; i < 9; i++) {
+		
+		// 複数の敵を表示
+		for (int i = 2; i < MAX_INVADER_NUM; i++) {
 			Invader invader = new Invader((getWidth() / i), (getHeight() / i),
 					this);
 			mInvaderList.add(invader);

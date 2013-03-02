@@ -13,7 +13,7 @@ public class Invader {
 	private boolean existFlag;
 	private InvarderListener mIl;
 	private int mTerm = 1000;
-	private Timer mTimer;
+	private Timer mShootTimer;
 	
 	Invader(int x, int y, InvarderListener li) {
 		posX = x;
@@ -21,8 +21,8 @@ public class Invader {
 		existFlag = true;
 		mIl = li;
 		
-		 mTimer = new Timer();
-	     mTimer.schedule(new Task1(), mTerm); 
+		 mShootTimer = new Timer();
+	     mShootTimer.schedule(new ShootTask(), mTerm); 
 	}
 	
 	public float getInvaderPosX() {
@@ -83,18 +83,18 @@ public class Invader {
 	public void remove() {
 		posY = -100;
 		existFlag = false;
-		mTimer.cancel(); 
+		mShootTimer.cancel(); 
 	}
 	
 	public interface InvarderListener {
 		public void shootBeamEvent(float shotX, float shotY);
 	}
 	
-	class Task1 extends TimerTask {
+	class ShootTask extends TimerTask {
 	    public void run() {
 	    	mIl.shootBeamEvent(posX, posY);
 	    	mTerm = mTerm + 2000;
-	    	mTimer.schedule(new Task1(), mTerm); 
+	    	mShootTimer.schedule(new ShootTask(), mTerm); 
 	    }
 	}	
 	
