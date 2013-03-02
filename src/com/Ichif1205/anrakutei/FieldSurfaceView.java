@@ -31,10 +31,10 @@ public class FieldSurfaceView extends SurfaceView implements
 	private Thread mThread;
 	private ArrayList<Shot> mShotList;
 	private ArrayList<InvaderBeam> mInvBeamList;
+	private ArrayList<Invader> mInvaderList;
 
 	public FieldSurfaceView(Context context) {
 		super(context);
-		Log.d(TAG, "Start");
 		mHolder = getHolder();
 		mHolder.addCallback(this);
 		mHolder.setFixedSize(getWidth(), getHeight());
@@ -42,7 +42,6 @@ public class FieldSurfaceView extends SurfaceView implements
 
 	public FieldSurfaceView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		Log.d(TAG, "Start");
 		mHolder = getHolder();
 		mHolder.addCallback(this);
 		mHolder.setFixedSize(getWidth(), getHeight());
@@ -56,7 +55,6 @@ public class FieldSurfaceView extends SurfaceView implements
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		// TODO 自動生成されたメソッド・スタブ
 		mThread = new Thread(this);
 		mThread.start();
 
@@ -65,12 +63,19 @@ public class FieldSurfaceView extends SurfaceView implements
 		mPaint.setAntiAlias(true);
 
 		mInvBeamList = new ArrayList<InvaderBeam>();
+		mShotList = new ArrayList<Shot>();
+		mInvaderList = new ArrayList<Invader>();
 
 		mPlayer = new Player(getWidth() / 2, getHeight() * 7 / 8);
-		mInvader = new Invader(getWidth() / 8, getHeight() / 8, this);
+		// TODO ここでInvaderをListに追加
+		for (int i = 2; i < 9; i++) {
+			Invader invader = new Invader((getWidth() / i), (getHeight() / i),
+					this);
+			mInvaderList.add(invader);
+		}
+
 		mBitmap = BitmapFactory.decodeResource(getResources(),
 				R.drawable.suraimu);
-		mShotList = new ArrayList<Shot>();
 
 		onDraw();
 	}
@@ -92,38 +97,46 @@ public class FieldSurfaceView extends SurfaceView implements
 			Shot shot = mShotList.get(i);
 			float shotPosX = shot.getShotPosX();
 			float shotPosY = shot.getShotPosY();
-			boolean isShooted = mInvader.isShooted(shotPosX, shotPosY);
-			// 弾が敵に当たったら消える
-			if (isShooted) {
-				shot.remove();
-				mInvader.remove();
+			
+			for (Invader invader : mInvaderList) {
+				boolean isShooted = invader.isShooted(shotPosX, shotPosY);
+				// 弾が敵に当たったら消える
+				if (isShooted) {
+					shot.remove();
+					invader.remove();
+				}
 			}
+			
 			// 弾が画面上からはみ出るまで表示させ続ける
 			if (shotPosY > 0) {
 				shot.updatePosition();
 				drawShot(shot);
 			}
 		}
-		// 敵の描画
-		if (mInvader.getInvaderExistFlag()) {
-			drawInvader();
-			for (int i = 0; i < mInvBeamList.size(); i++) {
-				InvaderBeam invBeam = mInvBeamList.get(i);
-				float invBeamPosX = invBeam.getInvBeamPosX();
-				float invBeamPosY = invBeam.getInvBeamPosY();
-				boolean isShooted = mPlayer.isShooted(invBeamPosX, invBeamPosY);
-				// ビームが自機に当たったら消える
-				if (isShooted) {
-					invBeam.remove();
-					mPlayer.remove();
-				}
-				// ビームが画面上からはみ出るまで表示させ続ける
-				if (invBeamPosY < getHeight()) {
-					invBeam.updatePosition();
-					drawInvBeam(invBeam);
+		
+		for (Invader invader : mInvaderList) {
+			// 敵の描画
+			if (invader.getInvaderExistFlag()) {
+				drawInvader(invader);
+				for (int i = 0; i < mInvBeamList.size(); i++) {
+					InvaderBeam invBeam = mInvBeamList.get(i);
+					float invBeamPosX = invBeam.getInvBeamPosX();
+					float invBeamPosY = invBeam.getInvBeamPosY();
+					boolean isShooted = mPlayer.isShooted(invBeamPosX, invBeamPosY);
+					// ビームが自機に当たったら消える
+					if (isShooted) {
+						invBeam.remove();
+						mPlayer.remove();
+					}
+					// ビームが画面上からはみ出るまで表示させ続ける
+					if (invBeamPosY < getHeight()) {
+						invBeam.updatePosition();
+						drawInvBeam(invBeam);
+					}
 				}
 			}
 		}
+		
 		getHolder().unlockCanvasAndPost(mCanvas);
 	}
 
@@ -135,13 +148,13 @@ public class FieldSurfaceView extends SurfaceView implements
 	}
 
 	// 敵描画
-	protected void drawInvader() {
-		mInvader.updatePosition();
-		if (mInvader.isOverBoundary(getWidth())) {
-			mInvader.reverseSpeedDirection();
+	protected void drawInvader(Invader invader) {
+		invader.updatePosition();
+		if (invader.isOverBoundary(getWidth())) {
+			invader.reverseSpeedDirection();
 		}
-		mCanvas.drawBitmap(mBitmap, mInvader.getInvaderPosX(),
-				mInvader.getInvaderPosY(), mPaint);
+		mCanvas.drawBitmap(mBitmap, invader.getInvaderPosX(),
+				invader.getInvaderPosY(), mPaint);
 	}
 
 	// 自機の弾描画
@@ -165,9 +178,6 @@ public class FieldSurfaceView extends SurfaceView implements
 			Shot shot = new Shot(mPlayer.getPlayerPosX(),
 					mPlayer.getPlayerPosY());
 			mShotList.add(shot);
-			// InvaderBeam invBeam = new InvaderBeam(mInvader.getInvaderPosX(),
-			// mInvader.getInvaderPosY());
-			// mInvBeamList.add(invBeam);
 		} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
 			mPlayer.setPlayerPosX(event.getX());
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {

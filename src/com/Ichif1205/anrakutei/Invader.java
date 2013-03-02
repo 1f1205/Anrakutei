@@ -83,6 +83,7 @@ public class Invader {
 	public void remove() {
 		posY = -100;
 		existFlag = false;
+		mTimer.cancel(); 
 	}
 	
 	public interface InvarderListener {
