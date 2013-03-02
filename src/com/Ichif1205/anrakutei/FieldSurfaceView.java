@@ -21,7 +21,7 @@ import android.view.SurfaceView;
 public class FieldSurfaceView extends SurfaceView implements
 		SurfaceHolder.Callback, Runnable, InvarderListener {
 	private final String TAG = FieldSurfaceView.class.getSimpleName();
-	private final int MAX_INVADER_NUM = 9;
+	private final int MAX_INVADER_NUM = 8;
 
 	private SurfaceHolder mHolder;
 	private Canvas mCanvas;
@@ -154,8 +154,11 @@ public class FieldSurfaceView extends SurfaceView implements
 	// 敵描画
 	protected void drawInvader(Invader invader) {
 		invader.updatePosition();
-		if (invader.isOverBoundary(getWidth())) {
-			invader.reverseSpeedDirection();
+		if (invader.isOverBoundaryWidth(getWidth())) {
+			invader.reverseSpeedXDirection();
+		}
+		if (invader.isOverBoundaryHeight(getHeight())) {
+			invader.reverseSpeedYDirection();
 		}
 
 		mCanvas.drawBitmap(mBitmap, invader.getInvaderPosX(),
