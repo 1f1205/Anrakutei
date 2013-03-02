@@ -69,7 +69,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		mPlayer = new Player(getWidth() / 2, getHeight() * 7 / 8);
 		mInvader = new Invader(getWidth() / 8, getHeight() / 8, this);
 		mBitmap = BitmapFactory.decodeResource(getResources(),
-				R.drawable.suraimu);
+				R.drawable.invader);
 		mShotList = new ArrayList<Shot>();
 
 		onDraw();
