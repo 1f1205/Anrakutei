@@ -21,7 +21,7 @@ public class RankingActivity extends Activity {
 		ScoreDBOpenHelper helper = new ScoreDBOpenHelper(this);
 		SQLiteDatabase db = helper.getReadableDatabase();
 
-		String sql = "SELECT key, score, date FROM score_table ORDER BY score DESC limit 10";
+		String sql = "SELECT "+ ScoreDBOpenHelper.COLUMN_KEY+", "+ScoreDBOpenHelper.COLUMN_SCORE+", "+ScoreDBOpenHelper.COLUMN_DATE+" FROM score_table ORDER BY score DESC limit 10";
         Cursor cursor = db.rawQuery(sql, null);
 		//Cursor c = db.query("score_table", new String[] { "score", "date" },
 		//		null, null, null, null, null);

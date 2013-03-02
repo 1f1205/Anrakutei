@@ -25,8 +25,8 @@ public class ResultActivity extends Activity {
 		SQLiteDatabase db = helper.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put("score", Score);
-		values.put("date", Date);
+		values.put(ScoreDBOpenHelper.COLUMN_SCORE, Score);
+		values.put(ScoreDBOpenHelper.COLUMN_DATE, Date);
 		db.insert("score_table", null, values);
 
 		db.close();
