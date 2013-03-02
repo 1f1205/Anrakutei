@@ -26,8 +26,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	private Canvas mCanvas;
 	private Paint mPaint;
 	private Player mPlayer;
-	private final Bitmap mBitmap = BitmapFactory.decodeResource(getResources(),
-			R.drawable.invader);;
+	private Bitmap mBitmap ;
 	private Thread mThread;
 	private ArrayList<Shot> mShotList;
 	private ArrayList<InvaderBeam> mInvBeamList;
@@ -39,6 +38,8 @@ public class FieldSurfaceView extends SurfaceView implements
 		mHolder = getHolder();
 		mHolder.addCallback(this);
 		mHolder.setFixedSize(getWidth(), getHeight());
+		mBitmap = BitmapFactory.decodeResource(getResources(),
+				R.drawable.invader);
 	}
 
 	public FieldSurfaceView(Context context, AttributeSet attrs) {
@@ -46,6 +47,8 @@ public class FieldSurfaceView extends SurfaceView implements
 		mHolder = getHolder();
 		mHolder.addCallback(this);
 		mHolder.setFixedSize(getWidth(), getHeight());
+		mBitmap = BitmapFactory.decodeResource(getResources(),
+				R.drawable.invader);
 	}
 
 	@Override
@@ -72,7 +75,7 @@ public class FieldSurfaceView extends SurfaceView implements
 
 		// 複数の敵を表示
 		for (int i = 2; i < MAX_INVADER_NUM; i++) {
-			Invader invader = new Invader((getWidth() / i), (getHeight() / i),
+			Invader invader = new Invader(getWidth(), (getHeight() * 3 / 4),
 					this);
 			mInvaderList.add(invader);
 		}
@@ -121,6 +124,8 @@ public class FieldSurfaceView extends SurfaceView implements
 			for (Invader invader : mInvaderList) {
 				// 敵の描画
 				if (invader.getInvaderExistFlag()) {
+					invader.setInvaderWidth(mBitmap.getWidth());
+					invader.setInvaderHeight(mBitmap.getHeight());
 					drawInvader(invader);
 					for (int i = 0; i < mInvBeamList.size(); i++) {
 						InvaderBeam invBeam = mInvBeamList.get(i);

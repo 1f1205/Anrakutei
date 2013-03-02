@@ -6,8 +6,8 @@ import java.util.TimerTask;
 
 public class Invader {
 
-	private float posX;
-	private float posY;
+	private int posX;
+	private int posY;
 	private int width = 30;
 	private int height = 60;
 	private int speedX = 5;
@@ -15,8 +15,8 @@ public class Invader {
 	private int pattern;
 	private double theta = 0;
 	private int radius = 50;
-	private int centerX = 200;
-	private int centerY = 200;
+	private int centerX;
+	private int centerY;
 	private double alpha = 0;
 	private boolean existFlag;
 	private InvarderListener mIl;
@@ -24,22 +24,26 @@ public class Invader {
 	private Timer mShootTimer;
 
 	Invader(int x, int y, InvarderListener li) {
-		posX = x;
-		posY = y;
+		posX = getRandomPosition(x);
+		posY = getRandomPosition(y);
 		existFlag = true;
 		mIl = li;
 		Random rand = new Random();
 		pattern = rand.nextInt(3);
+		if (pattern == 2) {
+			centerX = posX;
+			centerY = posY;
+		}
 
 		mShootTimer = new Timer();
 		mShootTimer.schedule(new ShootTask(), mTerm);
 	}
 
-	public float getInvaderPosX() {
+	public int getInvaderPosX() {
 		return posX;
 	}
 
-	public float getInvaderPosY() {
+	public int getInvaderPosY() {
 		return posY;
 	}
 
@@ -55,11 +59,11 @@ public class Invader {
 		return existFlag;
 	}
 
-	public void setInvaderPosX(float x) {
+	public void setInvaderPosX(int x) {
 		posX = x;
 	}
 
-	public void setInvaderPosY(float y) {
+	public void setInvaderPosY(int y) {
 		posY = y;
 	}
 
@@ -75,6 +79,11 @@ public class Invader {
 		existFlag = exflag;
 	}
 
+	public int getRandomPosition(int length){
+		double rand = Math.random();
+		return (int)(rand * length);
+	}
+	
 	public boolean isShooted(float shotX, float shotY) {
 		if ((posX - width / 2 <= shotX && posX + width / 2 >= shotX)
 				&& (posY - height / 2 <= shotY && posY + height / 2 >= shotY)) {
@@ -107,7 +116,6 @@ public class Invader {
 
 	public void updatePosition() {
 		// patternの値によって移動パターン決定
-		pattern = 2;
 		if (pattern == 0) {
 			moveLR();
 		} else if (pattern == 1) {
@@ -127,9 +135,9 @@ public class Invader {
 	}
 
 	private void moveCircle() {
-		alpha += speedX;
-		posX =  (int)(radius * Math.cos(theta + alpha) + centerX);
-		posY =  (int)(radius * Math.sin(theta + alpha) + centerY);
+		alpha += speedX * 1.0 / radius;
+		posX = (int) (radius * Math.cos(theta + alpha) + centerX);
+		posY = (int) (radius * Math.sin(theta + alpha) + centerY);
 	}
 
 	public void remove() {
