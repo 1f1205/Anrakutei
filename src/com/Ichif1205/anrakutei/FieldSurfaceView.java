@@ -74,12 +74,13 @@ public class FieldSurfaceView extends SurfaceView implements
 					this);
 			mInvaderList.add(invader);
 		}
-
+		
 		mBitmap = BitmapFactory.decodeResource(getResources(),
 				R.drawable.invader);
+		Log.d(TAG, "[mBitmap_res]"+String.valueOf(mBitmap));
 		mShotList = new ArrayList<Shot>();
 
-		onDraw();
+		//onDraw();
 	}
 
 	@Override
@@ -116,6 +117,7 @@ public class FieldSurfaceView extends SurfaceView implements
 			}
 		}
 		
+		Log.d(TAG, "[mBitmap_res2]"+String.valueOf(mBitmap));
 		for (Invader invader : mInvaderList) {
 			// 敵の描画
 			if (invader.getInvaderExistFlag()) {
@@ -155,6 +157,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		if (invader.isOverBoundary(getWidth())) {
 			invader.reverseSpeedDirection();
 		}
+		Log.d(TAG, "[mBitmap]"+String.valueOf(mBitmap));
 		mCanvas.drawBitmap(mBitmap, invader.getInvaderPosX(),
 				invader.getInvaderPosY(), mPaint);
 	}
