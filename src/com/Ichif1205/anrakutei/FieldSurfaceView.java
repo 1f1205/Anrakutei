@@ -23,7 +23,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	private final int MAX_INVADER_NUM = 8;
 
 	private SurfaceHolder mHolder;
-	private Canvas mCanvas;
+	private Canvas mCanvas = null;
 	private Paint mPaint;
 	private Player mPlayer;
 	private final Bitmap mBitmap = BitmapFactory.decodeResource(getResources(),
@@ -89,6 +89,9 @@ public class FieldSurfaceView extends SurfaceView implements
 
 	protected void onDraw() {
 		mCanvas = getHolder().lockCanvas();
+		if (mCanvas == null) {
+			return;
+		}
 		mCanvas.drawColor(Color.BLACK);
 		// 自機の描画
 		if (mPlayer.getPlayerExistFlag()) {
