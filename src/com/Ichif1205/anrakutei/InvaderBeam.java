@@ -9,7 +9,7 @@ public class InvaderBeam {
 	private float posY;
 	private int width = 5;
 	private int height = 20;
-	private int speed = 5;
+	private final int speed = 2;
 	
 	InvaderBeam(float x, float y) {
 		posX = x;
@@ -42,6 +42,12 @@ public class InvaderBeam {
 	}
 	public void setInvBeamHeight(int h) {
 		height = h;
+	}
+	public boolean isInsideScreen(int windowHeight) {
+		if (posY < windowHeight) {
+			return true;
+		}
+		return false;
 	}
 	public void updatePosition() {
 		posY += speed;

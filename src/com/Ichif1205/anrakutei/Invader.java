@@ -8,8 +8,8 @@ public class Invader {
 
 	private int posX;
 	private int posY;
-	private int width = 30;
-	private int height = 60;
+	private int width = 40;
+	private int height = 40;
 	private int speedX = 5;
 	private int speedY = 5;
 	private int pattern;
@@ -28,8 +28,8 @@ public class Invader {
 		posY = getRandomPosition(y);
 		existFlag = true;
 		mIl = li;
-		Random rand = new Random();
-		pattern = rand.nextInt(3);
+		Random pt_rand = new Random();
+		pattern = pt_rand.nextInt(3);
 		if (pattern == 2) {
 			centerX = posX;
 			centerY = posY;
@@ -79,28 +79,28 @@ public class Invader {
 		existFlag = exflag;
 	}
 
-	public int getRandomPosition(int length){
+	public int getRandomPosition(int length) {
 		double rand = Math.random();
-		return (int)(rand * length);
+		return (int) (rand * length);
 	}
-	
+
 	public boolean isShooted(float shotX, float shotY) {
-		if ((posX - width / 2 <= shotX && posX + width / 2 >= shotX)
-				&& (posY - height / 2 <= shotY && posY + height / 2 >= shotY)) {
+		if ((shotX >= posX) && (shotX <= posX + width) && (shotY >= posY)
+				&& (shotY <= posY + height)) {
 			return true;
 		}
 		return false;
 	}
 
-	public boolean isOverBoundaryWidth(int width) {
-		if (posX > width || posX < 0) {
+	public boolean isOverBoundaryWidth(int w) {
+		if (posX > w - width || posX < 0) {
 			return true;
 		}
 		return false;
 	}
 
-	public boolean isOverBoundaryHeight(int height) {
-		if (posY > height || posY < 0) {
+	public boolean isOverBoundaryHeight(int h) {
+		if (posY > h - height || posY < 0) {
 			return true;
 		}
 		return false;
@@ -141,7 +141,7 @@ public class Invader {
 	}
 
 	public void remove() {
-		posY = -100;
+		posY = 1000;
 		existFlag = false;
 		mShootTimer.cancel();
 	}
