@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -57,7 +58,6 @@ public class FieldSurfaceView extends SurfaceView implements
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		mThread = new Thread(this);
-		mThread.start();
 
 		mPaint = new Paint();
 		mPaint.setColor(Color.GREEN);
@@ -78,6 +78,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		}
 
 		mShotList = new ArrayList<Shot>();
+		mThread.start();
 
 	}
 
