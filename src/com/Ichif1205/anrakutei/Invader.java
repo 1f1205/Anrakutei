@@ -156,8 +156,9 @@ public class Invader {
 	class ShootTask extends TimerTask {
 		public void run() {
 			mIl.shootBeamEvent(posX, posY);
-			mTerm = mTerm + 2000;
-			mShootTimer.schedule(new ShootTask(), mTerm);
+			Random rBeam = new Random();
+			int randBeam = 1000 + (500 * rBeam.nextInt(5));
+			mShootTimer.schedule(new ShootTask(), randBeam);
 		}
 	}
 
