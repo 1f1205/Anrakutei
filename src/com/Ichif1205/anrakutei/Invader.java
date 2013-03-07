@@ -4,32 +4,34 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.util.FloatMath;
+
 public class Invader {
 
-	private int posX;
-	private int posY;
-	private int width = 40;
-	private int height = 40;
-	private int speedX = 5;
-	private int speedY = 5;
+	private float posX;
+	private float posY;
+	private int width = 36;
+	private int height = 36;
+	private int speedX = 4;
+	private int speedY = 4;
 	private int pattern;
-	private double theta = 0;
+	private float theta = 0;
 	private int radius = 50;
-	private int centerX;
-	private int centerY;
-	private double alpha = 0;
+	private float centerX;
+	private float centerY;
+	private float alpha = 0;
 	private boolean existFlag;
 	private InvarderListener mIl;
 	private int mTerm = 1000;
 	private Timer mShootTimer;
 
-	Invader(int x, int y, InvarderListener li) {
+	Invader(float x, float y, InvarderListener li) {
 		posX = getRandomPosition(x);
 		posY = getRandomPosition(y);
 		existFlag = true;
 		mIl = li;
-		Random pt_rand = new Random();
-		pattern = pt_rand.nextInt(3);
+		Random ptn_rand = new Random();
+		pattern = ptn_rand.nextInt(3);
 		if (pattern == 2) {
 			centerX = posX;
 			centerY = posY;
@@ -39,11 +41,11 @@ public class Invader {
 		mShootTimer.schedule(new ShootTask(), mTerm);
 	}
 
-	public int getInvaderPosX() {
+	public float getInvaderPosX() {
 		return posX;
 	}
 
-	public int getInvaderPosY() {
+	public float getInvaderPosY() {
 		return posY;
 	}
 
@@ -55,7 +57,7 @@ public class Invader {
 		return height;
 	}
 
-	public boolean getInvaderExistFlag() {
+	public boolean isExisted() {
 		return existFlag;
 	}
 
@@ -79,9 +81,10 @@ public class Invader {
 		existFlag = exflag;
 	}
 
-	public int getRandomPosition(int length) {
-		double rand = Math.random();
-		return (int) (rand * length);
+	public float getRandomPosition(float length) {
+		Random randf = new Random();
+		float rate = randf.nextFloat();
+		return rate * length;
 	}
 
 	public boolean isShooted(float shotX, float shotY) {
@@ -136,8 +139,8 @@ public class Invader {
 
 	private void moveCircle() {
 		alpha += speedX * 1.0 / radius;
-		posX = (int) (radius * Math.cos(theta + alpha) + centerX);
-		posY = (int) (radius * Math.sin(theta + alpha) + centerY);
+		posX = radius * FloatMath.cos(theta + alpha) + centerX;
+		posY = radius * FloatMath.sin(theta + alpha) + centerY;
 	}
 
 	public void remove() {

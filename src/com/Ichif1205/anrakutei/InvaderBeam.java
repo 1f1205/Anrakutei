@@ -2,62 +2,73 @@ package com.Ichif1205.anrakutei;
 
 import android.graphics.RectF;
 
-
 public class InvaderBeam {
 
 	private float posX;
 	private float posY;
 	private int width = 5;
 	private int height = 20;
-	private final int speed = 2;
-	
+	private int speed = 5;
+
 	InvaderBeam(float x, float y) {
 		posX = x;
 		posY = y;
 	}
-	
+
 	public float getInvBeamPosX() {
-		return posX;	
+		return posX;
 	}
+
 	public float getInvBeamPosY() {
-		return posY;	
+		return posY;
 	}
+
 	public int getInvBeamWidth() {
-		return width;	
+		return width;
 	}
+
 	public int getInvBeamHeight() {
-		return height;	
+		return height;
 	}
+
 	public int getInvBeamSpeed() {
 		return speed;
 	}
+
 	public void setInvBeamPosX(float x) {
 		posX = x;
 	}
+
 	public void setInvBeamPosY(float y) {
 		posY = y;
 	}
+
 	public void setInvBeamWidth(int w) {
 		width = w;
 	}
+
 	public void setInvBeamHeight(int h) {
 		height = h;
 	}
+
 	public boolean isInsideScreen(int windowHeight) {
-		if (posY < windowHeight) {
+		if (posY < windowHeight && posY > 0) {
 			return true;
 		}
 		return false;
 	}
+
 	public void updatePosition() {
 		posY += speed;
 	}
-	public RectF createRectangle(){
-		RectF rectf = new RectF(posX-width/2, posY-height/2, 
-				posX+width/2, posY+height/2);
+
+	public RectF createRectangle() {
+		RectF rectf = new RectF(posX - width / 2, posY - height / 2, posX
+				+ width / 2, posY + height / 2);
 		return rectf;
 	}
+
 	public void remove() {
-		posY = 1000;
+		posY = -1;
 	}
 }

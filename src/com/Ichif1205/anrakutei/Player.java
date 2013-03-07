@@ -7,8 +7,8 @@ public class Player {
 
 	private float posX;
 	private float posY;
-	private int width = 60;
-	private int height = 40;
+	private int width = 50;
+	private int height = 30;
 	private boolean existFlag;
 	Player(int x, int y) {
 		posX = x;
