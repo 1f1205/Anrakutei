@@ -1,6 +1,9 @@
 package com.Ichif1205.anrakutei;
 
+import java.util.Random;
+
 import android.graphics.RectF;
+import android.util.FloatMath;
 
 public class InvaderBeam {
 
@@ -9,10 +12,17 @@ public class InvaderBeam {
 	private int width = 5;
 	private int height = 20;
 	private int speed = 5;
+	private int pattern;
+	private float centerX;
 
 	InvaderBeam(float x, float y) {
 		posX = x;
 		posY = y;
+		Random ptn_rand = new Random();
+		pattern = ptn_rand.nextInt(4);
+		if (pattern >= 1) {
+			centerX = posX;
+		}
 	}
 
 	public float getInvBeamPosX() {
@@ -59,7 +69,19 @@ public class InvaderBeam {
 	}
 
 	public void updatePosition() {
-		posY += speed;
+		// patternによって移動パターン決定
+		if (pattern == 0) {
+			posY += speed;
+		} else if (pattern == 1) {
+			posY += speed;
+			posX = 60 * FloatMath.cos(posY / 60) + centerX;
+		} else if (pattern == 2) {
+			posY += speed;
+			posX = posY * (float) Math.tan(Math.PI / 6) + centerX;
+		} else {
+			posY += speed;
+			posX = -posY * (float) Math.tan(Math.PI / 6) + centerX;
+		}
 	}
 
 	public RectF createRectangle() {
