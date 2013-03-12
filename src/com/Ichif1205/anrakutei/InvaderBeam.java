@@ -11,9 +11,10 @@ public class InvaderBeam {
 	private float posY;
 	private int width = 5;
 	private int height = 20;
-	private int speed = 5;
+	private int speed = 4;
 	private int pattern;
 	private float centerX;
+	private float dy;
 
 	InvaderBeam(float x, float y) {
 		posX = x;
@@ -62,7 +63,7 @@ public class InvaderBeam {
 	}
 
 	public boolean isInsideScreen(int windowHeight) {
-		if (posY < windowHeight && posY > 0) {
+		if (posY <= windowHeight && posY >= 0) {
 			return true;
 		}
 		return false;
@@ -77,10 +78,12 @@ public class InvaderBeam {
 			posX = 60 * FloatMath.cos(posY / 60) + centerX;
 		} else if (pattern == 2) {
 			posY += speed;
-			posX = posY * (float) Math.tan(Math.PI / 6) + centerX;
+			dy += speed * (float) Math.tan(Math.PI / 9);
+			posX = dy + centerX;
 		} else {
 			posY += speed;
-			posX = -posY * (float) Math.tan(Math.PI / 6) + centerX;
+			dy += speed * (float) Math.tan(Math.PI / 9);
+			posX = -dy + centerX;
 		}
 	}
 

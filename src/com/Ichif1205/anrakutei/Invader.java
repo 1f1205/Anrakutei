@@ -12,29 +12,32 @@ public class Invader {
 	private float posY;
 	private int width = 36;
 	private int height = 36;
-	private int speedX = 4;
-	private int speedY = 4;
-	private int pattern;
-	private float theta = 0;
-	private int radius = 50;
-	private float centerX;
-	private float centerY;
-	private float alpha = 0;
 	private boolean existFlag;
 	private InvarderListener mIl;
 	private int mTerm = 1000;
 	private Timer mShootTimer;
+	// 敵の動き関係
+	private int speedX = 4;
+	private int speedY = 4;
+	private int pattern;
+	private float theta = 0;
+	private int radius;
+	private float centerX;
+	private float centerY;
+	private float alpha = 0;
 
 	Invader(float x, float y, InvarderListener li) {
 		posX = getRandomPosition(x);
 		posY = getRandomPosition(y);
 		existFlag = true;
 		mIl = li;
-		Random ptn_rand = new Random();
-		pattern = ptn_rand.nextInt(3);
-		if (pattern == 2) {
+		pattern = (int) (Math.random() * 10);
+		if (pattern >= 8) {
 			centerX = posX;
 			centerY = posY;
+			Random r_rand = new Random();
+			int r_times = r_rand.nextInt(4) + 1;
+			radius = 25 * r_times;
 		}
 
 		mShootTimer = new Timer();
@@ -82,9 +85,15 @@ public class Invader {
 	}
 
 	public float getRandomPosition(float length) {
-		Random randf = new Random();
-		float rate = randf.nextFloat();
-		return rate * length;
+		float rate;
+		while (true) {
+			rate = (float) Math.random();
+			if (rate > 0.1 && rate < 0.9) {
+				break;
+			}
+		}
+		float pos = rate * length;
+		return pos;
 	}
 
 	public boolean isShooted(float shotX, float shotY) {
@@ -96,14 +105,14 @@ public class Invader {
 	}
 
 	public boolean isOverBoundaryWidth(int w) {
-		if (posX > w - width || posX < 0) {
+		if (posX > w - width || posX <= 0) {
 			return true;
 		}
 		return false;
 	}
 
 	public boolean isOverBoundaryHeight(int h) {
-		if (posY > h - height || posY < 0) {
+		if (posY > h - height || posY <= 0) {
 			return true;
 		}
 		return false;
@@ -119,9 +128,10 @@ public class Invader {
 
 	public void updatePosition() {
 		// patternの値によって移動パターン決定
-		if (pattern == 0) {
+		// 0-3: 横移動, 4-7: 斜め移動, 8-9: 円移動
+		if (pattern <= 3) {
 			moveLR();
-		} else if (pattern == 1) {
+		} else if (pattern <= 7) {
 			moveSkew();
 		} else {
 			moveCircle();
@@ -129,16 +139,35 @@ public class Invader {
 	}
 
 	private void moveLR() {
-		posX += speedX;
+		if (pattern <= 1) {
+			posX += speedX;
+		} else {
+			posX -= speedX;
+		}
 	}
 
 	private void moveSkew() {
-		posX += speedX;
-		posY += speedY;
+		if (pattern == 4) {
+			posX += speedX;
+			posY += speedY;
+		} else if (pattern == 5) {
+			posX -= speedX;
+			posY += speedY;
+		} else if (pattern == 6) {
+			posX += speedX;
+			posY -= speedY;
+		} else {
+			posX -= speedX;
+			posY -= speedY;
+		}
 	}
 
 	private void moveCircle() {
-		alpha += speedX * 1.0 / radius;
+		if (pattern == 8) {
+			alpha += speedX * 1.0 / radius;
+		} else {
+			alpha -= speedX * 1.0 / radius;
+		}
 		posX = radius * FloatMath.cos(theta + alpha) + centerX;
 		posY = radius * FloatMath.sin(theta + alpha) + centerY;
 	}
