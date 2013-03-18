@@ -1,6 +1,7 @@
 package com.Ichif1205.anrakutei;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -27,8 +28,15 @@ public class FieldSurfaceView extends SurfaceView implements
 	private Canvas mCanvas = null;
 	private Paint mPaint;
 	private Player mPlayer;
-	private Bitmap mBitmap = BitmapFactory.decodeResource(getResources(),
+	private Bitmap mBitmap;
+	private Bitmap mBitmap1 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.invader);
+	private Bitmap mBitmap2 = BitmapFactory.decodeResource(getResources(),
+			R.drawable.invader2);
+	private Bitmap mBitmap3 = BitmapFactory.decodeResource(getResources(),
+			R.drawable.invader3);
+	private Bitmap mBitmap4 = BitmapFactory.decodeResource(getResources(),
+			R.drawable.invader4);
 	private Thread mThread;
 	private ArrayList<Shot> mShotList;
 	private ArrayList<InvaderBeam> mInvBeamList;
@@ -75,7 +83,22 @@ public class FieldSurfaceView extends SurfaceView implements
 			Invader invader = new Invader(getWidth(), getHeight() * 3 / 4, this);
 			mInvaderList.add(invader);
 		}
-		mBitmap = Bitmap.createScaledBitmap(mBitmap, 36, 36, true);
+		// 　敵をランダムで決定
+		mBitmap1 = Bitmap.createScaledBitmap(mBitmap1, 36, 36, true);
+		mBitmap2 = Bitmap.createScaledBitmap(mBitmap2, 36, 36, true);
+		mBitmap3 = Bitmap.createScaledBitmap(mBitmap3, 36, 36, true);
+		mBitmap4 = Bitmap.createScaledBitmap(mBitmap4, 36, 36, true);
+		Random rand = new Random();
+		int inv_rand = rand.nextInt(4);
+		if (inv_rand == 0) {
+			mBitmap = mBitmap1;
+		} else if (inv_rand == 1) {
+			mBitmap = mBitmap2;
+		} else if (inv_rand == 2) {
+			mBitmap = mBitmap3;
+		} else {
+			mBitmap = mBitmap4;
+		}
 
 		mThread.start();
 	}
