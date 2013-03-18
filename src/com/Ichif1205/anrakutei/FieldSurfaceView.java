@@ -34,6 +34,8 @@ public class FieldSurfaceView extends SurfaceView implements
 	private ArrayList<InvaderBeam> mInvBeamList;
 	private ArrayList<Invader> mInvaderList;
 	private ArrayList<Item> mItem;
+	
+	private boolean mExecFlg = true;
 
 	public FieldSurfaceView(Context context) {
 		super(context);
@@ -80,7 +82,7 @@ public class FieldSurfaceView extends SurfaceView implements
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		// TODO 自動生成されたメソッド・スタブ
+		mExecFlg = false;
 		mThread = null;
 	}
 
@@ -201,9 +203,25 @@ public class FieldSurfaceView extends SurfaceView implements
 
 	@Override
 	public void run() {
-		while (mThread != null) {
+		while (mExecFlg) {
 			onDraw();
 		}
+	}
+	
+	public void restartLoop() {
+		mExecFlg = true;
+	}
+	
+	public void endLoop() {
+		synchronized (mThread) {
+            mExecFlg = false;
+        }
+         
+        try {
+            mThread.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }	
 	}
 
 	@Override
