@@ -220,7 +220,6 @@ public class FieldSurfaceView extends SurfaceView implements
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
 			// mPlayer.setPlayerPosX(event.getX());
 		}
-
 		return true;
 	}
 
@@ -231,20 +230,21 @@ public class FieldSurfaceView extends SurfaceView implements
 		}
 	}
 	
+	/**
+	 * スレッドを再起動
+	 */
 	public void restartLoop() {
-		mExecFlg = true;
+			mExecFlg = true;
+			mThread = new Thread(this);
+			mThread.start();
 	}
 	
+	/**
+	 * スレッドを終了
+	 */
 	public void endLoop() {
-		synchronized (mThread) {
             mExecFlg = false;
-        }
-         
-        try {
-            mThread.join();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }	
+            mThread = null;
 	}
 
 	@Override

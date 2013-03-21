@@ -6,9 +6,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 public class MainActivity extends Activity {
-	
-	//private SurfaceView mSurfaceView;
+	private static String TAG = MainActivity.class.getSimpleName();
 	private FieldSurfaceView mFieldSurfaceView;
+	private boolean mPauseFlg = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -16,51 +16,74 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		mFieldSurfaceView = (FieldSurfaceView)findViewById(R.id.FieldSurfaceView_id);
-		//mFieldSurfaceView = new FieldSurfaceView(this, mSurfaceView);
-//		mFieldSurfaceView = new FieldSurfaceView(this);
-//		setContentView(mFieldSurfaceView);
-		
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		mFieldSurfaceView.endLoop();
 	}
 	
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		mFieldSurfaceView.restartLoop();
 	}
 	
 	@Override
 	public void onBackPressed() {
-		mFieldSurfaceView.endLoop();
-		showDialog();
-		super.onBackPressed();
+		// mPauseFlg が trueの時はダイアログが表示されている
+		if (!mPauseFlg) {
+			// ダイアログ表示
+			mPauseFlg = true;
+			mFieldSurfaceView.endLoop();
+			showDialog();
+		} else {
+			// ダイアログで終了を選択された時
+			mPauseFlg = false;
+			mFieldSurfaceView.surfaceDestroyed(null);
+			super.onBackPressed();
+		}
 	}
 	
+	@Override
+	protected void onUserLeaveHint() {
+		// mPauseFlg が trueの時はダイアログが表示されている
+		if (!mPauseFlg) {
+			// ダイアログ表示
+			mPauseFlg = true;
+			mFieldSurfaceView.endLoop();
+			showDialog();
+		} else {
+			// ダイアログで終了を選択された時
+			mPauseFlg = false;
+			mFieldSurfaceView.surfaceDestroyed(null);
+			super.onUserLeaveHint();
+		}
+	}
+	
+	/**
+	 * ダイアログ表示
+	 */
 	private void showDialog() {
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         // アラートダイアログのタイトルを設定します
-        alertDialogBuilder.setTitle("タイトル");
+        alertDialogBuilder.setTitle("終了");
         // アラートダイアログのメッセージを設定します
-        alertDialogBuilder.setMessage("メッセージ");
+        alertDialogBuilder.setMessage("ゲームを終了しますか？");
         // アラートダイアログの肯定ボタンがクリックされた時に呼び出されるコールバックリスナーを登録します
-        alertDialogBuilder.setPositiveButton("肯定",
+        alertDialogBuilder.setPositiveButton("はい",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                    	
+                    	onBackPressed();
                     }
                 });
         // アラートダイアログの否定ボタンがクリックされた時に呼び出されるコールバックリスナーを登録します
-        alertDialogBuilder.setNegativeButton("否定",
+        alertDialogBuilder.setNegativeButton("いいえ",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                    	finish();
+                    	mPauseFlg = false;
+                    	mFieldSurfaceView.restartLoop();
                     }
                 });
         // アラートダイアログのキャンセルが可能かどうかを設定します
@@ -69,11 +92,4 @@ public class MainActivity extends Activity {
         // アラートダイアログを表示します
         alertDialog.show();
 	}
-	/*@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
-	}*/
-
 }
