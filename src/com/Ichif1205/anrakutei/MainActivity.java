@@ -3,6 +3,7 @@ package com.Ichif1205.anrakutei;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -16,10 +17,16 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d(TAG, "onCreate");
 		setContentView(R.layout.activity_main);
+		Typeface face = Utils.getFonts(getApplicationContext());
 		
+		TextView stageView = (TextView)findViewById(R.id.stageView_id);
 		TextView scoreView = (TextView)findViewById(R.id.scoreView_id);
 		scoreView.setText("0");
+		stageView.setTypeface(face);
+		scoreView.setTypeface(face);
+		
 		Log.d(TAG, "Start FindView");
 		mFieldSurfaceView = (FieldSurfaceView)findViewById(R.id.FieldSurfaceView_id);
 		mFieldSurfaceView.setScoreView(scoreView);
@@ -72,15 +79,7 @@ public class MainActivity extends Activity {
 			// ダイアログで終了を選択された時
 			mPauseFlg = false;
 			mFieldSurfaceView.surfaceDestroyed(null);
-			super.onUserLeaveHint();
-		}
-	}
-	
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		
-		if (mFieldSurfaceView != null) {
+			super.onBackPressed();
 		}
 	}
 	
