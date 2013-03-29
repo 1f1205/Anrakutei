@@ -2,6 +2,7 @@ package com.Ichif1205.anrakutei;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -14,10 +15,18 @@ public class HomeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 		
+		// init
 		Button button_play = (Button)findViewById(R.id.play);
         Button button_rank = (Button)findViewById(R.id.ranking);
         Button button_result = (Button)findViewById(R.id.result);
         
+        // Setting Font
+        Typeface face = Utils.getFonts(getApplicationContext());
+        button_play.setTypeface(face);
+        button_rank.setTypeface(face);
+        button_result.setTypeface(face);
+        
+        // Setting Listener
         button_play.setOnClickListener(new View.OnClickListener() {
         	public void onClick(View view) {
         		Intent intent = new Intent(HomeActivity.this, MainActivity.class);

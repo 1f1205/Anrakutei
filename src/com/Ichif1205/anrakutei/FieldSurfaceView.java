@@ -37,7 +37,10 @@ public class FieldSurfaceView extends SurfaceView implements
 			R.drawable.invader3);
 	private Bitmap mBitmap4 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.invader4);
+<<<<<<< HEAD
 	private Score mScore;
+=======
+>>>>>>> branch 'master' of https://github.com/wkodate/Anrakutei.git
 	private Bitmap mBitmap5 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.item1);
 	private Thread mThread;
@@ -45,7 +48,10 @@ public class FieldSurfaceView extends SurfaceView implements
 	private ArrayList<InvaderBeam> mInvBeamList;
 	private ArrayList<Invader> mInvaderList;
 	private ArrayList<Item> mItem;
+<<<<<<< HEAD
 
+=======
+>>>>>>> branch 'master' of https://github.com/wkodate/Anrakutei.git
 	private int mItemFlg = 0;
 
 	private boolean mExecFlg = true;
@@ -104,8 +110,11 @@ public class FieldSurfaceView extends SurfaceView implements
 		} else {
 			mBitmap = mBitmap4;
 		}
+<<<<<<< HEAD
 		
 		mScore = new Score(); 
+=======
+>>>>>>> branch 'master' of https://github.com/wkodate/Anrakutei.git
 		// アイテム
 		mBitmap5 = Bitmap.createScaledBitmap(mBitmap5, 36, 36, true);
 
@@ -139,7 +148,10 @@ public class FieldSurfaceView extends SurfaceView implements
 					if (invIsShooted) {
 						shot.remove();
 						invader.remove();
+<<<<<<< HEAD
 						mScore.addScore();
+=======
+>>>>>>> branch 'master' of https://github.com/wkodate/Anrakutei.git
 						mItemFlg = 1;
 					}
 				}
