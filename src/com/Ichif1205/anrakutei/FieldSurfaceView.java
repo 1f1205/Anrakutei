@@ -37,12 +37,17 @@ public class FieldSurfaceView extends SurfaceView implements
 			R.drawable.invader3);
 	private Bitmap mBitmap4 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.invader4);
+	private Score mScore;
+	private Bitmap mBitmap5 = BitmapFactory.decodeResource(getResources(),
+			R.drawable.item1);
 	private Thread mThread;
 	private ArrayList<Shot> mShotList;
 	private ArrayList<InvaderBeam> mInvBeamList;
 	private ArrayList<Invader> mInvaderList;
 	private ArrayList<Item> mItem;
-	
+
+	private int mItemFlg = 0;
+
 	private boolean mExecFlg = true;
 
 	public FieldSurfaceView(Context context) {
@@ -99,6 +104,10 @@ public class FieldSurfaceView extends SurfaceView implements
 		} else {
 			mBitmap = mBitmap4;
 		}
+		
+		mScore = new Score(); 
+		// アイテム
+		mBitmap5 = Bitmap.createScaledBitmap(mBitmap5, 36, 36, true);
 
 		mThread.start();
 	}
@@ -130,6 +139,8 @@ public class FieldSurfaceView extends SurfaceView implements
 					if (invIsShooted) {
 						shot.remove();
 						invader.remove();
+						mScore.addScore();
+						mItemFlg = 1;
 					}
 				}
 			}
@@ -159,6 +170,23 @@ public class FieldSurfaceView extends SurfaceView implements
 			// ビームが画面上からはみ出るまで表示させ続ける
 			if (invBeam.isInsideScreen(getHeight())) {
 				drawInvBeam(invBeam);
+			}
+		}
+		// アイテムの描画
+		if (mItemFlg == 1) {
+			for (int i = 0; i < mItem.size(); i++) {
+				Item item = mItem.get(i);
+				boolean pIsShooted = mPlayer.isShooted(item.getItemPosX(),
+						item.getItemPosY());
+				// ビームが自機に当たったら消える
+				if (pIsShooted) {
+					item.remove();
+					mItemFlg = 0;
+				}
+				// ビームが画面上からはみ出るまで表示させ続ける
+				if (item.isInsideScreen(getHeight())) {
+					drawItem(item);
+				}
 			}
 		}
 		getHolder().unlockCanvasAndPost(mCanvas);
@@ -203,9 +231,10 @@ public class FieldSurfaceView extends SurfaceView implements
 
 	// Item生成
 	protected void drawItem(Item item) {
-		RectF rectf = item.createRectangle();
+		item.updatePosition();
 		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-		mCanvas.drawRect(rectf, mPaint);
+		mCanvas.drawBitmap(mBitmap5, item.getItemPosX(), item.getItemPosY(),
+				mPaint);
 	}
 
 	@Override
@@ -229,28 +258,34 @@ public class FieldSurfaceView extends SurfaceView implements
 			onDraw();
 		}
 	}
-	
+
 	/**
 	 * スレッドを再起動
 	 */
 	public void restartLoop() {
-			mExecFlg = true;
-			mThread = new Thread(this);
-			mThread.start();
+		mExecFlg = true;
+		mThread = new Thread(this);
+		mThread.start();
 	}
-	
+
 	/**
 	 * スレッドを終了
 	 */
 	public void endLoop() {
-            mExecFlg = false;
-            mThread = null;
+		mExecFlg = false;
+		mThread = null;
 	}
 
 	@Override
 	public void shootBeamEvent(float shotX, float shotY) {
 		InvaderBeam invBeam = new InvaderBeam(shotX, shotY);
 		mInvBeamList.add(invBeam);
+	}
+
+	@Override
+	public void Item(float shotX, float shotY) {
+		Item item = new Item(shotX, shotY);
+		mItem.add(item);
 	}
 
 }
