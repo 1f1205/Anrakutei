@@ -3,7 +3,9 @@ package com.Ichif1205.anrakutei;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	private static String TAG = MainActivity.class.getSimpleName();
@@ -15,6 +17,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		TextView scoreView = (TextView)findViewById(R.id.scoreView_id);
+		scoreView.setText("SCORE");
 		mFieldSurfaceView = (FieldSurfaceView)findViewById(R.id.FieldSurfaceView_id);
 	}
 
