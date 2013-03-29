@@ -39,14 +39,18 @@ public class FieldSurfaceView extends SurfaceView implements
 			R.drawable.invader4);
 	private Bitmap mBitmap5 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.item1);
+	private Bitmap mBitmap6 = BitmapFactory.decodeResource(getResources(),
+			R.drawable.item2);
 	private Thread mThread;
 	private ArrayList<Shot> mShotList;
 	private ArrayList<InvaderBeam> mInvBeamList;
 	private ArrayList<Invader> mInvaderList;
 	private ArrayList<Item> mItem;
 	private int mItemFlg = 0;
+	private String item_pattern; // アイテムの種類
 	private int mItemPos;
 	private int mItemM = 0;
+	public int mItemB = 0;
 
 	private boolean mExecFlg = true;
 
@@ -106,6 +110,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		}
 		// アイテム
 		mBitmap5 = Bitmap.createScaledBitmap(mBitmap5, 36, 36, true);
+		mBitmap6 = Bitmap.createScaledBitmap(mBitmap6, 36, 36, true);
 
 		mThread.start();
 	}
@@ -189,10 +194,14 @@ public class FieldSurfaceView extends SurfaceView implements
 				// アイテムが自機に当たったら消える
 				if (pIsShooted) {
 					item.remove();
-					mItemM = 1;
+					if (item_pattern == "M") {
+						mItemM = 1;
+					} else if (item_pattern == "B") {
+						mItemB = 1;
+					}
 					mItemFlg = 0;
 				}
-				// ビームが画面上からはみ出るまで表示させ続ける
+				// アイテムが画面上からはみ出るまで表示させ続ける
 				if (item.isInsideScreen(getHeight())) {
 					drawItem(item);
 				}
@@ -226,7 +235,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	// 自機の弾描画
 	protected void drawShot(Shot shot) {
 		shot.updatePosition();
-		RectF rectf = shot.createRectangle();
+		RectF rectf = shot.createRectangle(mItemB);
 		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		mCanvas.drawRect(rectf, mPaint);
 	}
@@ -242,9 +251,16 @@ public class FieldSurfaceView extends SurfaceView implements
 	// Item生成
 	protected void drawItem(Item item) {
 		item.updatePosition();
+		item_pattern = item.selectItem();
 		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-		mCanvas.drawBitmap(mBitmap5, item.getItemPosX(), item.getItemPosY(),
-				mPaint);
+		if (item_pattern == "M") {
+			mCanvas.drawBitmap(mBitmap5, item.getItemPosX(),
+					item.getItemPosY(), mPaint);
+		}
+		if (item_pattern == "B") {
+			mCanvas.drawBitmap(mBitmap6, item.getItemPosX(),
+					item.getItemPosY(), mPaint);
+		}
 	}
 
 	@Override

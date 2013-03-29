@@ -15,6 +15,8 @@ public class Item {
 	private int pattern;
 	private float centerX;
 	private float dy;
+	private String select_item;
+	private int item_pattern;
 
 	Item(float x, float y) {
 		posX = x;
@@ -67,6 +69,17 @@ public class Item {
 			return true;
 		}
 		return false;
+	}
+
+	public String selectItem() {
+		Random ptn_rand = new Random();
+		item_pattern = ptn_rand.nextInt(1);
+		if (pattern == 0) {
+			select_item = "M";
+		} else if (pattern == 1) {
+			select_item = "B";
+		}
+		return select_item;
 	}
 
 	public void updatePosition() {

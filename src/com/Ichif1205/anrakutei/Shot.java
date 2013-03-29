@@ -55,7 +55,12 @@ public class Shot {
 		posY -= speed;
 	}
 
-	public RectF createRectangle() {
+	public RectF createRectangle(int x) {
+		// itemBをとった場合
+		if(x == 1){
+			width = 10;
+		}
+
 		RectF rectf = new RectF(posX - width / 2, posY - height / 2, posX
 				+ width / 2, posY + height / 2);
 		return rectf;
