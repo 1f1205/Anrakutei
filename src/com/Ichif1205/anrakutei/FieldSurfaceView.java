@@ -11,8 +11,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
-import android.os.Parcelable;
-import android.os.Handler;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -63,6 +62,9 @@ public class FieldSurfaceView extends SurfaceView implements
 	private int mItemM = 0;
 	public int mItemB = 0;
 	public int mItemS = 0;
+	
+	MediaPlayer bgm = MediaPlayer.create(getContext(), R.raw.bgm);
+    MediaPlayer se = MediaPlayer.create(getContext(), R.raw.shot);
 
 	private boolean mExecFlg = true;
 
@@ -144,6 +146,9 @@ public class FieldSurfaceView extends SurfaceView implements
 		mBitmap5 = Bitmap.createScaledBitmap(mBitmap5, 36, 36, true);
 		mBitmap6 = Bitmap.createScaledBitmap(mBitmap6, 36, 36, true);
 		mBitmap7 = Bitmap.createScaledBitmap(mBitmap7, 36, 36, true);
+		bgm.setLooping(true);
+        bgm.start();
+		
 		mHandler = new Handler();
 	}
 	
@@ -322,6 +327,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			se.start();
 			// 弾発射
 			Shot shot = new Shot(mPlayer.getPlayerPosX(),
 					mPlayer.getPlayerPosY());
@@ -351,6 +357,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		mExecFlg = true;
 		mThread = new Thread(this);
 		mThread.start();
+		bgm.start();
 	}
 
 	/**
@@ -362,6 +369,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		Log.d(TAG, mInvBeamList.size()+":End InvBeam");
 		mExecFlg = false;
 		mThread = null;
+		bgm.pause();
 	}
 
 	@Override
