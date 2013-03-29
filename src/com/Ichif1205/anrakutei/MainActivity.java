@@ -18,9 +18,10 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		TextView scoreView = (TextView)findViewById(R.id.scoreView_id);
-		scoreView.setText("SCORE");
+		scoreView.setText("0");
 		Log.d(TAG, "Start FindView");
 		mFieldSurfaceView = (FieldSurfaceView)findViewById(R.id.FieldSurfaceView_id);
+		mFieldSurfaceView.setScoreView(scoreView);
 		mFieldSurfaceView.saveInstance();
 		Log.d(TAG, "End FindView");
 	}
