@@ -45,6 +45,8 @@ public class FieldSurfaceView extends SurfaceView implements
 			R.drawable.item1);
 	private Bitmap mBitmap6 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.item2);
+	private Bitmap mBitmap7 = BitmapFactory.decodeResource(getResources(),
+			R.drawable.item3);
 	private Thread mThread;
 	private ArrayList<Shot> mShotList;
 	private ArrayList<InvaderBeam> mInvBeamList;
@@ -58,6 +60,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	private int mItemPos;
 	private int mItemM = 0;
 	public int mItemB = 0;
+	public int mItemS = 0;
 
 	private boolean mExecFlg = true;
 
@@ -125,6 +128,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		// アイテム
 		mBitmap5 = Bitmap.createScaledBitmap(mBitmap5, 36, 36, true);
 		mBitmap6 = Bitmap.createScaledBitmap(mBitmap6, 36, 36, true);
+		mBitmap7 = Bitmap.createScaledBitmap(mBitmap7, 36, 36, true);
 		mHandler = new Handler();
 
 		mThread.start();
@@ -220,6 +224,8 @@ public class FieldSurfaceView extends SurfaceView implements
 						mItemM = 1;
 					} else if (item_pattern == "B") {
 						mItemB = 1;
+					} else if (item_pattern == "S") {
+						mItemS = 1;
 					}
 					mItemFlg = 0;
 				}
@@ -237,7 +243,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	protected void drawPlayer() {
 		Path path = new Path();
 		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-		mCanvas.drawPath(mPlayer.draw(path), mPaint);
+		mCanvas.drawPath(mPlayer.draw(path, mItemS), mPaint);
 	}
 
 	// 敵描画
@@ -278,9 +284,11 @@ public class FieldSurfaceView extends SurfaceView implements
 		if (item_pattern == "M") {
 			mCanvas.drawBitmap(mBitmap5, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
-		}
-		if (item_pattern == "B") {
+		}else if (item_pattern == "B") {
 			mCanvas.drawBitmap(mBitmap6, item.getItemPosX(),
+					item.getItemPosY(), mPaint);
+		}else if (item_pattern == "S") {
+			mCanvas.drawBitmap(mBitmap7, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
 		}
 	}
