@@ -11,6 +11,7 @@ public class MainActivity extends Activity {
 	private static String TAG = MainActivity.class.getSimpleName();
 	private FieldSurfaceView mFieldSurfaceView;
 	private boolean mPauseFlg = false;
+	private Status mStatus;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +23,6 @@ public class MainActivity extends Activity {
 		Log.d(TAG, "Start FindView");
 		mFieldSurfaceView = (FieldSurfaceView)findViewById(R.id.FieldSurfaceView_id);
 		mFieldSurfaceView.setScoreView(scoreView);
-		mFieldSurfaceView.saveInstance();
 		Log.d(TAG, "End FindView");
 	}
 	
@@ -49,6 +49,7 @@ public class MainActivity extends Activity {
 			// ダイアログ表示
 			mPauseFlg = true;
 			mFieldSurfaceView.endLoop();
+			mStatus = mFieldSurfaceView.saveStatus();
 			showDialog();
 		} else {
 			// ダイアログで終了を選択された時
@@ -65,6 +66,7 @@ public class MainActivity extends Activity {
 			// ダイアログ表示
 			mPauseFlg = true;
 			mFieldSurfaceView.endLoop();
+			mStatus = mFieldSurfaceView.saveStatus();
 			showDialog();
 		} else {
 			// ダイアログで終了を選択された時
@@ -104,6 +106,7 @@ public class MainActivity extends Activity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                    	mFieldSurfaceView.setInstance(mStatus);
                     	mPauseFlg = false;
                     	mFieldSurfaceView.restartLoop();
                     }

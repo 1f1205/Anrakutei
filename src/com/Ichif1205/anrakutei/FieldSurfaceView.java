@@ -50,6 +50,8 @@ public class FieldSurfaceView extends SurfaceView implements
 	private ArrayList<InvaderBeam> mInvBeamList;
 	private ArrayList<Invader> mInvaderList;
 	private ArrayList<Item> mItem;
+	private Status mStatus = null; // ゲームの状態を保存
+	private boolean mPauseFlg = false;
 	private int mItemFlg = 0;
 	private String item_pattern; // アイテムの種類
 	private TextView mScoreView;
@@ -75,6 +77,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		mHolder.setFixedSize(getWidth(), getHeight());
 		Log.d(TAG, "Constract");
 	}
+	
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
@@ -86,12 +89,24 @@ public class FieldSurfaceView extends SurfaceView implements
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.d(TAG, "Create SurfaceView");
 		
-		if (mInvaderList != null) {
-			Log.d(TAG, "Invader True");
+		// ゲーム状態を取得
+		if (mStatus == null) {
+			init();
+		} else {
+			setGameStates();
 		}
 		
+		if (!mPauseFlg) {
+			mThread.start();
+		}
+	}
+	
+	/**
+	 * 初期化
+	 */
+	public void init() {
 		mThread = new Thread(this);
-
+		Log.d(TAG, "init");
 		mPaint = new Paint();
 		mPaint.setColor(Color.GREEN);
 		mPaint.setAntiAlias(true);
@@ -126,13 +141,24 @@ public class FieldSurfaceView extends SurfaceView implements
 		mBitmap5 = Bitmap.createScaledBitmap(mBitmap5, 36, 36, true);
 		mBitmap6 = Bitmap.createScaledBitmap(mBitmap6, 36, 36, true);
 		mHandler = new Handler();
-
-		mThread.start();
+	}
+	
+	/**
+	 * ゲームの状態をセット
+	 */
+	private void setGameStates() {
+		Log.d(TAG, "setGameStates");
+		mBitmap = mStatus.bitmap;
+		mShotList = mStatus.shotList;
+		mInvBeamList = mStatus.invBeamList;
+		mInvaderList = mStatus.invaderList;
+		mItem = mStatus.item;
+		mPauseFlg = mStatus.pauseFlg;
+		mStatus = null;
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		
 		mExecFlg = false;
 		mThread = null;
 	}
@@ -311,6 +337,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	 * スレッドを再起動
 	 */
 	public void restartLoop() {
+		mPauseFlg = false;
 		Log.d(TAG, mInvaderList.size()+"Restart Invader");
 		Log.d(TAG, mInvBeamList.size()+"Restart InvBeam");
 		mExecFlg = true;
@@ -322,6 +349,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	 * スレッドを終了
 	 */
 	public void endLoop() {
+		mPauseFlg = true;
 		Log.d(TAG, mInvaderList.size()+":End Invader");
 		Log.d(TAG, mInvBeamList.size()+":End InvBeam");
 		mExecFlg = false;
@@ -344,9 +372,29 @@ public class FieldSurfaceView extends SurfaceView implements
 		mItem.add(item);
 	}
 	
-	public void saveInstance() {
-		Log.d(TAG, "SaveInstance");
+	/**
+	 * ゲーム状態を保存する
+	 * @return
+	 */
+	public Status saveStatus() {
+		mStatus = new Status();
+		mStatus.bitmap = mBitmap;
+		mStatus.shotList = mShotList;
+		mStatus.invBeamList = mInvBeamList;
+		mStatus.invaderList = mInvaderList;
+		mStatus.item = mItem;
+		mStatus.pauseFlg = mPauseFlg;
+		
+		return mStatus;
 	}
+	
+	/**
+	 * Activityからゲーム状態をセットする
+	 */
+	public void setInstance(Status status) {
+		mStatus = status;
+	}
+	
 	public void setScoreView(TextView tv) {
 		mScoreView = tv;
 	}
