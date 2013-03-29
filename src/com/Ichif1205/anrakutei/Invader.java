@@ -180,10 +180,13 @@ public class Invader {
 
 	public interface InvarderListener {
 		public void shootBeamEvent(float shotX, float shotY);
+
+		public void Item(float shotX, float shotY);
 	}
 
 	class ShootTask extends TimerTask {
 		public void run() {
+			mIl.Item(posX, posY);
 			mIl.shootBeamEvent(posX, posY);
 			Random rBeam = new Random();
 			int randBeam = 1000 + (500 * rBeam.nextInt(5));
