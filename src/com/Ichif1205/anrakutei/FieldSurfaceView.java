@@ -11,6 +11,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.os.Parcelable;
+import android.os.Handler;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -69,6 +71,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		mHolder = getHolder();
 		mHolder.addCallback(this);
 		mHolder.setFixedSize(getWidth(), getHeight());
+		Log.d(TAG, "Constract");
 	}
 
 	@Override
@@ -79,6 +82,12 @@ public class FieldSurfaceView extends SurfaceView implements
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
+		Log.d(TAG, "Create SurfaceView");
+		
+		if (mInvaderList != null) {
+			Log.d(TAG, "Invader True");
+		}
+		
 		mThread = new Thread(this);
 
 		mPaint = new Paint();
@@ -121,6 +130,7 @@ public class FieldSurfaceView extends SurfaceView implements
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
+		
 		mExecFlg = false;
 		mThread = null;
 	}
@@ -299,6 +309,8 @@ public class FieldSurfaceView extends SurfaceView implements
 	 * スレッドを再起動
 	 */
 	public void restartLoop() {
+		Log.d(TAG, mInvaderList.size()+"Restart Invader");
+		Log.d(TAG, mInvBeamList.size()+"Restart InvBeam");
 		mExecFlg = true;
 		mThread = new Thread(this);
 		mThread.start();
@@ -308,12 +320,18 @@ public class FieldSurfaceView extends SurfaceView implements
 	 * スレッドを終了
 	 */
 	public void endLoop() {
+		Log.d(TAG, mInvaderList.size()+":End Invader");
+		Log.d(TAG, mInvBeamList.size()+":End InvBeam");
 		mExecFlg = false;
 		mThread = null;
 	}
 
 	@Override
 	public void shootBeamEvent(float shotX, float shotY) {
+		if (mThread == null) {
+			return;
+		}
+		Log.d(TAG, "BEAM EVENT");
 		InvaderBeam invBeam = new InvaderBeam(shotX, shotY);
 		mInvBeamList.add(invBeam);
 	}
@@ -324,6 +342,9 @@ public class FieldSurfaceView extends SurfaceView implements
 		mItem.add(item);
 	}
 	
+	public void saveInstance() {
+		Log.d(TAG, "SaveInstance");
+	}
 	public void setScoreView(TextView tv) {
 		mScoreView = tv;
 	}
