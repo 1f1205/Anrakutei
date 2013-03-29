@@ -3,8 +3,8 @@ package com.Ichif1205.anrakutei;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -19,7 +19,16 @@ public class MainActivity extends Activity {
 		
 		TextView scoreView = (TextView)findViewById(R.id.scoreView_id);
 		scoreView.setText("SCORE");
+		Log.d(TAG, "Start FindView");
 		mFieldSurfaceView = (FieldSurfaceView)findViewById(R.id.FieldSurfaceView_id);
+		mFieldSurfaceView.saveInstance();
+		Log.d(TAG, "End FindView");
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d(TAG, "onResume");
 	}
 
 	@Override
@@ -61,6 +70,14 @@ public class MainActivity extends Activity {
 			mPauseFlg = false;
 			mFieldSurfaceView.surfaceDestroyed(null);
 			super.onUserLeaveHint();
+		}
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		
+		if (mFieldSurfaceView != null) {
 		}
 	}
 	
