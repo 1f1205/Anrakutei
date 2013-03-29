@@ -44,7 +44,9 @@ public class FieldSurfaceView extends SurfaceView implements
 	private Bitmap mBitmap5 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.item1);
 	private Bitmap mBitmap6 = BitmapFactory.decodeResource(getResources(),
-			R.drawable.item1);
+			R.drawable.item2);
+	private Bitmap mBitmap7 = BitmapFactory.decodeResource(getResources(),
+			R.drawable.item3);
 	private Thread mThread;
 	private ArrayList<Shot> mShotList;
 	private ArrayList<InvaderBeam> mInvBeamList;
@@ -60,6 +62,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	private int mItemPos;
 	private int mItemM = 0;
 	public int mItemB = 0;
+	public int mItemS = 0;
 
 	private boolean mExecFlg = true;
 
@@ -140,6 +143,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		// アイテム
 		mBitmap5 = Bitmap.createScaledBitmap(mBitmap5, 36, 36, true);
 		mBitmap6 = Bitmap.createScaledBitmap(mBitmap6, 36, 36, true);
+		mBitmap7 = Bitmap.createScaledBitmap(mBitmap7, 36, 36, true);
 		mHandler = new Handler();
 	}
 	
@@ -184,11 +188,11 @@ public class FieldSurfaceView extends SurfaceView implements
 					if (invIsShooted) {
 						shot.remove();
 						invader.remove();
-						mHandler.post( new Runnable() {
-								public void run() {
-									mScore += 1000;
-									mScoreView.setText(Integer.toString(mScore));
-								}
+						mHandler.post(new Runnable() {
+							public void run() {
+								mScore += 1000;
+								mScoreView.setText(Integer.toString(mScore));
+							}
 						});
 						mItemFlg = 1;
 						mItemPos = 1;
@@ -246,6 +250,8 @@ public class FieldSurfaceView extends SurfaceView implements
 						mItemM = 1;
 					} else if (item_pattern == "B") {
 						mItemB = 1;
+					} else if (item_pattern == "S") {
+						mItemS = 1;
 					}
 					mItemFlg = 0;
 				}
@@ -263,7 +269,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	protected void drawPlayer() {
 		Path path = new Path();
 		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-		mCanvas.drawPath(mPlayer.draw(path), mPaint);
+		mCanvas.drawPath(mPlayer.draw(path, mItemS), mPaint);
 	}
 
 	// 敵描画
@@ -304,9 +310,11 @@ public class FieldSurfaceView extends SurfaceView implements
 		if (item_pattern == "M") {
 			mCanvas.drawBitmap(mBitmap5, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
-		}
-		if (item_pattern == "B") {
+		}else if (item_pattern == "B") {
 			mCanvas.drawBitmap(mBitmap6, item.getItemPosX(),
+					item.getItemPosY(), mPaint);
+		}else if (item_pattern == "S") {
+			mCanvas.drawBitmap(mBitmap7, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
 		}
 	}
@@ -338,8 +346,8 @@ public class FieldSurfaceView extends SurfaceView implements
 	 */
 	public void restartLoop() {
 		mPauseFlg = false;
-		Log.d(TAG, mInvaderList.size()+"Restart Invader");
-		Log.d(TAG, mInvBeamList.size()+"Restart InvBeam");
+		Log.d(TAG, mInvaderList.size() + "Restart Invader");
+		Log.d(TAG, mInvBeamList.size() + "Restart InvBeam");
 		mExecFlg = true;
 		mThread = new Thread(this);
 		mThread.start();

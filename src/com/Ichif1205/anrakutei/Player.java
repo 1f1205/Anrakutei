@@ -43,7 +43,11 @@ public class Player {
 	public void setPlayerHeight(int h) {
 		height = h;
 	}
-	public Path draw(Path path) {
+	public Path draw(Path path, int x) {
+		// itemSをとった場合
+				if(x == 1){
+					width = 15;
+				}
 		path.moveTo(posX, posY);
 		//左下から反時計回りに描画
 		path.lineTo(posX-width/2, posY+height/4);
