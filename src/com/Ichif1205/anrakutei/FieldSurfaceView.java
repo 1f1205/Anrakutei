@@ -85,11 +85,11 @@ public class FieldSurfaceView extends SurfaceView implements
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.d(TAG, "Create SurfaceView");
-		
+
 		if (mInvaderList != null) {
 			Log.d(TAG, "Invader True");
 		}
-		
+
 		mThread = new Thread(this);
 
 		mPaint = new Paint();
@@ -132,7 +132,7 @@ public class FieldSurfaceView extends SurfaceView implements
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		
+
 		mExecFlg = false;
 		mThread = null;
 	}
@@ -158,11 +158,11 @@ public class FieldSurfaceView extends SurfaceView implements
 					if (invIsShooted) {
 						shot.remove();
 						invader.remove();
-						mHandler.post( new Runnable() {
-								public void run() {
-									mScore += 1000;
-									mScoreView.setText(Integer.toString(mScore));
-								}
+						mHandler.post(new Runnable() {
+							public void run() {
+								mScore += 1000;
+								mScoreView.setText(Integer.toString(mScore));
+							}
 						});
 						mItemFlg = 1;
 						mItemPos = 1;
@@ -311,8 +311,8 @@ public class FieldSurfaceView extends SurfaceView implements
 	 * スレッドを再起動
 	 */
 	public void restartLoop() {
-		Log.d(TAG, mInvaderList.size()+"Restart Invader");
-		Log.d(TAG, mInvBeamList.size()+"Restart InvBeam");
+		Log.d(TAG, mInvaderList.size() + "Restart Invader");
+		Log.d(TAG, mInvBeamList.size() + "Restart InvBeam");
 		mExecFlg = true;
 		mThread = new Thread(this);
 		mThread.start();
@@ -322,8 +322,8 @@ public class FieldSurfaceView extends SurfaceView implements
 	 * スレッドを終了
 	 */
 	public void endLoop() {
-		Log.d(TAG, mInvaderList.size()+":End Invader");
-		Log.d(TAG, mInvBeamList.size()+":End InvBeam");
+		Log.d(TAG, mInvaderList.size() + ":End Invader");
+		Log.d(TAG, mInvBeamList.size() + ":End InvBeam");
 		mExecFlg = false;
 		mThread = null;
 	}
@@ -343,10 +343,11 @@ public class FieldSurfaceView extends SurfaceView implements
 		Item item = new Item(shotX, shotY);
 		mItem.add(item);
 	}
-	
+
 	public void saveInstance() {
 		Log.d(TAG, "SaveInstance");
 	}
+
 	public void setScoreView(TextView tv) {
 		mScoreView = tv;
 	}
