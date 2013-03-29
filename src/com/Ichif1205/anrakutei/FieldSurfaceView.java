@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -110,8 +111,9 @@ public class FieldSurfaceView extends SurfaceView implements
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		mExecFlg = false;
-		mThread = null;
+		
+//		mExecFlg = false;
+//		mThread = null;
 	}
 
 	protected void onDraw() {
@@ -281,6 +283,12 @@ public class FieldSurfaceView extends SurfaceView implements
 	public void Item(float shotX, float shotY) {
 		Item item = new Item(shotX, shotY);
 		mItem.add(item);
+	}
+	
+	@Override
+	protected Parcelable onSaveInstanceState() {
+		// TODO 自動生成されたメソッド・スタブ
+		return super.onSaveInstanceState();
 	}
 
 }
