@@ -3,6 +3,7 @@ package com.Ichif1205.anrakutei;
 import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -28,9 +29,11 @@ public class RankingActivity extends Activity {
 		// int count = c.getCount(); //record数
 		boolean isEof = cursor.moveToFirst();
 		int i = 1;
+		Typeface face = Utils.getFonts(getApplicationContext());
 		while (isEof) {
 			TextView tv = new TextView(this);
 			tv.setText(String.format("%d : %d : %d", i, cursor.getInt(1), cursor.getInt(2)));
+			tv.setTypeface(face);
 			isEof = cursor.moveToNext();
 			layout.addView(tv);
 			i++;
