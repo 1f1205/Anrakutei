@@ -11,11 +11,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.TextView;
 
 import com.Ichif1205.anrakutei.Invader.InvarderListener;
 
@@ -39,8 +41,6 @@ public class FieldSurfaceView extends SurfaceView implements
 			R.drawable.invader4);
 	private Bitmap mBitmap5 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.item1);
-	private Bitmap mBitmap6 = BitmapFactory.decodeResource(getResources(),
-			R.drawable.item2);
 	private Thread mThread;
 	private ArrayList<Shot> mShotList;
 	private ArrayList<InvaderBeam> mInvBeamList;
@@ -48,6 +48,9 @@ public class FieldSurfaceView extends SurfaceView implements
 	private ArrayList<Item> mItem;
 	private int mItemFlg = 0;
 	private String item_pattern; // アイテムの種類
+	private TextView mScoreView;
+	private int mScore;
+	private Handler mHandler;
 	private int mItemPos;
 	private int mItemM = 0;
 	public int mItemB = 0;
@@ -111,6 +114,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		// アイテム
 		mBitmap5 = Bitmap.createScaledBitmap(mBitmap5, 36, 36, true);
 		mBitmap6 = Bitmap.createScaledBitmap(mBitmap6, 36, 36, true);
+		mHandler = new Handler();
 
 		mThread.start();
 	}
@@ -142,6 +146,12 @@ public class FieldSurfaceView extends SurfaceView implements
 					if (invIsShooted) {
 						shot.remove();
 						invader.remove();
+						mHandler.post( new Runnable() {
+								public void run() {
+									mScore += 1000;
+									mScoreView.setText(Integer.toString(mScore));
+								}
+						});
 						mItemFlg = 1;
 						mItemPos = 1;
 					}
@@ -201,7 +211,7 @@ public class FieldSurfaceView extends SurfaceView implements
 					}
 					mItemFlg = 0;
 				}
-				// アイテムが画面上からはみ出るまで表示させ続ける
+				// ビームが画面上からはみ出るまで表示させ続ける
 				if (item.isInsideScreen(getHeight())) {
 					drawItem(item);
 				}
@@ -312,6 +322,10 @@ public class FieldSurfaceView extends SurfaceView implements
 	public void Item(float shotX, float shotY) {
 		Item item = new Item(shotX, shotY);
 		mItem.add(item);
+	}
+	
+	public void setScoreView(TextView tv) {
+		mScoreView = tv;
 	}
 
 }

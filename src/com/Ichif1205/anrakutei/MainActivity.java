@@ -18,8 +18,9 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		TextView scoreView = (TextView)findViewById(R.id.scoreView_id);
-		scoreView.setText("SCORE");
+		scoreView.setText("0");
 		mFieldSurfaceView = (FieldSurfaceView)findViewById(R.id.FieldSurfaceView_id);
+		mFieldSurfaceView.setScoreView(scoreView);
 	}
 
 	@Override
