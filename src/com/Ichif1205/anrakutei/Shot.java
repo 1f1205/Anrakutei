@@ -58,7 +58,7 @@ public class Shot {
 	public RectF createRectangle(int x) {
 		// itemBをとった場合
 		if(x == 1){
-			width = 10;
+			width = 15;
 		}
 
 		RectF rectf = new RectF(posX - width / 2, posY - height / 2, posX
