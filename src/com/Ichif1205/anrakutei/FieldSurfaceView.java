@@ -11,11 +11,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.TextView;
 
 import com.Ichif1205.anrakutei.Invader.InvarderListener;
 
@@ -45,6 +47,11 @@ public class FieldSurfaceView extends SurfaceView implements
 	private ArrayList<Invader> mInvaderList;
 	private ArrayList<Item> mItem;
 	private int mItemFlg = 0;
+	private TextView mScoreView;
+	private int mScore;
+	private Handler mHandler;
+	private int mItemPos;
+	private int mItemM = 0;
 
 	private boolean mExecFlg = true;
 
@@ -104,6 +111,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		}
 		// アイテム
 		mBitmap5 = Bitmap.createScaledBitmap(mBitmap5, 36, 36, true);
+		mHandler = new Handler();
 
 		mThread.start();
 	}
@@ -135,7 +143,14 @@ public class FieldSurfaceView extends SurfaceView implements
 					if (invIsShooted) {
 						shot.remove();
 						invader.remove();
+						mHandler.post( new Runnable() {
+								public void run() {
+									mScore += 1000;
+									mScoreView.setText(Integer.toString(mScore));
+								}
+						});
 						mItemFlg = 1;
+						mItemPos = 1;
 					}
 				}
 			}
@@ -167,15 +182,26 @@ public class FieldSurfaceView extends SurfaceView implements
 				drawInvBeam(invBeam);
 			}
 		}
+		// ItemMをとった場合
+		if (mItemM == 1) {
+			// 敵ビームの描画
+			for (int i = 0; i < mInvBeamList.size(); i++) {
+				InvaderBeam invBeam = mInvBeamList.get(i);
+				invBeam.remove();
+			}
+			mItemM = 0;
+		}
 		// アイテムの描画
-		if (mItemFlg == 1) {
-			for (int i = 0; i < mItem.size(); i++) {
+		// if (mItemFlg == 1) {
+		for (int i = 0; i < mItem.size(); i++) {
+			if (i == mItemPos) {
 				Item item = mItem.get(i);
-				boolean pIsShooted = mPlayer.isShooted(item.getItemPosX(),
+				boolean pIsShooted = mPlayer.isItemted(item.getItemPosX(),
 						item.getItemPosY());
-				// ビームが自機に当たったら消える
+				// アイテムが自機に当たったら消える
 				if (pIsShooted) {
 					item.remove();
+					mItemM = 1;
 					mItemFlg = 0;
 				}
 				// ビームが画面上からはみ出るまで表示させ続ける
@@ -183,6 +209,7 @@ public class FieldSurfaceView extends SurfaceView implements
 					drawItem(item);
 				}
 			}
+			// }
 		}
 		getHolder().unlockCanvasAndPost(mCanvas);
 	}
@@ -281,6 +308,10 @@ public class FieldSurfaceView extends SurfaceView implements
 	public void Item(float shotX, float shotY) {
 		Item item = new Item(shotX, shotY);
 		mItem.add(item);
+	}
+	
+	public void setScoreView(TextView tv) {
+		mScoreView = tv;
 	}
 
 }
