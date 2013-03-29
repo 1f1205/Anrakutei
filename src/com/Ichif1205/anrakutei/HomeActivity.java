@@ -20,7 +20,7 @@ public class HomeActivity extends Activity {
         
         button_play.setOnClickListener(new View.OnClickListener() {
         	public void onClick(View view) {
-        		Intent intent = new Intent(HomeActivity.this, SelectPlayer.class);
+        		Intent intent = new Intent(HomeActivity.this, MainActivity.class);
         		intent.putExtra("Count", 20);
         		startActivity(intent);
         	}
