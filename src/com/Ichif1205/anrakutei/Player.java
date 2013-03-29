@@ -65,6 +65,14 @@ public class Player {
 		}
 		return false;
 	}
+	// itemのあたり判定
+	public boolean isItemted(float shotX, float shotY) {
+		if ((posX-width/2 <= shotX && posX+width/2 >= shotX)
+				&& (posY-height <= shotY && posY+height >= shotY)){
+			return true;
+		}
+		return false;
+	}
 	public void remove() {
 		posY = -100;
 		existFlag = false;

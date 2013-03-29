@@ -184,7 +184,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		for (int i = 0; i < mItem.size(); i++) {
 			if (i == mItemPos) {
 				Item item = mItem.get(i);
-				boolean pIsShooted = mPlayer.isShooted(item.getItemPosX(),
+				boolean pIsShooted = mPlayer.isItemted(item.getItemPosX(),
 						item.getItemPosY());
 				// アイテムが自機に当たったら消える
 				if (pIsShooted) {

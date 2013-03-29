@@ -9,8 +9,8 @@ public class Item {
 
 	private float posX;
 	private float posY;
-	private int width = 5;
-	private int height = 20;
+	private int width = 8;
+	private int height = 16;
 	private int speed = 4;
 	private int pattern;
 	private float centerX;
