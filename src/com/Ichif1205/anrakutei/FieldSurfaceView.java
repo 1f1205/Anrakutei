@@ -90,7 +90,6 @@ public class FieldSurfaceView extends SurfaceView implements
 		mHolder.setFixedSize(getWidth(), getHeight());
 		Log.d(TAG, "Constract");
 	}
-	
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
@@ -108,7 +107,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		} else {
 			setGameStates();
 		}
-		
+
 		// 一時停止中か確認
 		if (!mPauseFlg) {
 			mThread.start();
@@ -182,7 +181,7 @@ public class FieldSurfaceView extends SurfaceView implements
 			drawPlayer();
 		}
 		// ガードの描画
-		if (mItemG == 1){
+		if (mItemG == 1) {
 			drawGurd();
 		}
 		// 自機の弾の描画
@@ -199,11 +198,11 @@ public class FieldSurfaceView extends SurfaceView implements
 						mHandler.post(new Runnable() {
 							public void run() {
 								mScore += 1000;
-//						mGameListener.addScore(mScore);
+								// mGameListener.addScore(mScore);
 								mScoreView.setText(Integer.toString(mScore));
 							}
 						});
-						
+
 						mItemFlg = 1;
 						mItemPos = 1;
 					}
@@ -227,11 +226,18 @@ public class FieldSurfaceView extends SurfaceView implements
 			InvaderBeam invBeam = mInvBeamList.get(i);
 			boolean pIsShooted = mPlayer.isShooted(invBeam.getInvBeamPosX(),
 					invBeam.getInvBeamPosY());
+			boolean pIsGurded = mPlayer.isGurded(invBeam.getInvBeamPosX(),
+					invBeam.getInvBeamPosY());
 			// ビームが自機に当たったら消える
 			if (pIsShooted) {
 				invBeam.remove();
 				mPlayer.remove();
+				bgm.stop();
 				mGameListener.endGame(mScore);
+			}
+			// ガードにあたったら消える
+			if (pIsGurded) {
+				invBeam.remove();
 			}
 			// ビームが画面上からはみ出るまで表示させ続ける
 			if (invBeam.isInsideScreen(getHeight())) {
@@ -284,12 +290,14 @@ public class FieldSurfaceView extends SurfaceView implements
 		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		mCanvas.drawPath(mPlayer.draw(path, mItemS), mPaint);
 	}
-	
+
 	// ガード描画
 	protected void drawGurd() {
 		Path path = new Path();
 		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-		mCanvas.drawPath(mPlayer.drawGurd(path), mPaint);
+		mCanvas.drawPath(
+				mPlayer.drawGurd(path, getWidth() / 2, getHeight() * 6 / 8),
+				mPaint);
 	}
 
 	// 敵描画
@@ -346,10 +354,10 @@ public class FieldSurfaceView extends SurfaceView implements
 		} else if (item_pattern == "S") {
 			mCanvas.drawBitmap(mItemSImage, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
-		}else if (item_pattern == "G") {
+		} else if (item_pattern == "G") {
 			mCanvas.drawBitmap(mItemGImage, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
-		}else if (item_pattern == "G") {
+		} else if (item_pattern == "G") {
 			mCanvas.drawBitmap(mItemGImage, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
 		}
@@ -392,8 +400,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	}
 
 	/**
-	 * スレッドを一時停止
-	 * mThreadを一旦nullに
+	 * スレッドを一時停止 mThreadを一旦nullに
 	 */
 	public void endLoop() {
 		mPauseFlg = true;
@@ -422,6 +429,7 @@ public class FieldSurfaceView extends SurfaceView implements
 
 	/**
 	 * ゲーム状態を保存する
+	 * 
 	 * @return
 	 */
 	public Status saveStatus() {
@@ -446,27 +454,30 @@ public class FieldSurfaceView extends SurfaceView implements
 	public void setScoreView(TextView tv) {
 		mScoreView = tv;
 	}
-	
+
 	/**
 	 * リスナーをセット
+	 * 
 	 * @param listener
 	 */
 	public void setEventListener(GameEventLiestener listener) {
 		mGameListener = listener;
 	}
-	
+
 	/**
 	 * ゲームの各イベントリスナー
 	 */
 	public interface GameEventLiestener {
 		/**
 		 * ゲーム終了イベント
+		 * 
 		 * @param mScore
 		 */
 		public void endGame(int score);
-		
+
 		/**
 		 * スコア増加イベント
+		 * 
 		 * @param mScore
 		 */
 		public void addScore(int score);

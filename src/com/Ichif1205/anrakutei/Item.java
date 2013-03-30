@@ -74,7 +74,8 @@ public class Item {
 	public String selectItem() {
 		Random ptn_rand = new Random();
 		item_pattern = ptn_rand.nextInt(3);
-		item_pattern=3;
+		//debug用
+		//item_pattern=3;
 		if (item_pattern == 0) {
 			select_item = "M";
 		} else if (item_pattern == 1) {

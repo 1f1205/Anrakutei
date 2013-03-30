@@ -9,6 +9,8 @@ public class Player {
 	private int width = 50;
 	private int height = 30;
 	private boolean existFlag;
+	private float gurdX;
+	private float gurdY;
 
 	Player(int x, int y) {
 		posX = x;
@@ -74,9 +76,9 @@ public class Player {
 	}
 
 	// ガード描画のパス
-	public Path drawGurd(Path path) {
-		float gurdX = 100;
-		float gurdY = 200;
+	public Path drawGurd(Path path, float x, float y) {
+		gurdX = x;
+		gurdY = y;
 		path.moveTo(gurdX, gurdY);
 		// 左下から反時計回りに描画
 		path.lineTo(gurdX - width, gurdY + height / 4);
@@ -104,6 +106,15 @@ public class Player {
 	public boolean isItemted(float shotX, float shotY) {
 		if ((posX - width / 2 <= shotX && posX + width / 2 >= shotX)
 				&& (posY - height <= shotY && posY + height >= shotY)) {
+			return true;
+		}
+		return false;
+	}
+
+	// gurd判定
+	public boolean isGurded(float shotX, float shotY) {
+		if ((gurdX - width <= shotX && gurdX + width >= shotX)
+				&& (gurdY - height <= shotY && gurdY + height >= shotY)) {
 			return true;
 		}
 		return false;
