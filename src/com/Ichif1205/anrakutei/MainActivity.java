@@ -1,5 +1,7 @@
 package com.Ichif1205.anrakutei;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -17,26 +19,48 @@ public class MainActivity extends Activity implements GameEventLiestener {
 	private TextView mScoreView = null;
 	private boolean mPauseFlg = false;
 	private boolean mGameEndFlg = false;
+	private int mStageId = 0;
 	private Status mStatus;
+	private ArrayList<StageInfo> mStageInfoLists = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
 		setContentView(R.layout.activity_main);
-		Typeface face = Utils.getFonts(getApplicationContext());
+		
+		// ステージIDやスコアのViewを設定
+		setView();
+		mFieldSurfaceView = (FieldSurfaceView) findViewById(R.id.FieldSurfaceView_id);
+		mFieldSurfaceView.setEventListener(this);
+		
+		final StageXmlParser xmlParser = new StageXmlParser(getApplicationContext());
+		
+		// TODO XMLの読み込みが終わるまでActivityを止めておく必要がある
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				mStageInfoLists = xmlParser.parseStageXml();
+				mFieldSurfaceView.setStageInfo(mStageInfoLists.get(mStageId));
+			}
+		});
+		thread.start();
 
+		Log.d(TAG, "Start FindView");
+		
+		Log.d(TAG, "End FindView");
+	}
+	
+	/**
+	 * FieldSurfaceView以外のViewの設定
+	 */
+	private void setView() {
+		Typeface face = Utils.getFonts(getApplicationContext());
 		TextView stageView = (TextView) findViewById(R.id.stageView_id);
 		mScoreView = (TextView) findViewById(R.id.scoreView_id);
 		mScoreView.setText("0");
 		stageView.setTypeface(face);
 		mScoreView.setTypeface(face);
-
-		Log.d(TAG, "Start FindView");
-		mFieldSurfaceView = (FieldSurfaceView) findViewById(R.id.FieldSurfaceView_id);
-		mFieldSurfaceView.setEventListener(this);
-		mFieldSurfaceView.setScoreView(mScoreView);
-		Log.d(TAG, "End FindView");
 	}
 
 	@Override
@@ -140,7 +164,11 @@ public class MainActivity extends Activity implements GameEventLiestener {
 
 	@Override
 	public void addScore(int score) {
-		Log.d(TAG, "Score:" + score);
 		mScoreView.setText(Integer.toString(score));
+	}
+
+	@Override
+	public void nextStage(int stageId) {
+		Log.d(TAG, "Game Clear");
 	}
 }

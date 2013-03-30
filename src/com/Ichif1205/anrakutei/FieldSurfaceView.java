@@ -24,7 +24,8 @@ import com.Ichif1205.anrakutei.Invader.InvarderListener;
 public class FieldSurfaceView extends SurfaceView implements
 		SurfaceHolder.Callback, Runnable, InvarderListener {
 	private final String TAG = FieldSurfaceView.class.getSimpleName();
-	private final int MAX_INVADER_NUM = 9;
+	private int MAX_INVADER_NUM = 9;
+	private int STAGE_ID = 0;
 
 	private SurfaceHolder mHolder;
 	private Context mContext;
@@ -64,6 +65,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	private Status mStatus = null; // ゲームの状態を保存
 	private boolean mPauseFlg = false;
 	private GameEventLiestener mGameListener = null;
+	private int mDestoryInvaderCount = 0;
 	private int mItemFlg = 0;
 	private String item_pattern; // アイテムの種類
 	private TextView mScoreView;
@@ -94,6 +96,14 @@ public class FieldSurfaceView extends SurfaceView implements
 		mHolder.addCallback(this);
 		mHolder.setFixedSize(getWidth(), getHeight());
 		Log.d(TAG, "Constract");
+	}
+	
+	/**
+	 * ステージ情報をセット
+	 */
+	public void setStageInfo(StageInfo info) {
+		MAX_INVADER_NUM = info.maxInvader;
+		STAGE_ID = info.id;
 	}
 
 	@Override
@@ -135,7 +145,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		mInvaderList = new ArrayList<Invader>();
 		mItemList = new ArrayList<Item>();
 		// 複数の敵を表示
-		for (int i = 2; i < MAX_INVADER_NUM; i++) {
+		for (int i = 0; i < MAX_INVADER_NUM; i++) {
 			Invader invader = new Invader(getWidth(), getHeight() / 2, this);
 			mInvaderList.add(invader);
 		}
@@ -211,13 +221,25 @@ public class FieldSurfaceView extends SurfaceView implements
 						invader.ItemDrop();
 						shot.remove();
 						invader.remove();
+						mDestoryInvaderCount++;
 						mHandler.post(new Runnable() {
 							public void run() {
 								mScore += 1000;
-								// mGameListener.addScore(mScore);
-								mScoreView.setText(Integer.toString(mScore));
+								 mGameListener.addScore(mScore);
+//								mScoreView.setText(Integer.toString(mScore));
 							}
 						});
+						if (MAX_INVADER_NUM == mDestoryInvaderCount) {
+						// 次のステージへ遷移
+							mHandler.post(new Runnable() {
+								
+								@Override
+								public void run() {
+									mGameListener.nextStage(0);
+								}
+							});
+						}
+						
 					}
 				}
 			}
@@ -269,7 +291,6 @@ public class FieldSurfaceView extends SurfaceView implements
 		// アイテムの描画
 		for (int i = 0; i < mItemList.size(); i++) {
 			Item item = mItemList.get(i);
-			Log.d("ite", "ite" + mItemList);
 			boolean pIsShooted = mPlayer.isItemted(item.getItemPosX(),
 					item.getItemPosY());
 			// アイテムが自機に当たったら消える
@@ -482,17 +503,20 @@ public class FieldSurfaceView extends SurfaceView implements
 	public interface GameEventLiestener {
 		/**
 		 * ゲーム終了イベント
-		 * 
 		 * @param mScore
 		 */
 		public void endGame(int score);
 
 		/**
 		 * スコア増加イベント
-		 * 
 		 * @param mScore
 		 */
 		public void addScore(int score);
+		
+		/**
+		 * 次のステージへのフラグ
+		 */
+		public void nextStage(int stageId);
 	}
 
 }

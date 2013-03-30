@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StageSets>
+    <Stage>
+    	<Id>1</Id>
+    	<MaxInvader>5</MaxInvader>
+    	<Boss>3</Boss>
+    </Stage>
+</StageSets>
