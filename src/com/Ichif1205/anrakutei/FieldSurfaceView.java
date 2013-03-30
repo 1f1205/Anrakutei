@@ -42,17 +42,19 @@ public class FieldSurfaceView extends SurfaceView implements
 			R.drawable.invader3);
 	private Bitmap mBitmap4 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.invader4);
-	private Bitmap mBitmap5 = BitmapFactory.decodeResource(getResources(),
+	private Bitmap mItemMImage = BitmapFactory.decodeResource(getResources(),
 			R.drawable.item1);
-	private Bitmap mBitmap6 = BitmapFactory.decodeResource(getResources(),
+	private Bitmap mItemBImage = BitmapFactory.decodeResource(getResources(),
 			R.drawable.item2);
-	private Bitmap mBitmap7 = BitmapFactory.decodeResource(getResources(),
+	private Bitmap mItemSImage = BitmapFactory.decodeResource(getResources(),
+			R.drawable.item3);
+	private Bitmap mItemGImage = BitmapFactory.decodeResource(getResources(),
 			R.drawable.item3);
 	private Thread mThread;
 	private ArrayList<Shot> mShotList;
 	private ArrayList<InvaderBeam> mInvBeamList;
 	private ArrayList<Invader> mInvaderList;
-	private ArrayList<Item> mItem;
+	private ArrayList<Item> mItemList;
 	private Status mStatus = null; // ゲームの状態を保存
 	private boolean mPauseFlg = false;
 	private GameEventLiestener mGameListener = null;
@@ -65,6 +67,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	private int mItemM = 0;
 	public int mItemB = 0;
 	public int mItemS = 0;
+	public int mItemG = 0;
 	
 	MediaPlayer bgm = MediaPlayer.create(getContext(), R.raw.bgm);
     MediaPlayer se = MediaPlayer.create(getContext(), R.raw.shot);
@@ -126,7 +129,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		mInvBeamList = new ArrayList<InvaderBeam>();
 		mShotList = new ArrayList<Shot>();
 		mInvaderList = new ArrayList<Invader>();
-		mItem = new ArrayList<Item>();
+		mItemList = new ArrayList<Item>();
 		// 複数の敵を表示
 		for (int i = 2; i < MAX_INVADER_NUM; i++) {
 			Invader invader = new Invader(getWidth(), getHeight() * 3 / 4, this);
@@ -149,9 +152,10 @@ public class FieldSurfaceView extends SurfaceView implements
 			mBitmap = mBitmap4;
 		}
 		// アイテム
-		mBitmap5 = Bitmap.createScaledBitmap(mBitmap5, 36, 36, true);
-		mBitmap6 = Bitmap.createScaledBitmap(mBitmap6, 36, 36, true);
-		mBitmap7 = Bitmap.createScaledBitmap(mBitmap7, 36, 36, true);
+		mItemMImage = Bitmap.createScaledBitmap(mItemMImage, 36, 36, true);
+		mItemBImage = Bitmap.createScaledBitmap(mItemBImage, 36, 36, true);
+		mItemSImage = Bitmap.createScaledBitmap(mItemSImage, 36, 36, true);
+		mItemGImage = Bitmap.createScaledBitmap(mItemGImage, 36, 36, true);
 		bgm.setLooping(true);
         bgm.start();
 		
@@ -167,7 +171,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		mShotList = mStatus.shotList;
 		mInvBeamList = mStatus.invBeamList;
 		mInvaderList = mStatus.invaderList;
-		mItem = mStatus.item;
+		mItemList = mStatus.item;
 		mPauseFlg = mStatus.pauseFlg;
 		mStatus = null;
 	}
@@ -255,9 +259,9 @@ public class FieldSurfaceView extends SurfaceView implements
 		}
 		// アイテムの描画
 		// if (mItemFlg == 1) {
-		for (int i = 0; i < mItem.size(); i++) {
+		for (int i = 0; i < mItemList.size(); i++) {
 			if (i == mItemPos) {
-				Item item = mItem.get(i);
+				Item item = mItemList.get(i);
 				boolean pIsShooted = mPlayer.isItemted(item.getItemPosX(),
 						item.getItemPosY());
 				// アイテムが自機に当たったら消える
@@ -325,13 +329,13 @@ public class FieldSurfaceView extends SurfaceView implements
 		item_pattern = item.selectItem();
 		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		if (item_pattern == "M") {
-			mCanvas.drawBitmap(mBitmap5, item.getItemPosX(),
+			mCanvas.drawBitmap(mItemMImage, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
 		}else if (item_pattern == "B") {
-			mCanvas.drawBitmap(mBitmap6, item.getItemPosX(),
+			mCanvas.drawBitmap(mItemBImage, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
 		}else if (item_pattern == "S") {
-			mCanvas.drawBitmap(mBitmap7, item.getItemPosX(),
+			mCanvas.drawBitmap(mItemSImage, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
 		}
 	}
@@ -398,7 +402,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	@Override
 	public void Item(float shotX, float shotY) {
 		Item item = new Item(shotX, shotY);
-		mItem.add(item);
+		mItemList.add(item);
 	}
 	
 	/**
@@ -411,7 +415,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		mStatus.shotList = mShotList;
 		mStatus.invBeamList = mInvBeamList;
 		mStatus.invaderList = mInvaderList;
-		mStatus.item = mItem;
+		mStatus.item = mItemList;
 		mStatus.pauseFlg = mPauseFlg;
 		
 		return mStatus;
