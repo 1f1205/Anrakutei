@@ -1,28 +1,39 @@
 package com.Ichif1205.anrakutei;
 
+import com.Ichif1205.anrakutei.FieldSurfaceView.GameEventLiestener;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements GameEventLiestener{
 	private static String TAG = MainActivity.class.getSimpleName();
 	private FieldSurfaceView mFieldSurfaceView;
+	private TextView mScoreView = null;
 	private boolean mPauseFlg = false;
 	private Status mStatus;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d(TAG, "onCreate");
 		setContentView(R.layout.activity_main);
+		Typeface face = Utils.getFonts(getApplicationContext());
 		
-		TextView scoreView = (TextView)findViewById(R.id.scoreView_id);
-		scoreView.setText("0");
+		TextView stageView = (TextView)findViewById(R.id.stageView_id);
+		mScoreView = (TextView)findViewById(R.id.scoreView_id);
+		mScoreView.setText("0");
+		stageView.setTypeface(face);
+		mScoreView.setTypeface(face);
+		
 		Log.d(TAG, "Start FindView");
 		mFieldSurfaceView = (FieldSurfaceView)findViewById(R.id.FieldSurfaceView_id);
-		mFieldSurfaceView.setScoreView(scoreView);
+		mFieldSurfaceView.setEventListener(this);
+		mFieldSurfaceView.setScoreView(mScoreView);
 		Log.d(TAG, "End FindView");
 	}
 	
@@ -72,15 +83,7 @@ public class MainActivity extends Activity {
 			// ダイアログで終了を選択された時
 			mPauseFlg = false;
 			mFieldSurfaceView.surfaceDestroyed(null);
-			super.onUserLeaveHint();
-		}
-	}
-	
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		
-		if (mFieldSurfaceView != null) {
+			super.onBackPressed();
 		}
 	}
 	
@@ -116,5 +119,16 @@ public class MainActivity extends Activity {
         AlertDialog alertDialog = alertDialogBuilder.create();
         // アラートダイアログを表示します
         alertDialog.show();
+	}
+
+	@Override
+	public void endGame(int mScore) {
+		
+	}
+
+	@Override
+	public void addScore(int score) {
+		Log.d(TAG, "Score:"+score);
+		mScoreView.setText(Integer.toString(score));
 	}
 }

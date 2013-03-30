@@ -203,6 +203,7 @@ public class FieldSurfaceView extends SurfaceView implements
 								mScoreView.setText(Integer.toString(mScore));
 							}
 						});
+						
 						mItemFlg = 1;
 						mItemPos = 1;
 					}
@@ -293,6 +294,13 @@ public class FieldSurfaceView extends SurfaceView implements
 		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		mCanvas.drawPath(mPlayer.drawGurd(path), mPaint);
 	}
+	
+	// ガード描画
+	protected void drawGurd() {
+		Path path = new Path();
+		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+		mCanvas.drawPath(mPlayer.drawGurd(path), mPaint);
+	}
 
 	// 敵描画
 	protected void drawInvader(Invader invader) {
@@ -347,6 +355,9 @@ public class FieldSurfaceView extends SurfaceView implements
 					item.getItemPosY(), mPaint);
 		} else if (item_pattern == "S") {
 			mCanvas.drawBitmap(mItemSImage, item.getItemPosX(),
+					item.getItemPosY(), mPaint);
+		}else if (item_pattern == "G") {
+			mCanvas.drawBitmap(mItemGImage, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
 		}else if (item_pattern == "G") {
 			mCanvas.drawBitmap(mItemGImage, item.getItemPosX(),
