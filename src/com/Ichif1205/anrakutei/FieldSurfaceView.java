@@ -24,7 +24,7 @@ import com.Ichif1205.anrakutei.Invader.InvarderListener;
 public class FieldSurfaceView extends SurfaceView implements
 		SurfaceHolder.Callback, Runnable, InvarderListener {
 	private final String TAG = FieldSurfaceView.class.getSimpleName();
-	private final int MAX_INVADER_NUM = 9;
+	private final int MAX_INVADER_NUM = 12;
 
 	private SurfaceHolder mHolder;
 	private Context mContext;

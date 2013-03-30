@@ -216,7 +216,7 @@ public class Invader {
 		public void run() {
 			mIl.shootBeamEvent(posX, posY);
 			Random rBeam = new Random();
-			int randBeam = 1000 + (500 * rBeam.nextInt(5));
+			int randBeam = 1500 + (500 * rBeam.nextInt(5));
 			mShootTimer.schedule(new ShootTask(), randBeam);
 		}
 	}
