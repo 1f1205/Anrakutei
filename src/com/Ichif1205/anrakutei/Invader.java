@@ -18,8 +18,8 @@ public class Invader {
 	private int mTerm = 1000;
 	private Timer mShootTimer;
 	// 敵の動き関係
-	private int speedX = 4;
-	private int speedY = 4;
+	private int speedX;
+	private int speedY;
 	private int mv_pattern;
 	private float theta = 0;
 	private int radius;
@@ -30,6 +30,10 @@ public class Invader {
 	Invader(float x, float y, InvarderListener li) {
 		posX = getRandomPosition(x);
 		posY = getRandomPosition(y);
+		Random speed_rand = new Random();
+		int spd = speed_rand.nextInt(3) + 3;
+		speedX = spd;
+		speedY = spd;
 		existFlag = true;
 		Random type_rand = new Random();
 		type = type_rand.nextInt(4);
