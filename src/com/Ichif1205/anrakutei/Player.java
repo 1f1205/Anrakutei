@@ -43,11 +43,27 @@ public class Player {
 	public void setPlayerHeight(int h) {
 		height = h;
 	}
-	public Path draw(Path path, int x) {
+	public Path draw(Path path, int itemSFlg) {
 		// itemSをとった場合
-				if(x == 1){
+				if(itemSFlg == 1){
 					width = 15;
 				}
+		path.moveTo(posX, posY);
+		//左下から反時計回りに描画
+		path.lineTo(posX-width/2, posY+height/4);
+		path.lineTo(posX+width/2, posY+height/4);
+		path.lineTo(posX+width/2, posY-height/4);
+		path.lineTo(posX+width/6, posY-height/4);
+		path.lineTo(posX+width/6, posY-height*3/4);
+		path.lineTo(posX-width/6, posY-height*3/4);
+		path.lineTo(posX-width/6, posY-height/4);
+		path.lineTo(posX-width/2, posY-height/4);
+		path.lineTo(posX-width/2, posY+height/4);
+		
+		return path;
+	}
+	// ガード描画のパス
+	public Path drawGurd(Path path) {
 		path.moveTo(posX, posY);
 		//左下から反時計回りに描画
 		path.lineTo(posX-width/2, posY+height/4);
