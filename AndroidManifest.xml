@@ -21,6 +21,7 @@
         </activity>
         <activity
             android:name="com.Ichif1205.anrakutei.HomeActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
