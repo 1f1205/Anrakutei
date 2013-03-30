@@ -34,13 +34,13 @@ public class FieldSurfaceView extends SurfaceView implements
 	private Paint mPaint;
 	private Player mPlayer;
 	private Bitmap mBitmap;
-	private Bitmap mBitmap1 = BitmapFactory.decodeResource(getResources(),
+	private Bitmap mInvImage1 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.invader);
-	private Bitmap mBitmap2 = BitmapFactory.decodeResource(getResources(),
+	private Bitmap mInvImage2 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.invader2);
-	private Bitmap mBitmap3 = BitmapFactory.decodeResource(getResources(),
+	private Bitmap mInvImage3 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.invader3);
-	private Bitmap mBitmap4 = BitmapFactory.decodeResource(getResources(),
+	private Bitmap mInvImage4 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.invader4);
 	private Bitmap mItemMImage = BitmapFactory.decodeResource(getResources(),
 			R.drawable.item1);
@@ -68,9 +68,9 @@ public class FieldSurfaceView extends SurfaceView implements
 	public int mItemB = 0;
 	public int mItemS = 0;
 	public int mItemG = 0;
-	
+
 	MediaPlayer bgm = MediaPlayer.create(getContext(), R.raw.bgm);
-    MediaPlayer se = MediaPlayer.create(getContext(), R.raw.shot);
+	MediaPlayer se = MediaPlayer.create(getContext(), R.raw.shot);
 
 	private boolean mExecFlg = true;
 
@@ -101,7 +101,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.d(TAG, "Create SurfaceView");
-		
+
 		// ゲーム状態を取得
 		if (mStatus == null) {
 			init();
@@ -114,7 +114,7 @@ public class FieldSurfaceView extends SurfaceView implements
 			mThread.start();
 		}
 	}
-	
+
 	/**
 	 * 初期化
 	 */
@@ -136,32 +136,21 @@ public class FieldSurfaceView extends SurfaceView implements
 			mInvaderList.add(invader);
 		}
 		// 　敵をランダムで決定
-		mBitmap1 = Bitmap.createScaledBitmap(mBitmap1, 36, 36, true);
-		mBitmap2 = Bitmap.createScaledBitmap(mBitmap2, 36, 36, true);
-		mBitmap3 = Bitmap.createScaledBitmap(mBitmap3, 36, 36, true);
-		mBitmap4 = Bitmap.createScaledBitmap(mBitmap4, 36, 36, true);
-		Random rand = new Random();
-		int inv_rand = rand.nextInt(4);
-		if (inv_rand == 0) {
-			mBitmap = mBitmap1;
-		} else if (inv_rand == 1) {
-			mBitmap = mBitmap2;
-		} else if (inv_rand == 2) {
-			mBitmap = mBitmap3;
-		} else {
-			mBitmap = mBitmap4;
-		}
+		mInvImage1 = Bitmap.createScaledBitmap(mInvImage1, 36, 36, true);
+		mInvImage2 = Bitmap.createScaledBitmap(mInvImage2, 36, 36, true);
+		mInvImage3 = Bitmap.createScaledBitmap(mInvImage3, 36, 36, true);
+		mInvImage4 = Bitmap.createScaledBitmap(mInvImage4, 36, 36, true);
 		// アイテム
 		mItemMImage = Bitmap.createScaledBitmap(mItemMImage, 36, 36, true);
 		mItemBImage = Bitmap.createScaledBitmap(mItemBImage, 36, 36, true);
 		mItemSImage = Bitmap.createScaledBitmap(mItemSImage, 36, 36, true);
 		mItemGImage = Bitmap.createScaledBitmap(mItemGImage, 36, 36, true);
 		bgm.setLooping(true);
-        bgm.start();
-		
+		bgm.start();
+
 		mHandler = new Handler();
 	}
-	
+
 	/**
 	 * ゲームの状態をセット
 	 */
@@ -302,6 +291,13 @@ public class FieldSurfaceView extends SurfaceView implements
 		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		mCanvas.drawPath(mPlayer.drawGurd(path), mPaint);
 	}
+	
+	// ガード描画
+	protected void drawGurd() {
+		Path path = new Path();
+		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+		mCanvas.drawPath(mPlayer.drawGurd(path), mPaint);
+	}
 
 	// 敵描画
 	protected void drawInvader(Invader invader) {
@@ -313,6 +309,16 @@ public class FieldSurfaceView extends SurfaceView implements
 		}
 		invader.updatePosition();
 
+		int invType = invader.getInvType();
+		if (invType == 0) {
+			mBitmap = mInvImage1;
+		} else if (invType == 1) {
+			mBitmap = mInvImage2;
+		} else if (invType == 2) {
+			mBitmap = mInvImage3;
+		} else {
+			mBitmap = mInvImage4;
+		}
 		mCanvas.drawBitmap(mBitmap, invader.getInvaderPosX(),
 				invader.getInvaderPosY(), mPaint);
 	}
@@ -341,11 +347,14 @@ public class FieldSurfaceView extends SurfaceView implements
 		if (item_pattern == "M") {
 			mCanvas.drawBitmap(mItemMImage, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
-		}else if (item_pattern == "B") {
+		} else if (item_pattern == "B") {
 			mCanvas.drawBitmap(mItemBImage, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
-		}else if (item_pattern == "S") {
+		} else if (item_pattern == "S") {
 			mCanvas.drawBitmap(mItemSImage, item.getItemPosX(),
+					item.getItemPosY(), mPaint);
+		}else if (item_pattern == "G") {
+			mCanvas.drawBitmap(mItemGImage, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
 		}else if (item_pattern == "G") {
 			mCanvas.drawBitmap(mItemGImage, item.getItemPosX(),
@@ -395,8 +404,8 @@ public class FieldSurfaceView extends SurfaceView implements
 	 */
 	public void endLoop() {
 		mPauseFlg = true;
-		Log.d(TAG, mInvaderList.size()+":End Invader");
-		Log.d(TAG, mInvBeamList.size()+":End InvBeam");
+		Log.d(TAG, mInvaderList.size() + ":End Invader");
+		Log.d(TAG, mInvBeamList.size() + ":End InvBeam");
 		mExecFlg = false;
 		mThread = null;
 		bgm.pause();
@@ -417,7 +426,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		Item item = new Item(shotX, shotY);
 		mItemList.add(item);
 	}
-	
+
 	/**
 	 * ゲーム状態を保存する
 	 * @return
@@ -430,17 +439,17 @@ public class FieldSurfaceView extends SurfaceView implements
 		mStatus.invaderList = mInvaderList;
 		mStatus.item = mItemList;
 		mStatus.pauseFlg = mPauseFlg;
-		
+
 		return mStatus;
 	}
-	
+
 	/**
 	 * Activityからゲーム状態をセットする
 	 */
 	public void setInstance(Status status) {
 		mStatus = status;
 	}
-	
+
 	public void setScoreView(TextView tv) {
 		mScoreView = tv;
 	}
