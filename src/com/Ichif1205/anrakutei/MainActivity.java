@@ -1,20 +1,22 @@
 package com.Ichif1205.anrakutei;
 
-import com.Ichif1205.anrakutei.FieldSurfaceView.GameEventLiestener;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-public class MainActivity extends Activity implements GameEventLiestener{
+import com.Ichif1205.anrakutei.FieldSurfaceView.GameEventLiestener;
+
+public class MainActivity extends Activity implements GameEventLiestener {
 	private static String TAG = MainActivity.class.getSimpleName();
 	private FieldSurfaceView mFieldSurfaceView;
 	private TextView mScoreView = null;
 	private boolean mPauseFlg = false;
+	private boolean mGameEndFlg = false;
 	private Status mStatus;
 
 	@Override
@@ -23,20 +25,20 @@ public class MainActivity extends Activity implements GameEventLiestener{
 		Log.d(TAG, "onCreate");
 		setContentView(R.layout.activity_main);
 		Typeface face = Utils.getFonts(getApplicationContext());
-		
-		TextView stageView = (TextView)findViewById(R.id.stageView_id);
-		mScoreView = (TextView)findViewById(R.id.scoreView_id);
+
+		TextView stageView = (TextView) findViewById(R.id.stageView_id);
+		mScoreView = (TextView) findViewById(R.id.scoreView_id);
 		mScoreView.setText("0");
 		stageView.setTypeface(face);
 		mScoreView.setTypeface(face);
-		
+
 		Log.d(TAG, "Start FindView");
-		mFieldSurfaceView = (FieldSurfaceView)findViewById(R.id.FieldSurfaceView_id);
+		mFieldSurfaceView = (FieldSurfaceView) findViewById(R.id.FieldSurfaceView_id);
 		mFieldSurfaceView.setEventListener(this);
 		mFieldSurfaceView.setScoreView(mScoreView);
 		Log.d(TAG, "End FindView");
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -47,12 +49,12 @@ public class MainActivity extends Activity implements GameEventLiestener{
 	protected void onPause() {
 		super.onPause();
 	}
-	
+
 	@Override
 	protected void onRestart() {
 		super.onRestart();
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		// mPauseFlg が trueの時はダイアログが表示されている
@@ -69,9 +71,14 @@ public class MainActivity extends Activity implements GameEventLiestener{
 			super.onBackPressed();
 		}
 	}
-	
+
 	@Override
 	protected void onUserLeaveHint() {
+		// ゲーム終了時はActivityを終了する
+		if (mGameEndFlg) { 
+			finish();
+			return;
+		}
 		// mPauseFlg が trueの時はダイアログが表示されている
 		if (!mPauseFlg) {
 			// ダイアログ表示
@@ -86,49 +93,54 @@ public class MainActivity extends Activity implements GameEventLiestener{
 			super.onBackPressed();
 		}
 	}
-	
+
 	/**
 	 * ダイアログ表示
 	 */
 	private void showDialog() {
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        // アラートダイアログのタイトルを設定します
-        alertDialogBuilder.setTitle("終了");
-        // アラートダイアログのメッセージを設定します
-        alertDialogBuilder.setMessage("ゲームを終了しますか？");
-        // アラートダイアログの肯定ボタンがクリックされた時に呼び出されるコールバックリスナーを登録します
-        alertDialogBuilder.setPositiveButton("はい",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    	onBackPressed();
-                    }
-                });
-        // アラートダイアログの否定ボタンがクリックされた時に呼び出されるコールバックリスナーを登録します
-        alertDialogBuilder.setNegativeButton("いいえ",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    	mFieldSurfaceView.setInstance(mStatus);
-                    	mPauseFlg = false;
-                    	mFieldSurfaceView.restartLoop();
-                    }
-                });
-        // アラートダイアログのキャンセルが可能かどうかを設定します
-        alertDialogBuilder.setCancelable(true);
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        // アラートダイアログを表示します
-        alertDialog.show();
+		// アラートダイアログのタイトルを設定します
+		alertDialogBuilder.setTitle("終了");
+		// アラートダイアログのメッセージを設定します
+		alertDialogBuilder.setMessage("ゲームを終了しますか？");
+		// アラートダイアログの肯定ボタンがクリックされた時に呼び出されるコールバックリスナーを登録します
+		alertDialogBuilder.setPositiveButton("はい",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						onBackPressed();
+					}
+				});
+		// アラートダイアログの否定ボタンがクリックされた時に呼び出されるコールバックリスナーを登録します
+		alertDialogBuilder.setNegativeButton("いいえ",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						mFieldSurfaceView.setInstance(mStatus);
+						mPauseFlg = false;
+						mFieldSurfaceView.restartLoop();
+					}
+				});
+		// アラートダイアログのキャンセルが可能かどうかを設定します
+		alertDialogBuilder.setCancelable(true);
+		AlertDialog alertDialog = alertDialogBuilder.create();
+		// アラートダイアログを表示します
+		alertDialog.show();
 	}
 
 	@Override
-	public void endGame(int mScore) {
-		
+	public void endGame(int score) {
+		// ゲーム終了
+		mGameEndFlg = true;
+		// Result画面へ遷移
+		Intent intent = new Intent(this, ResultActivity.class);
+		intent.putExtra("score", score);
+		startActivity(intent);
 	}
 
 	@Override
 	public void addScore(int score) {
-		Log.d(TAG, "Score:"+score);
+		Log.d(TAG, "Score:" + score);
 		mScoreView.setText(Integer.toString(score));
 	}
 }

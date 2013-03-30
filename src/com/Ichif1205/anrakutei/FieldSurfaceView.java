@@ -239,9 +239,6 @@ public class FieldSurfaceView extends SurfaceView implements
 				invBeam.remove();
 				mPlayer.remove();
 				mGameListener.endGame(mScore);
-				// Result画面へ遷移
-//				Intent intent = new Intent(mContext, ResultActivity.class);
-//				mContext.startActivity(intent);
 			}
 			// ビームが画面上からはみ出るまで表示させ続ける
 			if (invBeam.isInsideScreen(getHeight())) {

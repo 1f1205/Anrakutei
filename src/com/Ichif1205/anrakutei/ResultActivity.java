@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
+import android.widget.TextView;
 
 public class ResultActivity extends Activity {
 
@@ -13,9 +14,12 @@ public class ResultActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_result);
+		
+		TextView resultScore = (TextView) findViewById(R.id.result);
 
 		Intent intent = getIntent();
 		int score = intent.getIntExtra("score", 20);
+		resultScore.setText(Integer.toString(score));
 		int date = intent.getIntExtra("date", 2000000);
 		saveScore(score, date);
 	}
