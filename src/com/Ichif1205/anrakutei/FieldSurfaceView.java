@@ -1,10 +1,8 @@
 package com.Ichif1205.anrakutei;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -33,6 +31,8 @@ public class FieldSurfaceView extends SurfaceView implements
 	private Canvas mCanvas = null;
 	private Paint mPaint;
 	private Player mPlayer;
+	private static double PLAYER_INIT_WIDTH_RATE = 0.5;
+	private static double PLAYER_INIT_HEIGHT_RATE = 0.84375;
 	private Bitmap mBitmap;
 	private Bitmap mInvImage1 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.invader);
@@ -42,6 +42,8 @@ public class FieldSurfaceView extends SurfaceView implements
 			R.drawable.invader3);
 	private Bitmap mInvImage4 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.invader4);
+	public static int INV_IMAGE_WIDTH = 36;
+	public static int INV_IMAGE_HEIGHT = 36;
 	private Bitmap mItemMImage = BitmapFactory.decodeResource(getResources(),
 			R.drawable.item1);
 	private Bitmap mItemBImage = BitmapFactory.decodeResource(getResources(),
@@ -50,6 +52,8 @@ public class FieldSurfaceView extends SurfaceView implements
 			R.drawable.item3);
 	private Bitmap mItemGImage = BitmapFactory.decodeResource(getResources(),
 			R.drawable.item4);
+	public static int ITEM_IMAGE_WIDTH = 36;
+	public static int ITEM_IMAGE_HEIGHT = 36;
 	private Thread mThread;
 	private ArrayList<Shot> mShotList;
 	private ArrayList<InvaderBeam> mInvBeamList;
@@ -123,8 +127,8 @@ public class FieldSurfaceView extends SurfaceView implements
 		mPaint = new Paint();
 		mPaint.setColor(Color.GREEN);
 		mPaint.setAntiAlias(true);
-
-		mPlayer = new Player(getWidth() / 2, getHeight() * 7 / 8);
+		mPlayer = new Player((int)(getWidth() * PLAYER_INIT_WIDTH_RATE),
+				(int) (getHeight() * PLAYER_INIT_HEIGHT_RATE));
 		mInvBeamList = new ArrayList<InvaderBeam>();
 		mShotList = new ArrayList<Shot>();
 		mInvaderList = new ArrayList<Invader>();
@@ -135,15 +139,23 @@ public class FieldSurfaceView extends SurfaceView implements
 			mInvaderList.add(invader);
 		}
 		// 　敵をランダムで決定
-		mInvImage1 = Bitmap.createScaledBitmap(mInvImage1, 36, 36, true);
-		mInvImage2 = Bitmap.createScaledBitmap(mInvImage2, 36, 36, true);
-		mInvImage3 = Bitmap.createScaledBitmap(mInvImage3, 36, 36, true);
-		mInvImage4 = Bitmap.createScaledBitmap(mInvImage4, 36, 36, true);
+		mInvImage1 = Bitmap.createScaledBitmap(mInvImage1, INV_IMAGE_WIDTH,
+				INV_IMAGE_HEIGHT, true);
+		mInvImage2 = Bitmap.createScaledBitmap(mInvImage2, INV_IMAGE_WIDTH,
+				INV_IMAGE_HEIGHT, true);
+		mInvImage3 = Bitmap.createScaledBitmap(mInvImage3, INV_IMAGE_WIDTH,
+				INV_IMAGE_HEIGHT, true);
+		mInvImage4 = Bitmap.createScaledBitmap(mInvImage4, INV_IMAGE_WIDTH,
+				INV_IMAGE_HEIGHT, true);
 		// アイテム
-		mItemMImage = Bitmap.createScaledBitmap(mItemMImage, 36, 36, true);
-		mItemBImage = Bitmap.createScaledBitmap(mItemBImage, 36, 36, true);
-		mItemSImage = Bitmap.createScaledBitmap(mItemSImage, 36, 36, true);
-		mItemGImage = Bitmap.createScaledBitmap(mItemGImage, 36, 36, true);
+		mItemMImage = Bitmap.createScaledBitmap(mItemMImage, ITEM_IMAGE_WIDTH,
+				ITEM_IMAGE_HEIGHT, true);
+		mItemBImage = Bitmap.createScaledBitmap(mItemBImage, ITEM_IMAGE_WIDTH,
+				ITEM_IMAGE_HEIGHT, true);
+		mItemSImage = Bitmap.createScaledBitmap(mItemSImage, ITEM_IMAGE_WIDTH,
+				ITEM_IMAGE_HEIGHT, true);
+		mItemGImage = Bitmap.createScaledBitmap(mItemGImage, ITEM_IMAGE_WIDTH,
+				ITEM_IMAGE_HEIGHT, true);
 		bgm.setLooping(true);
 		bgm.start();
 
@@ -305,7 +317,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		if (invader.isOverBoundaryWidth(getWidth())) {
 			invader.reverseSpeedXDirection();
 		}
-		if (invader.isOverBoundaryHeight(getHeight())) {
+		if (invader.isOverBoundaryHeight(getHeight() * 27 / 32)) {
 			invader.reverseSpeedYDirection();
 		}
 		invader.updatePosition();
