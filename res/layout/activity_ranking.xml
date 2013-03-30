@@ -1,12 +1,42 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="#000000"
     tools:context=".RankingActivity" >
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/column_header"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="準備中だお(・ω・)" />
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal" >
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/header_rank"
+            style="@style/RowHeader"
+            android:layout_weight="3"
+            android:text="Rank" />
+
+        <TextView
+            android:id="@+id/header_time"
+            style="@style/RowHeader"
+            android:layout_weight="4"
+            android:text="Time" />
+
+        <TextView
+            android:id="@+id/header_date"
+            style="@style/RowHeader"
+            android:layout_weight="4"
+            android:text="Date" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/rank_list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/column_header" />
+
+</RelativeLayout>
