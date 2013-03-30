@@ -13,13 +13,14 @@ public class Invader {
 	private int width = 36;
 	private int height = 36;
 	private boolean existFlag;
+	private int type;
 	private InvarderListener mIl;
 	private int mTerm = 1000;
 	private Timer mShootTimer;
 	// 敵の動き関係
 	private int speedX = 4;
 	private int speedY = 4;
-	private int pattern;
+	private int mv_pattern;
 	private float theta = 0;
 	private int radius;
 	private float centerX;
@@ -30,14 +31,16 @@ public class Invader {
 		posX = getRandomPosition(x);
 		posY = getRandomPosition(y);
 		existFlag = true;
+		Random type_rand = new Random();
+		type = type_rand.nextInt(4);
 		mIl = li;
-		pattern = (int) (Math.random() * 10);
-		if (pattern >= 8) {
+		mv_pattern = (int) (Math.random() * 10);
+		if (mv_pattern >= 6) {
 			centerX = posX;
 			centerY = posY;
 			Random r_rand = new Random();
 			int r_times = r_rand.nextInt(4) + 1;
-			radius = 25 * r_times;
+			radius = 50 * r_times;
 		}
 
 		mShootTimer = new Timer();
@@ -58,6 +61,10 @@ public class Invader {
 
 	public int getInvaderHeight() {
 		return height;
+	}
+
+	public int getInvType() {
+		return type;
 	}
 
 	public boolean isExisted() {
@@ -128,10 +135,10 @@ public class Invader {
 
 	public void updatePosition() {
 		// patternの値によって移動パターン決定
-		// 0-3: 横移動, 4-7: 斜め移動, 8-9: 円移動
-		if (pattern <= 3) {
+		// 0-3: 横移動, 4-7: 斜め移動, 8-9: 円移動 
+		if (mv_pattern <= 3) {
 			moveLR();
-		} else if (pattern <= 7) {
+		} else if (mv_pattern <= 7) {
 			moveSkew();
 		} else {
 			moveCircle();
@@ -139,7 +146,7 @@ public class Invader {
 	}
 
 	private void moveLR() {
-		if (pattern <= 1) {
+		if (mv_pattern <= 1) {
 			posX += speedX;
 		} else {
 			posX -= speedX;
@@ -147,13 +154,14 @@ public class Invader {
 	}
 
 	private void moveSkew() {
-		if (pattern == 4) {
+		int skew_pattern = (int) Math.random();
+		if (skew_pattern < 0.25) {
 			posX += speedX;
 			posY += speedY;
-		} else if (pattern == 5) {
+		} else if (skew_pattern < 0.5) {
 			posX -= speedX;
 			posY += speedY;
-		} else if (pattern == 6) {
+		} else if (skew_pattern < 0.75) {
 			posX += speedX;
 			posY -= speedY;
 		} else {
@@ -163,7 +171,7 @@ public class Invader {
 	}
 
 	private void moveCircle() {
-		if (pattern == 8) {
+		if (mv_pattern == 8) {
 			alpha += speedX * 1.0 / radius;
 		} else {
 			alpha -= speedX * 1.0 / radius;
