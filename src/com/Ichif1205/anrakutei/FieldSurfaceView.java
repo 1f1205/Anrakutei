@@ -193,6 +193,9 @@ public class FieldSurfaceView extends SurfaceView implements
 							shot.getShotPosX(), shot.getShotPosY());
 					// 弾が敵に当たったら消える
 					if (invIsShooted) {
+						invader.ItemDrop();
+						// mItemFlg = 1;
+						mItemPos = 1;
 						shot.remove();
 						invader.remove();
 						mHandler.post(new Runnable() {
@@ -202,9 +205,6 @@ public class FieldSurfaceView extends SurfaceView implements
 								mScoreView.setText(Integer.toString(mScore));
 							}
 						});
-
-						mItemFlg = 1;
-						mItemPos = 1;
 					}
 				}
 			}
@@ -256,7 +256,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		// アイテムの描画
 		// if (mItemFlg == 1) {
 		for (int i = 0; i < mItemList.size(); i++) {
-			if (i == mItemPos) {
+			if (mItemPos == 1) {
 				Item item = mItemList.get(i);
 				boolean pIsShooted = mPlayer.isItemted(item.getItemPosX(),
 						item.getItemPosY());
@@ -265,12 +265,16 @@ public class FieldSurfaceView extends SurfaceView implements
 					item.remove();
 					if (item_pattern == "M") {
 						mItemM = 1;
+						mItemPos = 0;
 					} else if (item_pattern == "B") {
 						mItemB = 1;
+						mItemPos = 0;
 					} else if (item_pattern == "S") {
 						mItemS = 1;
+						mItemPos = 0;
 					} else if (item_pattern == "G") {
 						mItemG = 1;
+						mItemPos = 0;
 					}
 					mItemFlg = 0;
 				}

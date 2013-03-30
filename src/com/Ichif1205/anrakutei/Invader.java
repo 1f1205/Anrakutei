@@ -5,6 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.util.FloatMath;
+import android.util.Log;
 
 public class Invader {
 
@@ -135,7 +136,7 @@ public class Invader {
 
 	public void updatePosition() {
 		// patternの値によって移動パターン決定
-		// 0-3: 横移動, 4-7: 斜め移動, 8-9: 円移動 
+		// 0-3: 横移動, 4-7: 斜め移動, 8-9: 円移動
 		if (mv_pattern <= 3) {
 			moveLR();
 		} else if (mv_pattern <= 7) {
@@ -194,12 +195,15 @@ public class Invader {
 
 	class ShootTask extends TimerTask {
 		public void run() {
-			mIl.Item(posX, posY);
 			mIl.shootBeamEvent(posX, posY);
 			Random rBeam = new Random();
 			int randBeam = 1000 + (500 * rBeam.nextInt(5));
 			mShootTimer.schedule(new ShootTask(), randBeam);
 		}
+	}
+
+	public void ItemDrop() {
+		mIl.Item(posX, posY);
 	}
 
 }
