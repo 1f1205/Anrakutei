@@ -73,13 +73,15 @@ public class Item {
 
 	public String selectItem() {
 		Random ptn_rand = new Random();
-		item_pattern = ptn_rand.nextInt(2);
+		item_pattern = ptn_rand.nextInt(3);
 		if (pattern == 0) {
 			select_item = "M";
 		} else if (pattern == 1) {
 			select_item = "B";
 		}else if (pattern == 2) {
 			select_item = "S";
+		}else if (pattern == 3) {
+			select_item = "G";
 		}
 		return select_item;
 	}
