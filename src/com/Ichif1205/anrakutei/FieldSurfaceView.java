@@ -69,7 +69,6 @@ public class FieldSurfaceView extends SurfaceView implements
 	private TextView mScoreView;
 	private int mScore;
 	private Handler mHandler;
-	private int mItemPos;
 	private int mItemM = 0;
 	public int mItemB = 0;
 	public int mItemS = 0;
@@ -210,8 +209,6 @@ public class FieldSurfaceView extends SurfaceView implements
 					// 弾が敵に当たったら消える
 					if (invIsShooted) {
 						invader.ItemDrop();
-						// mItemFlg = 1;
-						mItemPos = 1;
 						shot.remove();
 						invader.remove();
 						mHandler.post(new Runnable() {
@@ -270,36 +267,32 @@ public class FieldSurfaceView extends SurfaceView implements
 			mItemM = 0;
 		}
 		// アイテムの描画
-		// if (mItemFlg == 1) {
 		for (int i = 0; i < mItemList.size(); i++) {
-			if (mItemPos == 1) {
-				Item item = mItemList.get(i);
-				boolean pIsShooted = mPlayer.isItemted(item.getItemPosX(),
-						item.getItemPosY());
-				// アイテムが自機に当たったら消える
-				if (pIsShooted) {
+			Item item = mItemList.get(i);
+			Log.d("ite", "ite" + mItemList);
+			boolean pIsShooted = mPlayer.isItemted(item.getItemPosX(),
+					item.getItemPosY());
+			// アイテムが自機に当たったら消える
+			if (pIsShooted) {
+				item.remove();
+				if (item_pattern == "M") {
+					mItemM = 1;
 					item.remove();
-					if (item_pattern == "M") {
-						mItemM = 1;
-						mItemPos = 0;
-					} else if (item_pattern == "B") {
-						mItemB = 1;
-						mItemPos = 0;
-					} else if (item_pattern == "S") {
-						mItemS = 1;
-						mItemPos = 0;
-					} else if (item_pattern == "G") {
-						mItemG = 1;
-						mItemPos = 0;
-					}
-					mItemFlg = 0;
-				}
-				// ビームが画面上からはみ出るまで表示させ続ける
-				if (item.isInsideScreen(getHeight())) {
-					drawItem(item);
+				} else if (item_pattern == "B") {
+					mItemB = 1;
+					item.remove();
+				} else if (item_pattern == "S") {
+					mItemS = 1;
+					item.remove();
+				} else if (item_pattern == "G") {
+					mItemG = 1;
+					item.remove();
 				}
 			}
-			// }
+			// ビームが画面上からはみ出るまで表示させ続ける
+			if (item.isInsideScreen(getHeight())) {
+				drawItem(item);
+			}
 		}
 		getHolder().unlockCanvasAndPost(mCanvas);
 	}
