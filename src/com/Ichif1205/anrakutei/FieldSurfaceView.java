@@ -291,13 +291,6 @@ public class FieldSurfaceView extends SurfaceView implements
 		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		mCanvas.drawPath(mPlayer.drawGurd(path), mPaint);
 	}
-	
-	// ガード描画
-	protected void drawGurd() {
-		Path path = new Path();
-		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-		mCanvas.drawPath(mPlayer.drawGurd(path), mPaint);
-	}
 
 	// 敵描画
 	protected void drawInvader(Invader invader) {
