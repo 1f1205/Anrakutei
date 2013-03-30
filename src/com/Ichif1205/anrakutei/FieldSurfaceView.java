@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -28,6 +29,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	private final int MAX_INVADER_NUM = 9;
 
 	private SurfaceHolder mHolder;
+	private Context mContext;
 	private Canvas mCanvas = null;
 	private Paint mPaint;
 	private Player mPlayer;
@@ -53,6 +55,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	private ArrayList<Item> mItem;
 	private Status mStatus = null; // ゲームの状態を保存
 	private boolean mPauseFlg = false;
+	private GameEventLiestener mGameListener = null;
 	private int mItemFlg = 0;
 	private String item_pattern; // アイテムの種類
 	private TextView mScoreView;
@@ -70,6 +73,7 @@ public class FieldSurfaceView extends SurfaceView implements
 
 	public FieldSurfaceView(Context context) {
 		super(context);
+		mContext = context;
 		mHolder = getHolder();
 		mHolder.addCallback(this);
 		mHolder.setFixedSize(getWidth(), getHeight());
@@ -77,6 +81,7 @@ public class FieldSurfaceView extends SurfaceView implements
 
 	public FieldSurfaceView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		mContext = context;
 		mHolder = getHolder();
 		mHolder.addCallback(this);
 		mHolder.setFixedSize(getWidth(), getHeight());
@@ -87,7 +92,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
-		// TODO 自動生成されたメソッド・スタブ
+		Log.d(TAG, "Change Surface");
 	}
 
 	@Override
@@ -101,6 +106,7 @@ public class FieldSurfaceView extends SurfaceView implements
 			setGameStates();
 		}
 		
+		// 一時停止中か確認
 		if (!mPauseFlg) {
 			mThread.start();
 		}
@@ -196,9 +202,11 @@ public class FieldSurfaceView extends SurfaceView implements
 						mHandler.post(new Runnable() {
 							public void run() {
 								mScore += 1000;
+//						mGameListener.addScore(mScore);
 								mScoreView.setText(Integer.toString(mScore));
 							}
 						});
+						
 						mItemFlg = 1;
 						mItemPos = 1;
 					}
@@ -226,6 +234,10 @@ public class FieldSurfaceView extends SurfaceView implements
 			if (pIsShooted) {
 				invBeam.remove();
 				mPlayer.remove();
+				mGameListener.endGame(mScore);
+				// Result画面へ遷移
+//				Intent intent = new Intent(mContext, ResultActivity.class);
+//				mContext.startActivity(intent);
 			}
 			// ビームが画面上からはみ出るまで表示させ続ける
 			if (invBeam.isInsideScreen(getHeight())) {
@@ -361,7 +373,8 @@ public class FieldSurfaceView extends SurfaceView implements
 	}
 
 	/**
-	 * スレッドを終了
+	 * スレッドを一時停止
+	 * mThreadを一旦nullに
 	 */
 	public void endLoop() {
 		mPauseFlg = true;
@@ -413,6 +426,31 @@ public class FieldSurfaceView extends SurfaceView implements
 	
 	public void setScoreView(TextView tv) {
 		mScoreView = tv;
+	}
+	
+	/**
+	 * リスナーをセット
+	 * @param listener
+	 */
+	public void setEventListener(GameEventLiestener listener) {
+		mGameListener = listener;
+	}
+	
+	/**
+	 * ゲームの各イベントリスナー
+	 */
+	public interface GameEventLiestener {
+		/**
+		 * ゲーム終了イベント
+		 * @param mScore
+		 */
+		public void endGame(int score);
+		
+		/**
+		 * スコア増加イベント
+		 * @param mScore
+		 */
+		public void addScore(int score);
 	}
 
 }
