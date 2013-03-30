@@ -39,8 +39,8 @@ public class Invader {
 		Random type_rand = new Random();
 		type = type_rand.nextInt(5);
 		mIl = li;
-		mv_pattern = (int) (Math.random() * 10);
-		if (mv_pattern >= 6) {
+		mv_pattern = (int) (Math.random() * 100);
+		if (mv_pattern >= 60 && mv_pattern <= 79) {
 			centerX = posX;
 			centerY = posY;
 			Random r_rand = new Random();
@@ -139,14 +139,16 @@ public class Invader {
 	}
 
 	public void updatePosition() {
-		// patternの値によって移動パターン決定
-		// 0-3: 横移動, 4-7: 斜め移動, 8-9: 円移動
-		if (mv_pattern <= 3) {
+		// mv_patternの値によって移動パターン決定
+		// 0-29:横移動, 30-59:斜め移動, 60-79:円移動, ランダム移動:80-99
+		if (mv_pattern <= 29) {
 			moveLR();
-		} else if (mv_pattern <= 7) {
+		} else if (mv_pattern <= 59) {
 			moveSkew();
-		} else {
+		} else if (mv_pattern <= 79){
 			moveCircle();
+		} else {
+			moveVibration();
 		}
 	}
 
@@ -159,14 +161,13 @@ public class Invader {
 	}
 
 	private void moveSkew() {
-		int skew_pattern = (int) Math.random();
-		if (skew_pattern < 0.25) {
+		if (mv_pattern < 38) {
 			posX += speedX;
 			posY += speedY;
-		} else if (skew_pattern < 0.5) {
+		} else if (mv_pattern < 46) {
 			posX -= speedX;
 			posY += speedY;
-		} else if (skew_pattern < 0.75) {
+		} else if (mv_pattern < 54) {
 			posX += speedX;
 			posY -= speedY;
 		} else {
@@ -176,13 +177,27 @@ public class Invader {
 	}
 
 	private void moveCircle() {
-		if (mv_pattern == 8) {
+		if (mv_pattern <= 70) {
 			alpha += speedX * 1.0 / radius;
 		} else {
 			alpha -= speedX * 1.0 / radius;
 		}
 		posX = radius * FloatMath.cos(theta + alpha) + centerX;
 		posY = radius * FloatMath.sin(theta + alpha) + centerY;
+	}
+
+	private void moveVibration() {
+		double direc_pattern = Math.random();
+		if (direc_pattern < 0.0625) {
+			posX += speedX + 3;
+		} else if (direc_pattern < 0.125) {
+			posX -= speedX + 3;
+		} else if (direc_pattern < 0.1875) {
+			posY += speedY + 3;
+		} else if (direc_pattern < 0.25){
+			posY -= speedY + 3;
+		}
+
 	}
 
 	public void remove() {

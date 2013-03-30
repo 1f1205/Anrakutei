@@ -32,7 +32,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	private Paint mPaint;
 	private Player mPlayer;
 	private static double PLAYER_INIT_WIDTH_RATE = 0.5;
-	private static double PLAYER_INIT_HEIGHT_RATE = 0.84375;
+	private static double PLAYER_INIT_HEIGHT_RATE = 0.84375; // =27/32
 	private Bitmap mBitmap;
 	private Bitmap mInvImage1 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.invader);
@@ -69,7 +69,6 @@ public class FieldSurfaceView extends SurfaceView implements
 	private TextView mScoreView;
 	private int mScore;
 	private Handler mHandler;
-	private int mItemPos;
 	private int mItemM = 0;
 	public int mItemB = 0;
 	public int mItemS = 0;
@@ -129,7 +128,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		mPaint = new Paint();
 		mPaint.setColor(Color.GREEN);
 		mPaint.setAntiAlias(true);
-		mPlayer = new Player((int)(getWidth() * PLAYER_INIT_WIDTH_RATE),
+		mPlayer = new Player((int) (getWidth() * PLAYER_INIT_WIDTH_RATE),
 				(int) (getHeight() * PLAYER_INIT_HEIGHT_RATE));
 		mInvBeamList = new ArrayList<InvaderBeam>();
 		mShotList = new ArrayList<Shot>();
@@ -137,7 +136,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		mItemList = new ArrayList<Item>();
 		// 複数の敵を表示
 		for (int i = 2; i < MAX_INVADER_NUM; i++) {
-			Invader invader = new Invader(getWidth(), getHeight() * 3 / 4, this);
+			Invader invader = new Invader(getWidth(), getHeight() / 2, this);
 			mInvaderList.add(invader);
 		}
 		// 　敵をランダムで決定
@@ -210,8 +209,6 @@ public class FieldSurfaceView extends SurfaceView implements
 					// 弾が敵に当たったら消える
 					if (invIsShooted) {
 						invader.ItemDrop();
-						// mItemFlg = 1;
-						mItemPos = 1;
 						shot.remove();
 						invader.remove();
 						mHandler.post(new Runnable() {
@@ -270,36 +267,32 @@ public class FieldSurfaceView extends SurfaceView implements
 			mItemM = 0;
 		}
 		// アイテムの描画
-		// if (mItemFlg == 1) {
 		for (int i = 0; i < mItemList.size(); i++) {
-			if (mItemPos == 1) {
-				Item item = mItemList.get(i);
-				boolean pIsShooted = mPlayer.isItemted(item.getItemPosX(),
-						item.getItemPosY());
-				// アイテムが自機に当たったら消える
-				if (pIsShooted) {
+			Item item = mItemList.get(i);
+			Log.d("ite", "ite" + mItemList);
+			boolean pIsShooted = mPlayer.isItemted(item.getItemPosX(),
+					item.getItemPosY());
+			// アイテムが自機に当たったら消える
+			if (pIsShooted) {
+				item.remove();
+				if (item_pattern == "M") {
+					mItemM = 1;
 					item.remove();
-					if (item_pattern == "M") {
-						mItemM = 1;
-						mItemPos = 0;
-					} else if (item_pattern == "B") {
-						mItemB = 1;
-						mItemPos = 0;
-					} else if (item_pattern == "S") {
-						mItemS = 1;
-						mItemPos = 0;
-					} else if (item_pattern == "G") {
-						mItemG = 1;
-						mItemPos = 0;
-					}
-					mItemFlg = 0;
-				}
-				// ビームが画面上からはみ出るまで表示させ続ける
-				if (item.isInsideScreen(getHeight())) {
-					drawItem(item);
+				} else if (item_pattern == "B") {
+					mItemB = 1;
+					item.remove();
+				} else if (item_pattern == "S") {
+					mItemS = 1;
+					item.remove();
+				} else if (item_pattern == "G") {
+					mItemG = 1;
+					item.remove();
 				}
 			}
-			// }
+			// ビームが画面上からはみ出るまで表示させ続ける
+			if (item.isInsideScreen(getHeight())) {
+				drawItem(item);
+			}
 		}
 		getHolder().unlockCanvasAndPost(mCanvas);
 	}
@@ -316,7 +309,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		Path path = new Path();
 		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		mCanvas.drawPath(
-				mPlayer.drawGurd(path, getWidth() / 2, getHeight() * 6 / 8),
+				mPlayer.drawGurd(path, getWidth() / 2, getHeight() * 3 / 4),
 				mPaint);
 	}
 
@@ -325,7 +318,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		if (invader.isOverBoundaryWidth(getWidth())) {
 			invader.reverseSpeedXDirection();
 		}
-		if (invader.isOverBoundaryHeight(getHeight() * 27 / 32)) {
+		if (invader.isOverBoundaryHeight((int) (getHeight() * PLAYER_INIT_HEIGHT_RATE))) {
 			invader.reverseSpeedYDirection();
 		}
 		invader.updatePosition();
@@ -337,7 +330,7 @@ public class FieldSurfaceView extends SurfaceView implements
 			mBitmap = mInvImage2;
 		} else if (invType == 2) {
 			mBitmap = mInvImage3;
-		} else if (invType == 3){
+		} else if (invType == 3) {
 			mBitmap = mInvImage4;
 		} else {
 			mBitmap = mInvImage5;
@@ -375,9 +368,6 @@ public class FieldSurfaceView extends SurfaceView implements
 					item.getItemPosY(), mPaint);
 		} else if (item_pattern == "S") {
 			mCanvas.drawBitmap(mItemSImage, item.getItemPosX(),
-					item.getItemPosY(), mPaint);
-		} else if (item_pattern == "G") {
-			mCanvas.drawBitmap(mItemGImage, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
 		} else if (item_pattern == "G") {
 			mCanvas.drawBitmap(mItemGImage, item.getItemPosX(),
