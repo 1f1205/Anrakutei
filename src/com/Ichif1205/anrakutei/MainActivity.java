@@ -1,5 +1,7 @@
 package com.Ichif1205.anrakutei;
 
+import com.Ichif1205.anrakutei.FieldSurfaceView.GameEventLiestener;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -8,9 +10,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements GameEventLiestener{
 	private static String TAG = MainActivity.class.getSimpleName();
 	private FieldSurfaceView mFieldSurfaceView;
+	private TextView mScoreView = null;
 	private boolean mPauseFlg = false;
 	private Status mStatus;
 
@@ -22,14 +25,15 @@ public class MainActivity extends Activity {
 		Typeface face = Utils.getFonts(getApplicationContext());
 		
 		TextView stageView = (TextView)findViewById(R.id.stageView_id);
-		TextView scoreView = (TextView)findViewById(R.id.scoreView_id);
-		scoreView.setText("0");
+		mScoreView = (TextView)findViewById(R.id.scoreView_id);
+		mScoreView.setText("0");
 		stageView.setTypeface(face);
-		scoreView.setTypeface(face);
+		mScoreView.setTypeface(face);
 		
 		Log.d(TAG, "Start FindView");
 		mFieldSurfaceView = (FieldSurfaceView)findViewById(R.id.FieldSurfaceView_id);
-		mFieldSurfaceView.setScoreView(scoreView);
+		mFieldSurfaceView.setEventListener(this);
+		mFieldSurfaceView.setScoreView(mScoreView);
 		Log.d(TAG, "End FindView");
 	}
 	
@@ -115,5 +119,16 @@ public class MainActivity extends Activity {
         AlertDialog alertDialog = alertDialogBuilder.create();
         // アラートダイアログを表示します
         alertDialog.show();
+	}
+
+	@Override
+	public void endGame(int mScore) {
+		
+	}
+
+	@Override
+	public void addScore(int score) {
+		Log.d(TAG, "Score:"+score);
+		mScoreView.setText(Integer.toString(score));
 	}
 }
