@@ -192,6 +192,10 @@ public class FieldSurfaceView extends SurfaceView implements
 		if (mPlayer.getPlayerExistFlag()) {
 			drawPlayer();
 		}
+		// ガードの描画
+		if (mItemG == 1){
+			drawGurd();
+		}
 		// 自機の弾の描画
 		for (int i = 0; i < mShotList.size(); i++) {
 			Shot shot = mShotList.get(i);
@@ -273,6 +277,8 @@ public class FieldSurfaceView extends SurfaceView implements
 						mItemB = 1;
 					} else if (item_pattern == "S") {
 						mItemS = 1;
+					} else if (item_pattern == "G") {
+						mItemG = 1;
 					}
 					mItemFlg = 0;
 				}
@@ -291,6 +297,13 @@ public class FieldSurfaceView extends SurfaceView implements
 		Path path = new Path();
 		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		mCanvas.drawPath(mPlayer.draw(path, mItemS), mPaint);
+	}
+	
+	// ガード描画
+	protected void drawGurd() {
+		Path path = new Path();
+		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+		mCanvas.drawPath(mPlayer.drawGurd(path), mPaint);
 	}
 
 	// 敵描画
@@ -336,6 +349,9 @@ public class FieldSurfaceView extends SurfaceView implements
 					item.getItemPosY(), mPaint);
 		}else if (item_pattern == "S") {
 			mCanvas.drawBitmap(mItemSImage, item.getItemPosX(),
+					item.getItemPosY(), mPaint);
+		}else if (item_pattern == "G") {
+			mCanvas.drawBitmap(mItemGImage, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
 		}
 	}
