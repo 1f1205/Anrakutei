@@ -36,7 +36,7 @@ public class Invader {
 		speedY = spd;
 		existFlag = true;
 		Random type_rand = new Random();
-		type = type_rand.nextInt(4);
+		type = type_rand.nextInt(5);
 		mIl = li;
 		mv_pattern = (int) (Math.random() * 10);
 		if (mv_pattern >= 6) {

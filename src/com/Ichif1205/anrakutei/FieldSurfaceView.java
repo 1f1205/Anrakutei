@@ -42,6 +42,8 @@ public class FieldSurfaceView extends SurfaceView implements
 			R.drawable.invader3);
 	private Bitmap mInvImage4 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.invader4);
+	private Bitmap mInvImage5 = BitmapFactory.decodeResource(getResources(),
+			R.drawable.invader5);
 	public static int INV_IMAGE_WIDTH = 36;
 	public static int INV_IMAGE_HEIGHT = 36;
 	private Bitmap mItemMImage = BitmapFactory.decodeResource(getResources(),
@@ -146,6 +148,8 @@ public class FieldSurfaceView extends SurfaceView implements
 		mInvImage3 = Bitmap.createScaledBitmap(mInvImage3, INV_IMAGE_WIDTH,
 				INV_IMAGE_HEIGHT, true);
 		mInvImage4 = Bitmap.createScaledBitmap(mInvImage4, INV_IMAGE_WIDTH,
+				INV_IMAGE_HEIGHT, true);
+		mInvImage5 = Bitmap.createScaledBitmap(mInvImage5, INV_IMAGE_WIDTH,
 				INV_IMAGE_HEIGHT, true);
 		// アイテム
 		mItemMImage = Bitmap.createScaledBitmap(mItemMImage, ITEM_IMAGE_WIDTH,
@@ -329,8 +333,10 @@ public class FieldSurfaceView extends SurfaceView implements
 			mBitmap = mInvImage2;
 		} else if (invType == 2) {
 			mBitmap = mInvImage3;
-		} else {
+		} else if (invType == 3){
 			mBitmap = mInvImage4;
+		} else {
+			mBitmap = mInvImage5;
 		}
 		mCanvas.drawBitmap(mBitmap, invader.getInvaderPosX(),
 				invader.getInvaderPosY(), mPaint);
