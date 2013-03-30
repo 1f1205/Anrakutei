@@ -11,7 +11,7 @@ public class InvaderBeam {
 	private float posY;
 	private int width = 5;
 	private int height = 20;
-	private int speed = 4;
+	private int speed;
 	private int pattern;
 	private float centerX;
 	private float dy;
@@ -19,6 +19,9 @@ public class InvaderBeam {
 	InvaderBeam(float x, float y) {
 		posX = x;
 		posY = y;
+		Random speed_rand = new Random();
+		int spd = speed_rand.nextInt(3) + 3;
+		speed = spd;
 		Random ptn_rand = new Random();
 		pattern = ptn_rand.nextInt(4);
 		if (pattern >= 1) {
