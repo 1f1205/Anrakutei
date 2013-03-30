@@ -49,7 +49,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	private Bitmap mItemSImage = BitmapFactory.decodeResource(getResources(),
 			R.drawable.item3);
 	private Bitmap mItemGImage = BitmapFactory.decodeResource(getResources(),
-			R.drawable.item3);
+			R.drawable.item4);
 	private Thread mThread;
 	private ArrayList<Shot> mShotList;
 	private ArrayList<InvaderBeam> mInvBeamList;
