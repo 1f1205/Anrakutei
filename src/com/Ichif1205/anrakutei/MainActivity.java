@@ -47,7 +47,6 @@ public class MainActivity extends Activity implements GameEventLiestener {
 		thread.start();
 
 		Log.d(TAG, "Start FindView");
-		
 		Log.d(TAG, "End FindView");
 	}
 	
