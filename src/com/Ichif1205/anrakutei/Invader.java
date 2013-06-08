@@ -28,12 +28,12 @@ public class Invader {
 	private float centerY;
 	private float alpha = 0;
 	// 敵の種類定義
-	private static int INV_PURPLE = 0;
-	private static int INV_YELLOW = 1;
-	private static int INV_LIGHTBLUE = 2;
-	private static int INV_ORANGE = 3;
-	private static int INV_GREEN = 4;
-	private static int INV_BOSS = 5;
+	private static final int INV_PURPLE = 0;
+	private static final int INV_YELLOW = 1;
+	private static final int INV_LIGHTBLUE = 2;
+	private static final int INV_ORANGE = 3;
+	private static final int INV_GREEN = 4;
+	private static final int INV_BOSS = 5;
 
 	Invader(float x, float y, InvarderListener li) {
 		posX = getRandomPosition(x);
@@ -278,6 +278,32 @@ public class Invader {
 
 	public void ItemAdd() {
 		mIl.Item(posX, posY);
+	}
+	
+	/**
+	 * インベーダーの種類に応じて点数を返す
+	 * @return
+	 */
+	public int getPoint() {
+		final int point;
+		switch (type) {
+		case INV_PURPLE:
+		case INV_YELLOW:
+		case INV_LIGHTBLUE:
+		case INV_ORANGE:
+		case INV_GREEN:
+			point = 1000;
+			break;
+			
+		case INV_BOSS:
+			point = 3000;
+			break;
+
+		default:
+			point = 0;
+			break;
+		}
+		return point;
 	}
 
 }

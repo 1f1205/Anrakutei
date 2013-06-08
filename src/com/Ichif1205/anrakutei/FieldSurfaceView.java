@@ -240,7 +240,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		for (int i = 0; i < mShotList.size(); i++) {
 			Shot shot = mShotList.get(i);
 			synchronized (mInvaderList) {
-				for (Invader invader : mInvaderList) {
+				for (final Invader invader : mInvaderList) {
 					boolean invIsShooted = invader.isShooted(
 							shot.getShotPosX(), shot.getShotPosY());
 					// 弾が敵に当たったら消える
@@ -251,9 +251,7 @@ public class FieldSurfaceView extends SurfaceView implements
 						mDestoryInvaderCount++;
 						mHandler.post(new Runnable() {
 							public void run() {
-								// TODO スコア
-								mScore += 1000;
-								mGameListener.addScore(mScore);
+								mGameListener.addScore(invader.getPoint());
 							}
 						});
 						if (MAX_INVADER_NUM == mDestoryInvaderCount) {
