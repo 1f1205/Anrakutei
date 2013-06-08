@@ -11,8 +11,8 @@ public class Invader {
 
 	private float posX;
 	private float posY;
-	private int width = 36;
-	private int height = 36;
+	private int width;
+	private int height;
 	private boolean existFlag;
 	private double mv_pattern;
 	private int type;
@@ -22,7 +22,7 @@ public class Invader {
 	// 敵の動き関係
 	private int speedX;
 	private int speedY;
-	private float theta = 0;
+	private float theta;
 	private int radius;
 	private float centerX;
 	private float centerY;
@@ -38,6 +38,8 @@ public class Invader {
 	Invader(float x, float y, InvarderListener li) {
 		posX = getRandomPosition(x);
 		posY = getRandomPosition(y);
+		width = 36;
+		height = 36;
 		Random speed_rand = new Random();
 		int spd = speed_rand.nextInt(3) + 3;
 		speedX = spd;
@@ -45,15 +47,28 @@ public class Invader {
 		existFlag = true;
 		Random type_rand = new Random();
 		type = type_rand.nextInt(6);
-		System.out.println("TYPE" + type);
+		System.out.println("[TYPE]" + type + "(" + posX + ", " + posY + ")");
 		mv_pattern = Math.random();
 		mIl = li;
 		if (type == INV_LIGHTBLUE) {
 			centerX = posX;
 			centerY = posY;
 			Random r_rand = new Random();
-			int r_times = r_rand.nextInt(4) + 1;
-			radius = 50 * r_times;
+			int r_times = r_rand.nextInt(3);
+			radius = 50 * (1 + r_times);
+			if (centerX <= x / 2 && centerY > y / 2) {
+				theta = (float) (Math.PI / 4);
+			} else if (centerX > x / 2 && centerY > y / 2) {
+				theta = (float) (3 * Math.PI / 4);
+			} else if (centerX > x / 2 && centerY <= y / 2) {
+				theta = (float) (5 * Math.PI / 4);
+			} else {
+				theta = (float) (7 * Math.PI / 4);
+			}
+		}
+		if (type == INV_BOSS) {
+			width = 72;
+			height = 72;
 		}
 
 		mShootTimer = new Timer();
@@ -108,7 +123,8 @@ public class Invader {
 		float rate;
 		while (true) {
 			rate = (float) Math.random();
-			if (rate > 0.1 && rate < 0.9) {
+			System.out.println("[RATE]" + rate);
+			if (rate > 0.2 && rate < 0.8) {
 				break;
 			}
 		}
@@ -132,7 +148,7 @@ public class Invader {
 	}
 
 	public boolean isOverBoundaryHeight(int h) {
-		if (posY > h - height || posY <= 0) {
+		if (posY > h - height || posY <= 10) {
 			return true;
 		}
 		return false;
@@ -157,7 +173,7 @@ public class Invader {
 		} else if (type == INV_ORANGE) {
 			moveUD();
 		} else if (type == INV_GREEN) {
-			moveLR();
+			move30Skew();
 		} else {
 			moveVibration();
 		}
@@ -178,12 +194,28 @@ public class Invader {
 		} else if (mv_pattern < 0.5) {
 			posX -= speedX;
 			posY += speedY;
-		} else if (mv_pattern == 0.75) {
+		} else if (mv_pattern < 0.75) {
 			posX += speedX;
 			posY -= speedY;
 		} else {
 			posX -= speedX;
 			posY -= speedY;
+		}
+	}
+
+	private void move30Skew() {
+		if (mv_pattern < 0.25) {
+			posX += speedX;
+			posY += speedY / 2;
+		} else if (mv_pattern < 0.5) {
+			posX -= speedX;
+			posY += speedY / 2;
+		} else if (mv_pattern < 0.75) {
+			posX += speedX;
+			posY -= speedY / 2;
+		} else {
+			posX -= speedX;
+			posY -= speedY / 2;
 		}
 	}
 
@@ -236,7 +268,7 @@ public class Invader {
 			Random beam_rand = new Random();
 			int randBeam;
 			if (type == INV_BOSS) {
-				randBeam = 1000 + (200 * beam_rand.nextInt(5));
+				randBeam = 1000 + (100 * beam_rand.nextInt(5));
 			} else {
 				randBeam = 1500 + (500 * beam_rand.nextInt(5));
 			}
