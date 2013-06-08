@@ -16,7 +16,7 @@ public class Item {
 	private float centerX;
 	private float dy;
 	private String select_item;
-	private int item_pattern;
+	private int item_pattern = -1;
 
 	Item(float x, float y) {
 		posX = x;
@@ -72,10 +72,11 @@ public class Item {
 	}
 
 	public String selectItem() {
+		if(item_pattern!=-1){return select_item;}
 		Random ptn_rand = new Random();
-		item_pattern = ptn_rand.nextInt(3);
+		item_pattern = ptn_rand.nextInt(5);
 		//debug用
-		//item_pattern=3;
+		item_pattern=4;
 		if (item_pattern == 0) {
 			select_item = "M";
 		} else if (item_pattern == 1) {
@@ -84,6 +85,8 @@ public class Item {
 			select_item = "S";
 		}else if (item_pattern == 3) {
 			select_item = "G";
+		}else if (item_pattern == 4) {
+			select_item = "P";
 		}
 		return select_item;
 	}

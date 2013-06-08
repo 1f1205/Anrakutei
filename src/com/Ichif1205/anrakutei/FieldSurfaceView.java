@@ -1,6 +1,8 @@
 package com.Ichif1205.anrakutei;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,6 +16,7 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -54,6 +57,8 @@ public class FieldSurfaceView extends SurfaceView implements
 			R.drawable.item3);
 	private Bitmap mItemGImage = BitmapFactory.decodeResource(getResources(),
 			R.drawable.item4);
+	private Bitmap mItemPImage = BitmapFactory.decodeResource(getResources(),
+			R.drawable.item5);
 	public static int ITEM_IMAGE_WIDTH = 36;
 	public static int ITEM_IMAGE_HEIGHT = 36;
 	private Thread mThread;
@@ -65,8 +70,8 @@ public class FieldSurfaceView extends SurfaceView implements
 	private boolean mPauseFlg = false;
 	private GameEventLiestener mGameListener = null;
 	private int mDestoryInvaderCount = 0;
-	private int mItemFlg = 0;
 	private String item_pattern; // アイテムの種類
+	HashMap<String, String> mItemInfo;
 	private TextView mScoreView;
 	private int mScore = 0;
 	private Handler mHandler;
@@ -96,7 +101,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		mHolder.setFixedSize(getWidth(), getHeight());
 		Log.d(TAG, "Constract");
 	}
-	
+
 	/**
 	 * ステージ情報をセット
 	 * @param info
@@ -152,6 +157,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		mShotList = new ArrayList<Shot>();
 		mInvaderList = new ArrayList<Invader>();
 		mItemList = new ArrayList<Item>();
+		mItemInfo = new HashMap<String, String>();
 		// 複数の敵を表示
 		for (int i = 0; i < MAX_INVADER_NUM; i++) {
 			Invader invader = new Invader(getWidth(), getHeight() / 2, this);
@@ -176,6 +182,8 @@ public class FieldSurfaceView extends SurfaceView implements
 		mItemSImage = Bitmap.createScaledBitmap(mItemSImage, ITEM_IMAGE_WIDTH,
 				ITEM_IMAGE_HEIGHT, true);
 		mItemGImage = Bitmap.createScaledBitmap(mItemGImage, ITEM_IMAGE_WIDTH,
+				ITEM_IMAGE_HEIGHT, true);
+		mItemPImage = Bitmap.createScaledBitmap(mItemPImage, ITEM_IMAGE_WIDTH,
 				ITEM_IMAGE_HEIGHT, true);
 		bgm.setLooping(true);
 		bgm.start();
@@ -226,28 +234,28 @@ public class FieldSurfaceView extends SurfaceView implements
 							shot.getShotPosX(), shot.getShotPosY());
 					// 弾が敵に当たったら消える
 					if (invIsShooted) {
-						invader.ItemDrop();
+						invader.ItemAdd();
 						shot.remove();
 						invader.remove();
 						mDestoryInvaderCount++;
 						mHandler.post(new Runnable() {
 							public void run() {
 								mScore += 1000;
-								 mGameListener.addScore(mScore);
-//								mScoreView.setText(Integer.toString(mScore));
+								mGameListener.addScore(mScore);
+								// mScoreView.setText(Integer.toString(mScore));
 							}
 						});
 						if (MAX_INVADER_NUM == mDestoryInvaderCount) {
-						// 次のステージへ遷移
+							// 次のステージへ遷移
 							mHandler.post(new Runnable() {
-								
+
 								@Override
 								public void run() {
 									mGameListener.nextStage(mScore, STAGE_ID);
 								}
 							});
 						}
-						
+
 					}
 				}
 			}
@@ -299,28 +307,29 @@ public class FieldSurfaceView extends SurfaceView implements
 		// アイテムの描画
 		for (int i = 0; i < mItemList.size(); i++) {
 			Item item = mItemList.get(i);
+			String itemPattern = mItemInfo.get(String.valueOf(i));
+			// Log.d(itemPattern, "itemnum"+i+"pattern"+itemPattern);
 			boolean pIsShooted = mPlayer.isItemted(item.getItemPosX(),
 					item.getItemPosY());
 			// アイテムが自機に当たったら消える
 			if (pIsShooted) {
 				item.remove();
-				if (item_pattern == "M") {
+				if (itemPattern == "M") {
 					mItemM = 1;
-					item.remove();
-				} else if (item_pattern == "B") {
+				} else if (itemPattern == "B") {
 					mItemB = 1;
-					item.remove();
-				} else if (item_pattern == "S") {
+				} else if (itemPattern == "S") {
 					mItemS = 1;
-					item.remove();
-				} else if (item_pattern == "G") {
+				} else if (itemPattern == "G") {
 					mItemG = 1;
-					item.remove();
+				} else if (itemPattern == "P") {
+					mScore += 1000;
 				}
 			}
-			// ビームが画面上からはみ出るまで表示させ続ける
+			// アイテムが画面上からはみ出るまで表示させ続ける
 			if (item.isInsideScreen(getHeight())) {
-				drawItem(item);
+				String num = String.valueOf(i);
+				drawItem(item, num);
 			}
 		}
 		getHolder().unlockCanvasAndPost(mCanvas);
@@ -347,7 +356,8 @@ public class FieldSurfaceView extends SurfaceView implements
 		if (invader.isOverBoundaryWidth(getWidth())) {
 			invader.reverseSpeedXDirection();
 		}
-		if (invader.isOverBoundaryHeight((int) (getHeight() * PLAYER_INIT_HEIGHT_RATE))) {
+		if (invader
+				.isOverBoundaryHeight((int) (getHeight() * PLAYER_INIT_HEIGHT_RATE))) {
 			invader.reverseSpeedYDirection();
 		}
 		invader.updatePosition();
@@ -385,21 +395,24 @@ public class FieldSurfaceView extends SurfaceView implements
 	}
 
 	// Item生成
-	protected void drawItem(Item item) {
+	protected void drawItem(Item item, String num) {
 		item.updatePosition();
-		item_pattern = item.selectItem();
 		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-		if (item_pattern == "M") {
+		String itemPattern = mItemInfo.get(num);
+		if (itemPattern == "M") {
 			mCanvas.drawBitmap(mItemMImage, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
-		} else if (item_pattern == "B") {
+		} else if (itemPattern == "B") {
 			mCanvas.drawBitmap(mItemBImage, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
-		} else if (item_pattern == "S") {
+		} else if (itemPattern == "S") {
 			mCanvas.drawBitmap(mItemSImage, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
-		} else if (item_pattern == "G") {
+		} else if (itemPattern == "G") {
 			mCanvas.drawBitmap(mItemGImage, item.getItemPosX(),
+					item.getItemPosY(), mPaint);
+		} else if (itemPattern == "P") {
+			mCanvas.drawBitmap(mItemPImage, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
 		}
 	}
@@ -466,6 +479,11 @@ public class FieldSurfaceView extends SurfaceView implements
 	public void Item(float shotX, float shotY) {
 		Item item = new Item(shotX, shotY);
 		mItemList.add(item);
+		String num = String.valueOf(mItemList.size());
+		if (!mItemInfo.containsKey(num)) {
+			item_pattern = item.selectItem();
+			mItemInfo.put(num, item_pattern);
+		}
 	}
 
 	/**
@@ -511,16 +529,18 @@ public class FieldSurfaceView extends SurfaceView implements
 	public interface GameEventLiestener {
 		/**
 		 * ゲーム終了イベント
+		 * 
 		 * @param mScore
 		 */
 		public void endGame(int score);
 
 		/**
 		 * スコア増加イベント
+		 * 
 		 * @param mScore
 		 */
 		public void addScore(int score);
-		
+
 		/**
 		 * 次のステージへのフラグ
 		 */
