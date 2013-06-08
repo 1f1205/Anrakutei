@@ -1,7 +1,5 @@
 package com.Ichif1205.anrakutei;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -10,9 +8,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Space;
 import android.widget.TextView;
 
 import com.Ichif1205.anrakutei.FieldSurfaceView.GameEventLiestener;
@@ -206,6 +201,7 @@ public class MainActivity extends Activity implements GameEventLiestener {
 		mNextStageFlg = true;
 		// ステージを繰り上げる
 		mStageId++;
+		
 		// 最終ステージまでクリアしたら結果画面に遷移
 		if (mStageInfos.indexOfKey(mStageId) < 0) {
 			endGame(score);
