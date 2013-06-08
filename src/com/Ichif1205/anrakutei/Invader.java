@@ -221,7 +221,7 @@ public class Invader {
 		}
 	}
 
-	public void ItemDrop() {
+	public void ItemAdd() {
 		mIl.Item(posX, posY);
 	}
 
