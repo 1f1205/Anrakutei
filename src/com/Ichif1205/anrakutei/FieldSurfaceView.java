@@ -3,6 +3,7 @@ package com.Ichif1205.anrakutei;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -314,7 +315,9 @@ public class FieldSurfaceView extends SurfaceView implements
 				} else if (itemPattern == "G") {
 					mItemG = 1;
 				} else if (itemPattern == "P") {
-					mScore += 1000;
+					Random ptn_rand = new Random();
+					int plus_score = ptn_rand.nextInt(5)*100;
+					mScore += plus_score;
 				}
 			}
 			// アイテムが画面上からはみ出るまで表示させ続ける

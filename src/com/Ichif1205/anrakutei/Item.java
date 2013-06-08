@@ -72,21 +72,28 @@ public class Item {
 	}
 
 	public String selectItem() {
-		if(item_pattern!=-1){return select_item;}
+		if (item_pattern != -1) {
+			return select_item;
+		}
 		Random ptn_rand = new Random();
-		item_pattern = ptn_rand.nextInt(5);
-		//debug用
-		item_pattern=4;
-		if (item_pattern == 0) {
-			select_item = "M";
-		} else if (item_pattern == 1) {
-			select_item = "B";
-		}else if (item_pattern == 2) {
-			select_item = "S";
-		}else if (item_pattern == 3) {
-			select_item = "G";
-		}else if (item_pattern == 4) {
-			select_item = "P";
+		Random flg = new Random();
+		if (flg.nextInt(2) == 1) {
+			item_pattern = ptn_rand.nextInt(5);
+			// debug用
+			// item_pattern=4;
+			if (item_pattern == 0) {
+				select_item = "M";
+			} else if (item_pattern == 1) {
+				select_item = "B";
+			} else if (item_pattern == 2) {
+				select_item = "S";
+			} else if (item_pattern == 3) {
+				select_item = "G";
+			} else if (item_pattern == 4) {
+				select_item = "P";
+			}
+		} else {
+			select_item = "null";
 		}
 		return select_item;
 	}
