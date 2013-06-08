@@ -21,11 +21,6 @@ public class SplashActivity extends Activity {
 
 		// ステージ名表示
 		Intent intent = getIntent();
-		if (intent.hasExtra(MainActivity.EXTRA_SCORE)) {
-			Log.d(TAG,
-					"Splash_Score:"
-							+ intent.getIntExtra(MainActivity.EXTRA_SCORE, 0));
-		}
 
 		if (intent.hasExtra(MainActivity.EXTRA_STAGE)) {
 			stageNum = intent.getIntExtra(MainActivity.EXTRA_STAGE, 0);
@@ -43,13 +38,6 @@ public class SplashActivity extends Activity {
 		public void run() {
 			// Splash完了後に実行するActivityを指定する。
 			Intent intent = getIntent();
-
-			if (intent.hasExtra(MainActivity.EXTRA_SCORE)) {
-				Log.d(TAG,
-						"Splash_Score:"
-								+ intent.getIntExtra(MainActivity.EXTRA_SCORE,
-										0));
-			}
 
 			intent.setClass(getApplicationContext(), MainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP
