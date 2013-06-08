@@ -1,6 +1,5 @@
 package com.Ichif1205.anrakutei;
 
-
 /**
  * ステージ情報を格納
  */

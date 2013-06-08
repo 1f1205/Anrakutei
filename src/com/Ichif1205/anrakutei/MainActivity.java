@@ -9,6 +9,9 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Space;
 import android.widget.TextView;
 
 import com.Ichif1205.anrakutei.FieldSurfaceView.GameEventLiestener;
@@ -19,29 +22,41 @@ public class MainActivity extends Activity implements GameEventLiestener {
 	private TextView mScoreView = null;
 	private boolean mPauseFlg = false;
 	private boolean mGameEndFlg = false;
+	private boolean mNextStageFlg = false;
 	private int mStageId = 0;
+	private int mScore = 0;
 	private Status mStatus;
 	private ArrayList<StageInfo> mStageInfoLists = null;
+
+	private final String STAGE_FORMAT = "STAGE%03d";
+
+	/**
+	 * Extra
+	 */
+	public static final String EXTRA_SCORE = "EXTRA_SCORE";
+	public static final String EXTRA_STAGE = "EXTRA_STAGE";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
 		setContentView(R.layout.activity_main);
-		
+
 		// ステージIDやスコアのViewを設定
 		setView();
 		mFieldSurfaceView = (FieldSurfaceView) findViewById(R.id.FieldSurfaceView_id);
 		mFieldSurfaceView.setEventListener(this);
-		
-		final StageXmlParser xmlParser = new StageXmlParser(getApplicationContext());
-		
+
+		final StageXmlParser xmlParser = new StageXmlParser(
+				getApplicationContext());
+
 		// TODO XMLの読み込みが終わるまでActivityを止めておく必要がある
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				mStageInfoLists = xmlParser.parseStageXml();
 				mFieldSurfaceView.setStageInfo(mStageInfoLists.get(mStageId));
+				mFieldSurfaceView.setScore(mScore);
 			}
 		});
 		thread.start();
@@ -49,17 +64,30 @@ public class MainActivity extends Activity implements GameEventLiestener {
 		Log.d(TAG, "Start FindView");
 		Log.d(TAG, "End FindView");
 	}
-	
+
 	/**
 	 * FieldSurfaceView以外のViewの設定
 	 */
 	private void setView() {
+		Intent intent = getIntent();
+
+		// ステージIDを設定
+		if (intent.hasExtra(EXTRA_STAGE)) {
+			mStageId = intent.getIntExtra(EXTRA_STAGE, 0);
+		}
+
+		// スコアを設定
+		if (intent.hasExtra(EXTRA_SCORE)) {
+			mScore = intent.getIntExtra(EXTRA_SCORE, 0);
+		}
+
 		Typeface face = Utils.getFonts(getApplicationContext());
 		TextView stageView = (TextView) findViewById(R.id.stageView_id);
 		mScoreView = (TextView) findViewById(R.id.scoreView_id);
-		mScoreView.setText("0");
-		stageView.setTypeface(face);
 		mScoreView.setTypeface(face);
+		mScoreView.setText(String.valueOf(mScore));
+		stageView.setTypeface(face);
+		stageView.setText(String.format(STAGE_FORMAT, mStageId));
 	}
 
 	@Override
@@ -97,8 +125,13 @@ public class MainActivity extends Activity implements GameEventLiestener {
 
 	@Override
 	protected void onUserLeaveHint() {
+		// ステージ遷移時は即return
+		if (mNextStageFlg) {
+			return;
+		}
+
 		// ゲーム終了時はActivityを終了する
-		if (mGameEndFlg) { 
+		if (mGameEndFlg) {
 			finish();
 			return;
 		}
@@ -157,17 +190,34 @@ public class MainActivity extends Activity implements GameEventLiestener {
 		mGameEndFlg = true;
 		// Result画面へ遷移
 		Intent intent = new Intent(this, ResultActivity.class);
-		intent.putExtra("score", score);
+		intent.putExtra("score", mScore);
 		startActivity(intent);
 	}
 
 	@Override
 	public void addScore(int score) {
+		mScore = score;
 		mScoreView.setText(Integer.toString(score));
 	}
 
 	@Override
-	public void nextStage(int stageId) {
+	public void nextStage(int score, int stageId) {
 		Log.d(TAG, "Game Clear");
+		mNextStageFlg = true;
+		
+		// 最終ステージまでクリアしたら結果画面に遷移
+		if (mStageInfoLists.size() == stageId) {
+			endGame(score);
+			return;
+		}
+		
+		// ステージ遷移用のINTENT
+		Intent stageIntent = new Intent(getApplicationContext(),
+				SplashActivity.class);
+
+		stageIntent.putExtra(EXTRA_SCORE, score);
+		stageIntent.putExtra(EXTRA_STAGE, stageId);
+
+		startActivity(stageIntent);
 	}
 }
