@@ -116,15 +116,17 @@ public class FieldSurfaceView extends SurfaceView implements
 
 	/**
 	 * ステージ情報をセット
+	 * 
 	 * @param info
 	 */
 	public void setStageInfo(StageInfo info) {
 		MAX_INVADER_NUM = info.maxInvader;
 		stageId = info.id;
 	}
-	
+
 	/**
 	 * 前のステージのスコアを引き継ぐ
+	 * 
 	 * @param score
 	 */
 	public void setScore(int score) {
@@ -338,7 +340,7 @@ public class FieldSurfaceView extends SurfaceView implements
 					mItemG = 1;
 				} else if (itemPattern == "P") {
 					Random ptn_rand = new Random();
-					int plus_score = ptn_rand.nextInt(5)*100;
+					int plus_score = ptn_rand.nextInt(5) * 100;
 					mScore += plus_score;
 				}
 			}
