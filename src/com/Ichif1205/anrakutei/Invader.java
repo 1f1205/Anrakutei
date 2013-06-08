@@ -14,6 +14,7 @@ public class Invader {
 	private int width = 36;
 	private int height = 36;
 	private boolean existFlag;
+	private double mv_pattern;
 	private int type;
 	private InvarderListener mIl;
 	private int mTerm = 1000;
@@ -21,12 +22,18 @@ public class Invader {
 	// 敵の動き関係
 	private int speedX;
 	private int speedY;
-	private int mv_pattern;
 	private float theta = 0;
 	private int radius;
 	private float centerX;
 	private float centerY;
 	private float alpha = 0;
+	// 敵の種類定義
+	private static int INV_PURPLE = 0;
+	private static int INV_YELLOW = 1;
+	private static int INV_LIGHTBLUE = 2;
+	private static int INV_ORANGE = 3;
+	private static int INV_GREEN = 4;
+	private static int INV_BOSS = 5;
 
 	Invader(float x, float y, InvarderListener li) {
 		posX = getRandomPosition(x);
@@ -37,10 +44,11 @@ public class Invader {
 		speedY = spd;
 		existFlag = true;
 		Random type_rand = new Random();
-		type = type_rand.nextInt(5);
+		type = type_rand.nextInt(6);
+		System.out.println("TYPE" + type);
+		mv_pattern = Math.random();
 		mIl = li;
-		mv_pattern = (int) (Math.random() * 100);
-		if (mv_pattern >= 60 && mv_pattern <= 79) {
+		if (type == INV_LIGHTBLUE) {
 			centerX = posX;
 			centerY = posY;
 			Random r_rand = new Random();
@@ -139,21 +147,24 @@ public class Invader {
 	}
 
 	public void updatePosition() {
-		// mv_patternの値によって移動パターン決定
-		// 0-29:横移動, 30-59:斜め移動, 60-79:円移動, ランダム移動:80-99
-		if (mv_pattern <= 29) {
+		// インベーダーの種類によって動き異なる
+		if (type == INV_PURPLE) {
 			moveLR();
-		} else if (mv_pattern <= 59) {
+		} else if (type == INV_YELLOW) {
 			moveSkew();
-		} else if (mv_pattern <= 79){
+		} else if (type == INV_LIGHTBLUE) {
 			moveCircle();
+		} else if (type == INV_ORANGE) {
+			moveUD();
+		} else if (type == INV_GREEN) {
+			moveLR();
 		} else {
 			moveVibration();
 		}
 	}
 
 	private void moveLR() {
-		if (mv_pattern <= 1) {
+		if (mv_pattern < 0.5) {
 			posX += speedX;
 		} else {
 			posX -= speedX;
@@ -161,13 +172,13 @@ public class Invader {
 	}
 
 	private void moveSkew() {
-		if (mv_pattern < 38) {
+		if (mv_pattern < 0.25) {
 			posX += speedX;
 			posY += speedY;
-		} else if (mv_pattern < 46) {
+		} else if (mv_pattern < 0.5) {
 			posX -= speedX;
 			posY += speedY;
-		} else if (mv_pattern < 54) {
+		} else if (mv_pattern == 0.75) {
 			posX += speedX;
 			posY -= speedY;
 		} else {
@@ -177,7 +188,7 @@ public class Invader {
 	}
 
 	private void moveCircle() {
-		if (mv_pattern <= 70) {
+		if (mv_pattern < 0.5) {
 			alpha += speedX * 1.0 / radius;
 		} else {
 			alpha -= speedX * 1.0 / radius;
@@ -186,18 +197,25 @@ public class Invader {
 		posY = radius * FloatMath.sin(theta + alpha) + centerY;
 	}
 
+	private void moveUD() {
+		if (mv_pattern < 0.5) {
+			posY += speedY;
+		} else {
+			posY -= speedY;
+		}
+	}
+
 	private void moveVibration() {
-		double direc_pattern = Math.random();
-		if (direc_pattern < 0.0625) {
+		double mvvi = Math.random();
+		if (mvvi < 0.03125) {
 			posX += speedX + 3;
-		} else if (direc_pattern < 0.125) {
+		} else if (mvvi < 0.0625) {
 			posX -= speedX + 3;
-		} else if (direc_pattern < 0.1875) {
+		} else if (mvvi < 0.09375) {
 			posY += speedY + 3;
-		} else if (direc_pattern < 0.25){
+		} else if (mvvi < 0.125) {
 			posY -= speedY + 3;
 		}
-
 	}
 
 	public void remove() {
@@ -207,16 +225,21 @@ public class Invader {
 	}
 
 	public interface InvarderListener {
-		public void shootBeamEvent(float shotX, float shotY);
+		public void shootBeamEvent(float shotX, float shotY, int type);
 
 		public void Item(float shotX, float shotY);
 	}
 
 	class ShootTask extends TimerTask {
 		public void run() {
-			mIl.shootBeamEvent(posX, posY);
-			Random rBeam = new Random();
-			int randBeam = 1500 + (500 * rBeam.nextInt(5));
+			mIl.shootBeamEvent(posX, posY, type);
+			Random beam_rand = new Random();
+			int randBeam;
+			if (type == INV_BOSS) {
+				randBeam = 1000 + (200 * beam_rand.nextInt(5));
+			} else {
+				randBeam = 1500 + (500 * beam_rand.nextInt(5));
+			}
 			mShootTimer.schedule(new ShootTask(), randBeam);
 		}
 	}

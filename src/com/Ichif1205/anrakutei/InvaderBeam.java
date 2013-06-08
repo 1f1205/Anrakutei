@@ -9,23 +9,27 @@ public class InvaderBeam {
 
 	private float posX;
 	private float posY;
+	private int invType;
 	private int width = 5;
 	private int height = 20;
 	private int speed;
-	private int pattern;
+	private int beamType;
 	private float centerX;
 	private float dy;
 
-	InvaderBeam(float x, float y) {
+	InvaderBeam(float x, float y, int type) {
 		posX = x;
 		posY = y;
+		invType = type;
 		Random speed_rand = new Random();
-		int spd = speed_rand.nextInt(3) + 3;
-		speed = spd;
-		Random ptn_rand = new Random();
-		pattern = ptn_rand.nextInt(4);
-		if (pattern >= 1) {
+		speed = speed_rand.nextInt(3) + 3;
+		Random beam_rand = new Random();
+		beamType = beam_rand.nextInt(4);
+		if (beamType >= 1) {
 			centerX = posX;
+		}
+		if (invType == 5) {
+			speed = 8;
 		}
 	}
 
@@ -47,6 +51,10 @@ public class InvaderBeam {
 
 	public int getInvBeamSpeed() {
 		return speed;
+	}
+
+	public int getInvType() {
+		return invType;
 	}
 
 	public void setInvBeamPosX(float x) {
@@ -74,12 +82,12 @@ public class InvaderBeam {
 
 	public void updatePosition() {
 		// patternによって移動パターン決定
-		if (pattern == 0) {
+		if (beamType == 0) {
 			posY += speed;
-		} else if (pattern == 1) {
+		} else if (beamType == 1) {
 			posY += speed;
 			posX = 60 * FloatMath.cos(posY / 60) + centerX;
-		} else if (pattern == 2) {
+		} else if (beamType == 2) {
 			posY += speed;
 			dy += speed * (float) Math.tan(Math.PI / 9);
 			posX = dy + centerX;
