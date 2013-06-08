@@ -1,6 +1,5 @@
 package com.Ichif1205.anrakutei;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -17,7 +16,6 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -28,10 +26,9 @@ import com.Ichif1205.anrakutei.Invader.InvarderListener;
 public class FieldSurfaceView extends SurfaceView implements
 		SurfaceHolder.Callback, Runnable, InvarderListener {
 	private final String TAG = FieldSurfaceView.class.getSimpleName();
-	private int stageId = 0;
+	private final Context mContext;
 	private int MAX_INVADER_NUM = 12;
 	private SurfaceHolder mHolder;
-	private Context mContext;
 	private Canvas mCanvas = null;
 	private Paint mPaint;
 	private Player mPlayer;
@@ -77,13 +74,25 @@ public class FieldSurfaceView extends SurfaceView implements
 	private int mDestoryInvaderCount = 0;
 	private String item_pattern; // アイテムの種類
 	HashMap<String, String> mItemInfo;
-	private TextView mScoreView;
 	private int mScore = 0;
 	private Handler mHandler;
 	private int mItemM = 0;
 	public int mItemB = 0;
 	public int mItemS = 0;
 	public int mItemG = 0;
+	
+	//HP
+	private Bitmap mItemHP5 = BitmapFactory.decodeResource(getResources(),
+			R.drawable.hp5);
+	private Bitmap mItemHP4 = BitmapFactory.decodeResource(getResources(),
+			R.drawable.hp4);
+	private Bitmap mItemHP3 = BitmapFactory.decodeResource(getResources(),
+			R.drawable.hp3);
+	private Bitmap mItemHP2 = BitmapFactory.decodeResource(getResources(),
+			R.drawable.hp2);
+	private Bitmap mItemHP1 = BitmapFactory.decodeResource(getResources(),
+			R.drawable.hp1);
+	private int BossHP5;
 
 	MediaPlayer bgm = MediaPlayer.create(getContext(), R.raw.bgm);
 	MediaPlayer se = MediaPlayer.create(getContext(), R.raw.shot);
@@ -114,7 +123,6 @@ public class FieldSurfaceView extends SurfaceView implements
 	 */
 	public void setStageInfo(StageInfo info) {
 		MAX_INVADER_NUM = info.maxInvader;
-		stageId = info.id;
 	}
 
 	/**
@@ -196,6 +204,18 @@ public class FieldSurfaceView extends SurfaceView implements
 				ITEM_IMAGE_HEIGHT, true);
 		bgm.setLooping(true);
 		bgm.start();
+		
+		//HP
+		mItemHP5 = Bitmap.createScaledBitmap(mItemHP5, ITEM_IMAGE_WIDTH,
+				ITEM_IMAGE_HEIGHT, true);
+		mItemHP4 = Bitmap.createScaledBitmap(mItemHP4, ITEM_IMAGE_WIDTH,
+				ITEM_IMAGE_HEIGHT, true);
+		mItemHP3 = Bitmap.createScaledBitmap(mItemHP3, ITEM_IMAGE_WIDTH,
+				ITEM_IMAGE_HEIGHT, true);
+		mItemHP2 = Bitmap.createScaledBitmap(mItemHP2, ITEM_IMAGE_WIDTH,
+				ITEM_IMAGE_HEIGHT, true);
+		mItemHP1 = Bitmap.createScaledBitmap(mItemHP1, ITEM_IMAGE_WIDTH,
+				ITEM_IMAGE_HEIGHT, true);
 
 		mHandler = new Handler();
 	}
@@ -243,15 +263,17 @@ public class FieldSurfaceView extends SurfaceView implements
 							shot.getShotPosX(), shot.getShotPosY());
 					// 弾が敵に当たったら消える
 					if (invIsShooted) {
+						int invType = invader.getInvType();
+						Log.d("itemPattern", "itemnum"+invType);
 						invader.ItemAdd();
 						shot.remove();
 						invader.remove();
 						mDestoryInvaderCount++;
 						mHandler.post(new Runnable() {
 							public void run() {
+								// TODO スコア
 								mScore += 1000;
 								mGameListener.addScore(mScore);
-								// mScoreView.setText(Integer.toString(mScore));
 							}
 						});
 						if (MAX_INVADER_NUM == mDestoryInvaderCount) {
@@ -260,6 +282,7 @@ public class FieldSurfaceView extends SurfaceView implements
 
 								@Override
 								public void run() {
+									bgm.stop();
 									mGameListener.nextStage(mScore);
 								}
 							});
@@ -317,7 +340,6 @@ public class FieldSurfaceView extends SurfaceView implements
 		for (int i = 0; i < mItemList.size(); i++) {
 			Item item = mItemList.get(i);
 			String itemPattern = mItemInfo.get(String.valueOf(i));
-			// Log.d(itemPattern, "itemnum"+i+"pattern"+itemPattern);
 			boolean pIsShooted = mPlayer.isItemted(item.getItemPosX(),
 					item.getItemPosY());
 			// アイテムが自機に当たったら消える
@@ -534,10 +556,6 @@ public class FieldSurfaceView extends SurfaceView implements
 	 */
 	public void setInstance(Status status) {
 		mStatus = status;
-	}
-
-	public void setScoreView(TextView tv) {
-		mScoreView = tv;
 	}
 
 	/**
