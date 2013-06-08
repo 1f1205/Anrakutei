@@ -299,7 +299,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		for (int i = 0; i < mItemList.size(); i++) {
 			Item item = mItemList.get(i);
 			String itemPattern = mItemInfo.get(String.valueOf(i));
-			//Log.d(itemPattern, "itemnum"+i+"pattern"+itemPattern);
+			// Log.d(itemPattern, "itemnum"+i+"pattern"+itemPattern);
 			boolean pIsShooted = mPlayer.isItemted(item.getItemPosX(),
 					item.getItemPosY());
 			// アイテムが自機に当たったら消える
@@ -313,7 +313,7 @@ public class FieldSurfaceView extends SurfaceView implements
 					mItemS = 1;
 				} else if (itemPattern == "G") {
 					mItemG = 1;
-				}else if (itemPattern == "P") {
+				} else if (itemPattern == "P") {
 					mScore += 1000;
 				}
 			}
@@ -402,7 +402,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		} else if (itemPattern == "G") {
 			mCanvas.drawBitmap(mItemGImage, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
-		}else if (itemPattern == "P") {
+		} else if (itemPattern == "P") {
 			mCanvas.drawBitmap(mItemPImage, item.getItemPosX(),
 					item.getItemPosY(), mPaint);
 		}
