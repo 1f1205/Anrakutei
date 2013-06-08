@@ -84,13 +84,6 @@ public class FieldSurfaceView extends SurfaceView implements
 	public int mItemB = 0;
 	public int mItemS = 0;
 	public int mItemG = 0;
-	// 敵の種類定義
-	private static int INV_PURPLE = 0;
-	private static int INV_YELLOW = 1;
-	private static int INV_LIGHTBLUE = 2;
-	private static int INV_ORANGE = 3;
-	private static int INV_GREEN = 4;
-	private static int INV_BOSS = 5;
 
 	MediaPlayer bgm = MediaPlayer.create(getContext(), R.raw.bgm);
 	MediaPlayer se = MediaPlayer.create(getContext(), R.raw.shot);
@@ -381,15 +374,15 @@ public class FieldSurfaceView extends SurfaceView implements
 		invader.updatePosition();
 
 		int invType = invader.getInvType();
-		if (invType == INV_PURPLE) {
+		if (invType == Invader.INV_PURPLE) {
 			mBitmap = mInvImage1;
-		} else if (invType == INV_YELLOW) {
+		} else if (invType == Invader.INV_YELLOW) {
 			mBitmap = mInvImage2;
-		} else if (invType == INV_LIGHTBLUE) {
+		} else if (invType == Invader.INV_LIGHTBLUE) {
 			mBitmap = mInvImage3;
-		} else if (invType == INV_ORANGE) {
+		} else if (invType == Invader.INV_ORANGE) {
 			mBitmap = mInvImage4;
-		} else if (invType == INV_GREEN) {
+		} else if (invType == Invader.INV_GREEN) {
 			mBitmap = mInvImage5;
 		} else {
 			mBitmap = mInvImage6;
@@ -491,7 +484,7 @@ public class FieldSurfaceView extends SurfaceView implements
 			return;
 		}
 		Log.d(TAG, "BEAM EVENT");
-		if (invType == INV_BOSS) {
+		if (invType == Invader.INV_BOSS) {
 			InvaderBeam invBeam = new InvaderBeam(shotX, shotY
 					+ INVBOSS_IMAGE_HEIGHT / 2, invType);
 			mInvBeamList.add(invBeam);
