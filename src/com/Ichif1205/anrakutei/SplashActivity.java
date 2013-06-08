@@ -11,20 +11,19 @@ public class SplashActivity extends Activity {
 	private static final String TAG = SplashActivity.class.getSimpleName();
 	private static final int WAIT_TIME = 2000;
 	private static final String STAGE_FORMAT = "STAGE %03d";
-	private int stageNum = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_next_stage_splash);
 		TextView stageName = (TextView) findViewById(R.id.stage_name);
+		int stageNum = 0;
 
 		// ステージ名表示
 		Intent intent = getIntent();
 
 		if (intent.hasExtra(MainActivity.EXTRA_STAGE)) {
 			stageNum = intent.getIntExtra(MainActivity.EXTRA_STAGE, 0);
-			stageNum++;
 		}
 		stageName.setText(String.format(STAGE_FORMAT, stageNum));
 

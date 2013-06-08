@@ -28,7 +28,7 @@ import com.Ichif1205.anrakutei.Invader.InvarderListener;
 public class FieldSurfaceView extends SurfaceView implements
 		SurfaceHolder.Callback, Runnable, InvarderListener {
 	private final String TAG = FieldSurfaceView.class.getSimpleName();
-	private int STAGE_ID = 0;
+	private int stageId = 0;
 	private int MAX_INVADER_NUM = 12;
 	private SurfaceHolder mHolder;
 	private Context mContext;
@@ -120,7 +120,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	 */
 	public void setStageInfo(StageInfo info) {
 		MAX_INVADER_NUM = info.maxInvader;
-		STAGE_ID = info.id;
+		stageId = info.id;
 	}
 	
 	/**
@@ -265,7 +265,7 @@ public class FieldSurfaceView extends SurfaceView implements
 
 								@Override
 								public void run() {
-									mGameListener.nextStage(mScore, STAGE_ID);
+									mGameListener.nextStage(mScore);
 								}
 							});
 						}
@@ -575,7 +575,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		/**
 		 * 次のステージへのフラグ
 		 */
-		public void nextStage(int score, int stageId);
+		public void nextStage(int score);
 	}
 
 }

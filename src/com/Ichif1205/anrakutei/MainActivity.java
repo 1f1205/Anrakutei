@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Space;
@@ -23,10 +24,10 @@ public class MainActivity extends Activity implements GameEventLiestener {
 	private boolean mPauseFlg = false;
 	private boolean mGameEndFlg = false;
 	private boolean mNextStageFlg = false;
-	private int mStageId = 0;
+	private int mStageId = 1;
 	private int mScore = 0;
 	private Status mStatus;
-	private ArrayList<StageInfo> mStageInfoLists = null;
+	private SparseArray<StageInfo> mStageInfos = null;
 
 	private final String STAGE_FORMAT = "STAGE%03d";
 
@@ -47,15 +48,14 @@ public class MainActivity extends Activity implements GameEventLiestener {
 		mFieldSurfaceView = (FieldSurfaceView) findViewById(R.id.FieldSurfaceView_id);
 		mFieldSurfaceView.setEventListener(this);
 
-		final StageXmlParser xmlParser = new StageXmlParser(
-				getApplicationContext());
-
 		// TODO XMLの読み込みが終わるまでActivityを止めておく必要がある
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				mStageInfoLists = xmlParser.parseStageXml();
-				mFieldSurfaceView.setStageInfo(mStageInfoLists.get(mStageId));
+				final StageXmlParser xmlParser = new StageXmlParser(
+						getApplicationContext());
+				mStageInfos = xmlParser.parseStageXml();
+				mFieldSurfaceView.setStageInfo(mStageInfos.get(mStageId));
 				mFieldSurfaceView.setScore(mScore);
 			}
 		});
@@ -73,7 +73,7 @@ public class MainActivity extends Activity implements GameEventLiestener {
 
 		// ステージIDを設定
 		if (intent.hasExtra(EXTRA_STAGE)) {
-			mStageId = intent.getIntExtra(EXTRA_STAGE, 0);
+			mStageId = intent.getIntExtra(EXTRA_STAGE, 1);
 		}
 
 		// スコアを設定
@@ -201,22 +201,23 @@ public class MainActivity extends Activity implements GameEventLiestener {
 	}
 
 	@Override
-	public void nextStage(int score, int stageId) {
+	public void nextStage(int score) {
 		Log.d(TAG, "Game Clear");
 		mNextStageFlg = true;
-		
+		// ステージを繰り上げる
+		mStageId++;
 		// 最終ステージまでクリアしたら結果画面に遷移
-		if (mStageInfoLists.size() == stageId) {
+		if (mStageInfos.indexOfKey(mStageId) < 0) {
 			endGame(score);
 			return;
 		}
-		
+
 		// ステージ遷移用のINTENT
 		Intent stageIntent = new Intent(getApplicationContext(),
 				SplashActivity.class);
 
 		stageIntent.putExtra(EXTRA_SCORE, score);
-		stageIntent.putExtra(EXTRA_STAGE, stageId);
+		stageIntent.putExtra(EXTRA_STAGE, mStageId);
 
 		startActivity(stageIntent);
 	}

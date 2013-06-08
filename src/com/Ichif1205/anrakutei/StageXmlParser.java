@@ -11,6 +11,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
+import android.util.SparseArray;
 import android.util.Xml;
 
 /**
@@ -30,9 +31,9 @@ public class StageXmlParser {
 	 * StageXmlをパースする
 	 * @return
 	 */
-	public ArrayList<StageInfo> parseStageXml() {
+	public SparseArray<StageInfo> parseStageXml() {
 		final XmlPullParser xmlPullParser = Xml.newPullParser();
-		final ArrayList<StageInfo> stages = new ArrayList<StageInfo>();
+		final SparseArray<StageInfo> stages = new SparseArray<StageInfo>();
 		final AssetManager assets = mContext.getResources().getAssets();
 		
 		try {
@@ -45,7 +46,8 @@ public class StageXmlParser {
 				// itemタグを見つけたら、addItemsへ
 				if (eventType == XmlPullParser.START_TAG
 						&& STAGE_TAG.equals(xmlPullParser.getName())) {
-					stages.add(addStage(xmlPullParser));
+					final StageInfo stage = addStage(xmlPullParser);
+					stages.put(stage.id, stage);
 				}
 			}
 		} catch (IOException e) {
