@@ -191,8 +191,8 @@ public class MainActivity extends Activity implements GameEventLiestener {
 
 	@Override
 	public void addScore(int score) {
-		mScore = score;
-		mScoreView.setText(Integer.toString(score));
+		mScore += score;
+		mScoreView.setText(Integer.toString(mScore));
 	}
 
 	@Override
@@ -204,7 +204,7 @@ public class MainActivity extends Activity implements GameEventLiestener {
 		
 		// 最終ステージまでクリアしたら結果画面に遷移
 		if (mStageInfos.indexOfKey(mStageId) < 0) {
-			endGame(score);
+			endGame(mScore);
 			return;
 		}
 
@@ -212,7 +212,7 @@ public class MainActivity extends Activity implements GameEventLiestener {
 		Intent stageIntent = new Intent(getApplicationContext(),
 				SplashActivity.class);
 
-		stageIntent.putExtra(EXTRA_SCORE, score);
+		stageIntent.putExtra(EXTRA_SCORE, mScore);
 		stageIntent.putExtra(EXTRA_STAGE, mStageId);
 
 		startActivity(stageIntent);
