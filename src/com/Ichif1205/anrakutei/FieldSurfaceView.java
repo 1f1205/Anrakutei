@@ -68,7 +68,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	private int mItemFlg = 0;
 	private String item_pattern; // アイテムの種類
 	private TextView mScoreView;
-	private int mScore;
+	private int mScore = 0;
 	private Handler mHandler;
 	private int mItemM = 0;
 	public int mItemB = 0;
@@ -99,10 +99,19 @@ public class FieldSurfaceView extends SurfaceView implements
 	
 	/**
 	 * ステージ情報をセット
+	 * @param info
 	 */
 	public void setStageInfo(StageInfo info) {
 		MAX_INVADER_NUM = info.maxInvader;
 		STAGE_ID = info.id;
+	}
+	
+	/**
+	 * 前のステージのスコアを引き継ぐ
+	 * @param score
+	 */
+	public void setScore(int score) {
+		mScore = score;
 	}
 
 	@Override
@@ -234,7 +243,7 @@ public class FieldSurfaceView extends SurfaceView implements
 								
 								@Override
 								public void run() {
-									mGameListener.nextStage(0);
+									mGameListener.nextStage(mScore, STAGE_ID);
 								}
 							});
 						}
@@ -515,7 +524,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		/**
 		 * 次のステージへのフラグ
 		 */
-		public void nextStage(int stageId);
+		public void nextStage(int score, int stageId);
 	}
 
 }
