@@ -52,7 +52,8 @@ public class SplashActivity extends Activity {
 			}
 
 			intent.setClass(getApplicationContext(), MainActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_NO_HISTORY);
+			intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP
+					| Intent.FLAG_ACTIVITY_NO_HISTORY);
 			startActivity(intent);
 			SplashActivity.this.finish();
 		}
