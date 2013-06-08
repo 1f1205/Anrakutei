@@ -80,13 +80,19 @@ public class FieldSurfaceView extends SurfaceView implements
 	public int mItemB = 0;
 	public int mItemS = 0;
 	public int mItemG = 0;
-	// 敵の種類定義
-	private static int INV_PURPLE = 0;
-	private static int INV_YELLOW = 1;
-	private static int INV_LIGHTBLUE = 2;
-	private static int INV_ORANGE = 3;
-	private static int INV_GREEN = 4;
-	private static int INV_BOSS = 5;
+	
+	//HP
+	private Bitmap mItemHP5 = BitmapFactory.decodeResource(getResources(),
+			R.drawable.hp5);
+	private Bitmap mItemHP4 = BitmapFactory.decodeResource(getResources(),
+			R.drawable.hp4);
+	private Bitmap mItemHP3 = BitmapFactory.decodeResource(getResources(),
+			R.drawable.hp3);
+	private Bitmap mItemHP2 = BitmapFactory.decodeResource(getResources(),
+			R.drawable.hp2);
+	private Bitmap mItemHP1 = BitmapFactory.decodeResource(getResources(),
+			R.drawable.hp1);
+	private int BossHP5;
 
 	MediaPlayer bgm = MediaPlayer.create(getContext(), R.raw.bgm);
 	MediaPlayer se = MediaPlayer.create(getContext(), R.raw.shot);
@@ -198,6 +204,18 @@ public class FieldSurfaceView extends SurfaceView implements
 				ITEM_IMAGE_HEIGHT, true);
 		bgm.setLooping(true);
 		bgm.start();
+		
+		//HP
+		mItemHP5 = Bitmap.createScaledBitmap(mItemHP5, ITEM_IMAGE_WIDTH,
+				ITEM_IMAGE_HEIGHT, true);
+		mItemHP4 = Bitmap.createScaledBitmap(mItemHP4, ITEM_IMAGE_WIDTH,
+				ITEM_IMAGE_HEIGHT, true);
+		mItemHP3 = Bitmap.createScaledBitmap(mItemHP3, ITEM_IMAGE_WIDTH,
+				ITEM_IMAGE_HEIGHT, true);
+		mItemHP2 = Bitmap.createScaledBitmap(mItemHP2, ITEM_IMAGE_WIDTH,
+				ITEM_IMAGE_HEIGHT, true);
+		mItemHP1 = Bitmap.createScaledBitmap(mItemHP1, ITEM_IMAGE_WIDTH,
+				ITEM_IMAGE_HEIGHT, true);
 
 		mHandler = new Handler();
 	}
@@ -245,6 +263,8 @@ public class FieldSurfaceView extends SurfaceView implements
 							shot.getShotPosX(), shot.getShotPosY());
 					// 弾が敵に当たったら消える
 					if (invIsShooted) {
+						int invType = invader.getInvType();
+						Log.d("itemPattern", "itemnum"+invType);
 						invader.ItemAdd();
 						shot.remove();
 						invader.remove();
@@ -260,6 +280,7 @@ public class FieldSurfaceView extends SurfaceView implements
 
 								@Override
 								public void run() {
+									bgm.stop();
 									mGameListener.nextStage(mScore);
 								}
 							});
@@ -373,15 +394,15 @@ public class FieldSurfaceView extends SurfaceView implements
 		invader.updatePosition();
 
 		int invType = invader.getInvType();
-		if (invType == INV_PURPLE) {
+		if (invType == Invader.INV_PURPLE) {
 			mBitmap = mInvImage1;
-		} else if (invType == INV_YELLOW) {
+		} else if (invType == Invader.INV_YELLOW) {
 			mBitmap = mInvImage2;
-		} else if (invType == INV_LIGHTBLUE) {
+		} else if (invType == Invader.INV_LIGHTBLUE) {
 			mBitmap = mInvImage3;
-		} else if (invType == INV_ORANGE) {
+		} else if (invType == Invader.INV_ORANGE) {
 			mBitmap = mInvImage4;
-		} else if (invType == INV_GREEN) {
+		} else if (invType == Invader.INV_GREEN) {
 			mBitmap = mInvImage5;
 		} else {
 			mBitmap = mInvImage6;
@@ -483,7 +504,7 @@ public class FieldSurfaceView extends SurfaceView implements
 			return;
 		}
 		Log.d(TAG, "BEAM EVENT");
-		if (invType == INV_BOSS) {
+		if (invType == Invader.INV_BOSS) {
 			InvaderBeam invBeam = new InvaderBeam(shotX, shotY
 					+ INVBOSS_IMAGE_HEIGHT / 2, invType);
 			mInvBeamList.add(invBeam);

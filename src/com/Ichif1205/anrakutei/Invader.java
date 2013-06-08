@@ -28,12 +28,12 @@ public class Invader {
 	private float centerY;
 	private float alpha = 0;
 	// 敵の種類定義
-	private static final int INV_PURPLE = 0;
-	private static final int INV_YELLOW = 1;
-	private static final int INV_LIGHTBLUE = 2;
-	private static final int INV_ORANGE = 3;
-	private static final int INV_GREEN = 4;
-	private static final int INV_BOSS = 5;
+	public static final int INV_PURPLE = 0;
+	public static final int INV_YELLOW = 1;
+	public static final int INV_LIGHTBLUE = 2;
+	public static final int INV_ORANGE = 3;
+	public static final int INV_GREEN = 4;
+	public static final int INV_BOSS = 5;
 
 	Invader(float x, float y, InvarderListener li) {
 		posX = getRandomPosition(x);
