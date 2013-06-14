@@ -202,8 +202,12 @@ public class FieldSurfaceView extends SurfaceView implements
 				ITEM_IMAGE_HEIGHT, true);
 		mItemPImage = Bitmap.createScaledBitmap(mItemPImage, ITEM_IMAGE_WIDTH,
 				ITEM_IMAGE_HEIGHT, true);
-		bgm.setLooping(true);
-		bgm.start();
+		
+		if (Utils.isRingerEnable(mContext)) {
+			// BGMを流す
+			bgm.setLooping(true);
+			bgm.start();
+		}
 		
 		//HP
 		mItemHP5 = Bitmap.createScaledBitmap(mItemHP5, ITEM_IMAGE_WIDTH,
@@ -483,7 +487,9 @@ public class FieldSurfaceView extends SurfaceView implements
 		mExecFlg = true;
 		mThread = new Thread(this);
 		mThread.start();
-		bgm.start();
+		if (Utils.isRingerEnable(mContext)) {
+			bgm.start();
+		}
 	}
 
 	/**
