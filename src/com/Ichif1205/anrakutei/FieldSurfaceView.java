@@ -82,18 +82,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	public int mItemS = 0;
 	public int mItemG = 0;
 
-	// HP
-	private Bitmap mItemHP5 = BitmapFactory.decodeResource(getResources(),
-			R.drawable.hp5);
-	private Bitmap mItemHP4 = BitmapFactory.decodeResource(getResources(),
-			R.drawable.hp4);
-	private Bitmap mItemHP3 = BitmapFactory.decodeResource(getResources(),
-			R.drawable.hp3);
-	private Bitmap mItemHP2 = BitmapFactory.decodeResource(getResources(),
-			R.drawable.hp2);
-	private Bitmap mItemHP1 = BitmapFactory.decodeResource(getResources(),
-			R.drawable.hp1);
-	private int mBossHPMAX = 5; // BossのHPのMax
+	private int mBossHPMAX = 10; // BossのHPのMax
 	private int BossHP = mBossHPMAX; // BossのHP
 
 	MediaPlayer bgm = MediaPlayer.create(getContext(), R.raw.bgm);
@@ -210,18 +199,6 @@ public class FieldSurfaceView extends SurfaceView implements
 			bgm.start();
 		}
 
-		// HP
-		mItemHP5 = Bitmap.createScaledBitmap(mItemHP5, ITEM_IMAGE_WIDTH,
-				ITEM_IMAGE_HEIGHT, true);
-		mItemHP4 = Bitmap.createScaledBitmap(mItemHP4, ITEM_IMAGE_WIDTH,
-				ITEM_IMAGE_HEIGHT, true);
-		mItemHP3 = Bitmap.createScaledBitmap(mItemHP3, ITEM_IMAGE_WIDTH,
-				ITEM_IMAGE_HEIGHT, true);
-		mItemHP2 = Bitmap.createScaledBitmap(mItemHP2, ITEM_IMAGE_WIDTH,
-				ITEM_IMAGE_HEIGHT, true);
-		mItemHP1 = Bitmap.createScaledBitmap(mItemHP1, ITEM_IMAGE_WIDTH,
-				ITEM_IMAGE_HEIGHT, true);
-
 		mHandler = new Handler();
 	}
 
@@ -276,7 +253,7 @@ public class FieldSurfaceView extends SurfaceView implements
 								shot.remove();
 								break;
 							}
-							BossHP = mBossHPMAX;
+							BossHP = mBossHPMAX; // boss複数出現時の暫定対応
 						}
 						invader.ItemAdd();
 						shot.remove();
@@ -427,6 +404,14 @@ public class FieldSurfaceView extends SurfaceView implements
 		}
 		mCanvas.drawBitmap(mBitmap, invader.getInvaderPosX(),
 				invader.getInvaderPosY(), mPaint);
+		if (invType == Invader.INV_BOSS) {
+			Path path = new Path();
+			mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+			// Log.d("itemPattern", "boss" + BossHP);
+			mCanvas.drawPath(invader.drawBossHPMeter(path,
+					invader.getInvaderPosX(), invader.getInvaderPosY(), BossHP,
+					mBossHPMAX), mPaint);
+		}
 	}
 
 	// 自機の弾描画
