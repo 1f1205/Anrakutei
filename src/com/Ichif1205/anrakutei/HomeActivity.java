@@ -1,10 +1,13 @@
 package com.Ichif1205.anrakutei;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 
@@ -14,6 +17,9 @@ public class HomeActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
+		
+		final ReadStageInfoTask task = new ReadStageInfoTask(HomeActivity.this);
+				task.execute();
 
 		// init
 		Button button_play = (Button) findViewById(R.id.play);
@@ -57,11 +63,47 @@ public class HomeActivity extends Activity {
 
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_home, menu);
-		return true;
+	private class ReadStageInfoTask extends AsyncTask<Void, Integer, Boolean>{
+//		private Context mContext;
+		private Activity mActivity;
+		private ProgressDialog mProgress;
+		
+		public ReadStageInfoTask(Activity activity) {
+			super();
+			mActivity = activity;
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			// Progres barの初期設定
+			mProgress = new ProgressDialog(mActivity);
+			mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			mProgress.setTitle("ステージ読込中");
+			mProgress.setMessage("しばらくお待ち下さい");
+			mProgress.setCancelable(false);
+			mProgress.show();
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			final StageXmlParser xmlParser = new StageXmlParser(getApplicationContext());
+			xmlParser.parseStageXml();
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+//			super.onProgressUpdate(values);
+			mProgress.incrementProgressBy(values[0]);
+		}
+		
+		@Override
+		protected void onPostExecute(Boolean result) {
+//			super.onPostExecute(result);
+			mProgress.dismiss();
+			
+		}
+		
 	}
 
 }
