@@ -47,9 +47,7 @@ public class MainActivity extends Activity implements GameEventLiestener {
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				final StageXmlParser xmlParser = new StageXmlParser(
-						getApplicationContext());
-				mStageInfos = xmlParser.parseStageXml();
+				mStageInfos = StageInfos.getInstance();
 				mFieldSurfaceView.setStageInfo(mStageInfos.get(mStageId));
 				mFieldSurfaceView.setScore(mScore);
 			}

@@ -31,9 +31,9 @@ public class StageXmlParser {
 	 * StageXmlをパースする
 	 * @return
 	 */
-	public SparseArray<StageInfo> parseStageXml() {
+	public void parseStageXml() {
 		final XmlPullParser xmlPullParser = Xml.newPullParser();
-		final SparseArray<StageInfo> stages = new SparseArray<StageInfo>();
+		final SparseArray<StageInfo> stages = StageInfos.getInstance();
 		final AssetManager assets = mContext.getResources().getAssets();
 		
 		try {
@@ -61,8 +61,6 @@ public class StageXmlParser {
 			// AssetsManagerをクローズ
 //			assets.close();
 		}
-		
-		return stages;
 	}
 	
 	/**
