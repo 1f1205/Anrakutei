@@ -62,9 +62,18 @@ public class HomeActivity extends Activity {
 		});
 
 	}
+	
+	@Override
+	protected void onStop() {
+		// Singletonの開放
+		StageInfos.remove();
+		super.onStop();
+	}
 
+	/**
+	 * ステージ情報をバックグラウンドで読み込む
+	 */
 	private class ReadStageInfoTask extends AsyncTask<Void, Integer, Boolean>{
-//		private Context mContext;
 		private Activity mActivity;
 		private ProgressDialog mProgress;
 		
@@ -93,13 +102,11 @@ public class HomeActivity extends Activity {
 		
 		@Override
 		protected void onProgressUpdate(Integer... values) {
-//			super.onProgressUpdate(values);
 			mProgress.incrementProgressBy(values[0]);
 		}
 		
 		@Override
 		protected void onPostExecute(Boolean result) {
-//			super.onPostExecute(result);
 			mProgress.dismiss();
 			
 		}
