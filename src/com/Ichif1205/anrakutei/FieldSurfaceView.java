@@ -25,7 +25,7 @@ import com.Ichif1205.anrakutei.Invader.InvarderListener;
 
 public class FieldSurfaceView extends SurfaceView implements
 		SurfaceHolder.Callback, Runnable, InvarderListener {
-	//wkodate
+	// wkodate
 	private final String TAG = FieldSurfaceView.class.getSimpleName();
 	private final Context mContext;
 	private int MAX_INVADER_NUM = 12;
@@ -81,8 +81,8 @@ public class FieldSurfaceView extends SurfaceView implements
 	public int mItemB = 0;
 	public int mItemS = 0;
 	public int mItemG = 0;
-	
-	//HP
+
+	// HP
 	private Bitmap mItemHP5 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.hp5);
 	private Bitmap mItemHP4 = BitmapFactory.decodeResource(getResources(),
@@ -96,7 +96,6 @@ public class FieldSurfaceView extends SurfaceView implements
 	private int BossHP5;
 
 	MediaPlayer bgm = MediaPlayer.create(getContext(), R.raw.bgm);
-	MediaPlayer se = MediaPlayer.create(getContext(), R.raw.shot);
 
 	private boolean mExecFlg = true;
 
@@ -203,14 +202,14 @@ public class FieldSurfaceView extends SurfaceView implements
 				ITEM_IMAGE_HEIGHT, true);
 		mItemPImage = Bitmap.createScaledBitmap(mItemPImage, ITEM_IMAGE_WIDTH,
 				ITEM_IMAGE_HEIGHT, true);
-		
+
+		bgm.setLooping(true);
 		if (Utils.isRingerEnable(mContext)) {
 			// BGMを流す
-			bgm.setLooping(true);
 			bgm.start();
 		}
-		
-		//HP
+
+		// HP
 		mItemHP5 = Bitmap.createScaledBitmap(mItemHP5, ITEM_IMAGE_WIDTH,
 				ITEM_IMAGE_HEIGHT, true);
 		mItemHP4 = Bitmap.createScaledBitmap(mItemHP4, ITEM_IMAGE_WIDTH,
@@ -269,7 +268,7 @@ public class FieldSurfaceView extends SurfaceView implements
 					// 弾が敵に当たったら消える
 					if (invIsShooted) {
 						int invType = invader.getInvType();
-						Log.d("itemPattern", "itemnum"+invType);
+						Log.d("itemPattern", "itemnum" + invType);
 						invader.ItemAdd();
 						shot.remove();
 						invader.remove();
@@ -458,7 +457,6 @@ public class FieldSurfaceView extends SurfaceView implements
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			se.start();
 			// 弾発射
 			Shot shot = new Shot(mPlayer.getPlayerPosX(),
 					mPlayer.getPlayerPosY());
