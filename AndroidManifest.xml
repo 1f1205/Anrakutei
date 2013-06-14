@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.Ichif1205.anrakutei"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.Ichif1205.anrakutei.MainActivity"
+            android:configChanges="orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name="com.Ichif1205.anrakutei.HomeActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.Ichif1205.anrakutei.RankingActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_ranking" >
+        </activity>
+        <activity
+            android:name="com.Ichif1205.anrakutei.SelectPlayer"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_select_player" >
+        </activity>
+        <activity
+            android:name="com.Ichif1205.anrakutei.ResultActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_result" >
+        </activity>
+        <activity
+            android:name=".SplashActivity"
+            android:configChanges="orientation"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+    </application>
+
+</manifest>
