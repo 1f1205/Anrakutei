@@ -25,7 +25,7 @@ import com.Ichif1205.anrakutei.Invader.InvarderListener;
 
 public class FieldSurfaceView extends SurfaceView implements
 		SurfaceHolder.Callback, Runnable, InvarderListener {
-	//wkodate
+	// wkodate
 	private final String TAG = FieldSurfaceView.class.getSimpleName();
 	private final Context mContext;
 	private int MAX_INVADER_NUM = 12;
@@ -81,8 +81,8 @@ public class FieldSurfaceView extends SurfaceView implements
 	public int mItemB = 0;
 	public int mItemS = 0;
 	public int mItemG = 0;
-	
-	//HP
+
+	// HP
 	private Bitmap mItemHP5 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.hp5);
 	private Bitmap mItemHP4 = BitmapFactory.decodeResource(getResources(),
@@ -93,7 +93,8 @@ public class FieldSurfaceView extends SurfaceView implements
 			R.drawable.hp2);
 	private Bitmap mItemHP1 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.hp1);
-	private int BossHP5;
+	private int mBossHPMAX = 5; // BossのHPのMax
+	private int BossHP = mBossHPMAX; // BossのHP
 
 	MediaPlayer bgm = MediaPlayer.create(getContext(), R.raw.bgm);
 	MediaPlayer se = MediaPlayer.create(getContext(), R.raw.shot);
@@ -205,8 +206,8 @@ public class FieldSurfaceView extends SurfaceView implements
 				ITEM_IMAGE_HEIGHT, true);
 		bgm.setLooping(true);
 		bgm.start();
-		
-		//HP
+
+		// HP
 		mItemHP5 = Bitmap.createScaledBitmap(mItemHP5, ITEM_IMAGE_WIDTH,
 				ITEM_IMAGE_HEIGHT, true);
 		mItemHP4 = Bitmap.createScaledBitmap(mItemHP4, ITEM_IMAGE_WIDTH,
@@ -265,7 +266,15 @@ public class FieldSurfaceView extends SurfaceView implements
 					// 弾が敵に当たったら消える
 					if (invIsShooted) {
 						int invType = invader.getInvType();
-						Log.d("itemPattern", "itemnum"+invType);
+						Log.d("itemPattern", "itemnum" + invType);
+						if (invType == 5) {
+							BossHP--;
+							if (BossHP != 0) {
+								shot.remove();
+								break;
+							}
+							BossHP = mBossHPMAX;
+						}
 						invader.ItemAdd();
 						shot.remove();
 						invader.remove();
@@ -353,9 +362,14 @@ public class FieldSurfaceView extends SurfaceView implements
 				} else if (itemPattern == "G") {
 					mItemG = 1;
 				} else if (itemPattern == "P") {
-					Random ptn_rand = new Random();
-					int plus_score = ptn_rand.nextInt(5) * 100;
-					mScore += plus_score;
+					mHandler.post(new Runnable() {
+						public void run() {
+							Random ptn_rand = new Random();
+							Log.d("itemPattern", "itam" + ptn_rand.nextInt(4));
+							int plus_score = (ptn_rand.nextInt(4) + 1) * 100;
+							mGameListener.addScore(plus_score);
+						}
+					});
 				}
 			}
 			// アイテムが画面上からはみ出るまで表示させ続ける
