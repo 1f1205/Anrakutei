@@ -93,7 +93,8 @@ public class FieldSurfaceView extends SurfaceView implements
 			R.drawable.hp2);
 	private Bitmap mItemHP1 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.hp1);
-	private int BossHP5;
+	private int mBossHPMAX = 5; // BossのHPのMax
+	private int BossHP = mBossHPMAX; // BossのHP
 
 	MediaPlayer bgm = MediaPlayer.create(getContext(), R.raw.bgm);
 
@@ -269,6 +270,14 @@ public class FieldSurfaceView extends SurfaceView implements
 					if (invIsShooted) {
 						int invType = invader.getInvType();
 						Log.d("itemPattern", "itemnum" + invType);
+						if (invType == 5) {
+							BossHP--;
+							if (BossHP != 0) {
+								shot.remove();
+								break;
+							}
+							BossHP = mBossHPMAX;
+						}
 						invader.ItemAdd();
 						shot.remove();
 						invader.remove();
@@ -356,9 +365,14 @@ public class FieldSurfaceView extends SurfaceView implements
 				} else if (itemPattern == "G") {
 					mItemG = 1;
 				} else if (itemPattern == "P") {
-					Random ptn_rand = new Random();
-					int plus_score = ptn_rand.nextInt(5) * 100;
-					mScore += plus_score;
+					mHandler.post(new Runnable() {
+						public void run() {
+							Random ptn_rand = new Random();
+							Log.d("itemPattern", "itam" + ptn_rand.nextInt(4));
+							int plus_score = (ptn_rand.nextInt(4) + 1) * 100;
+							mGameListener.addScore(plus_score);
+						}
+					});
 				}
 			}
 			// アイテムが画面上からはみ出るまで表示させ続ける
