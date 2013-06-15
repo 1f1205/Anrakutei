@@ -36,35 +36,37 @@ public class Invader {
 	public static final int INV_GREEN = 4;
 	public static final int INV_BOSS = 5;
 
+	public static final int INV_IMAGE_WIDTH = 36;
+	public static final int INV_IMAGE_HEIGHT = 36;
+	public static final int INVBOSS_IMAGE_WIDTH = 72;
+	public static final int INVBOSS_IMAGE_HEIGHT = 72;
+
 	private float HPX;
 	private float HPY;
-
-	private int mBossHPMAX = 10; // BossのHPのMax
-	private int BossHP = mBossHPMAX; // BossのHP
+	private int mBossHPMAX; // BossのHPのMax
+	private int BossHP; // BossのHP
 
 	Invader(float x, float y, int invtype, InvarderListener li) {
 		posX = getRandomPosition(x);
 		posY = getRandomPosition(y);
-		width = 36;
-		height = 36;
+		width = INV_IMAGE_WIDTH;
+		height = INV_IMAGE_HEIGHT;
 		Random speed_rand = new Random();
 		int spd = speed_rand.nextInt(3) + 3;
 		speedX = spd;
 		speedY = spd;
 		existFlag = true;
-		// Random type_rand = new Random();
-		// type = type_rand.nextInt(6);
 		type = invtype;
 
-		System.out.println("[TYPE]" + type + "(" + posX + ", " + posY + ")");
 		mv_pattern = Math.random();
 		mIl = li;
+		// 青インベーダーの円の中心と表示位置を求める
 		if (type == INV_LIGHTBLUE) {
 			centerX = posX;
 			centerY = posY;
 			Random r_rand = new Random();
 			int r_times = r_rand.nextInt(3);
-			radius = 50 * (1 + r_times);
+			radius = 50 * (2 + r_times);
 			if (centerX <= x / 2 && centerY > y / 2) {
 				theta = (float) (Math.PI / 4);
 			} else if (centerX > x / 2 && centerY > y / 2) {
@@ -75,9 +77,12 @@ public class Invader {
 				theta = (float) (7 * Math.PI / 4);
 			}
 		}
+		// ボスの設定
 		if (type == INV_BOSS) {
-			width = 72;
-			height = 72;
+			width = INVBOSS_IMAGE_WIDTH;
+			height = INVBOSS_IMAGE_HEIGHT;
+			mBossHPMAX = 10;
+			BossHP = mBossHPMAX;
 		}
 
 		mShootTimer = new Timer();
@@ -132,7 +137,6 @@ public class Invader {
 		float rate;
 		while (true) {
 			rate = (float) Math.random();
-			System.out.println("[RATE]" + rate);
 			if (rate > 0.1 && rate < 0.9) {
 				break;
 			}
@@ -249,13 +253,13 @@ public class Invader {
 	private void moveVibration() {
 		double mvvi = Math.random();
 		if (mvvi < 0.03125) {
-			posX += speedX + 3;
+			posX += speedX + 4;
 		} else if (mvvi < 0.0625) {
-			posX -= speedX + 3;
+			posX -= speedX + 4;
 		} else if (mvvi < 0.09375) {
-			posY += speedY + 3;
+			posY += speedY + 4;
 		} else if (mvvi < 0.125) {
-			posY -= speedY + 3;
+			posY -= speedY + 4;
 		}
 	}
 
@@ -320,7 +324,7 @@ public class Invader {
 	public Path drawBossHPMeter(Path path, float x, float y) {
 		int HPwidth = 50 / mBossHPMAX * BossHP;
 		int HPheight = 8;
-		HPX = x + 36; // widht/2
+		HPX = x + 36; // width/2
 		HPY = y - 20; // 適当
 		path.moveTo(HPX, HPY);
 		// 左下から反時計回りに描画

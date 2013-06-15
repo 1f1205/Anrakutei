@@ -16,7 +16,7 @@
     	<Id>3</Id>
     	<MaxInvader>4</MaxInvader>
     	<Boss>3</Boss>
-    	<invTypeArray>2,0,0,2,0,0</invTypeArray>
+    	<invTypeArray>0,2,0,0,2,0</invTypeArray>
     </Stage>
     <Stage>
     	<Id>4</Id>
