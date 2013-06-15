@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.graphics.Path;
 import android.util.FloatMath;
 import android.util.Log;
 
@@ -34,6 +35,9 @@ public class Invader {
 	public static final int INV_ORANGE = 3;
 	public static final int INV_GREEN = 4;
 	public static final int INV_BOSS = 5;
+
+	private float HPX;
+	private float HPY;
 
 	Invader(float x, float y, InvarderListener li) {
 		posX = getRandomPosition(x);
@@ -279,9 +283,10 @@ public class Invader {
 	public void ItemAdd() {
 		mIl.Item(posX, posY);
 	}
-	
+
 	/**
 	 * インベーダーの種類に応じて点数を返す
+	 * 
 	 * @return
 	 */
 	public int getPoint() {
@@ -294,7 +299,7 @@ public class Invader {
 		case INV_GREEN:
 			point = 1000;
 			break;
-			
+
 		case INV_BOSS:
 			point = 3000;
 			break;
@@ -306,4 +311,25 @@ public class Invader {
 		return point;
 	}
 
+	// ボスHP描画のパス
+	public Path drawBossHPMeter(Path path, float x, float y, int BossHP,
+			int HPMax) {
+		int HPwidth = 50 / HPMax * BossHP;
+		int HPheight = 8;
+		HPX = x + 36; // widht/2
+		HPY = y - 20; // 適当
+		path.moveTo(HPX, HPY);
+		// 左下から反時計回りに描画
+		path.lineTo(HPX - HPwidth, HPY + HPheight);
+		path.lineTo(HPX + HPwidth, HPY + HPheight);
+		path.lineTo(HPX + HPwidth, HPY - HPheight);
+		path.lineTo(HPX + HPwidth, HPY - HPheight);
+		path.lineTo(HPX + HPwidth, HPY - HPheight);
+		path.lineTo(HPX - HPwidth, HPY - HPheight);
+		path.lineTo(HPX - HPwidth, HPY - HPheight);
+		path.lineTo(HPX - HPwidth, HPY - HPheight);
+		path.lineTo(HPX - HPwidth, HPY + HPheight);
+
+		return path;
+	}
 }
