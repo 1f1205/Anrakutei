@@ -28,7 +28,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	private final String TAG = FieldSurfaceView.class.getSimpleName();
 	private final Context mContext;
 	private int MAX_INVADER_NUM;
-	private int[] INVADER_TYPE;
+	private ArrayList<Integer> invaderType;
 	private SurfaceHolder mHolder;
 	private Canvas mCanvas = null;
 	private Paint mPaint;
@@ -81,22 +81,11 @@ public class FieldSurfaceView extends SurfaceView implements
 	public int mItemB = 0;
 	public int mItemS = 0;
 	public int mItemG = 0;
-	
-	//HP
-	private Bitmap mItemHP5 = BitmapFactory.decodeResource(getResources(),
-			R.drawable.hp5);
-	private Bitmap mItemHP4 = BitmapFactory.decodeResource(getResources(),
-			R.drawable.hp4);
-	private Bitmap mItemHP3 = BitmapFactory.decodeResource(getResources(),
-			R.drawable.hp3);
-	private Bitmap mItemHP2 = BitmapFactory.decodeResource(getResources(),
-			R.drawable.hp2);
-	private Bitmap mItemHP1 = BitmapFactory.decodeResource(getResources(),
-			R.drawable.hp1);
-	private int BossHP5;
+
+	private int mBossHPMAX = 10; // BossのHPのMax
+	private int BossHP = mBossHPMAX; // BossのHP
 
 	MediaPlayer bgm = MediaPlayer.create(getContext(), R.raw.bgm);
-	MediaPlayer se = MediaPlayer.create(getContext(), R.raw.shot);
 
 	private boolean mExecFlg = true;
 
@@ -124,7 +113,8 @@ public class FieldSurfaceView extends SurfaceView implements
 	 */
 	public void setStageInfo(StageInfo info) {
 		MAX_INVADER_NUM = info.maxInvader;
-		INVADER_TYPE = info.invTypeArray;
+		invaderType = info.invTypeArray;
+		System.out.println("[INVTYPEARRAY]"+invaderType);
 		//INVADER_TYPE = new int[] {0, 1, 2, 3, 4};
 	}
 
@@ -178,7 +168,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		mItemInfo = new HashMap<String, String>();
 		// 複数の敵を表示
 		for (int i = 0; i < MAX_INVADER_NUM; i++) {
-			Invader invader = new Invader(getWidth(), getHeight() / 2, INVADER_TYPE[i], this);
+			Invader invader = new Invader(getWidth(), getHeight() / 2, invaderType.get(i), this);
 			mInvaderList.add(invader);
 		}
 		// 　敵の画像セット
@@ -205,20 +195,12 @@ public class FieldSurfaceView extends SurfaceView implements
 				ITEM_IMAGE_HEIGHT, true);
 		mItemPImage = Bitmap.createScaledBitmap(mItemPImage, ITEM_IMAGE_WIDTH,
 				ITEM_IMAGE_HEIGHT, true);
+
 		bgm.setLooping(true);
-		bgm.start();
-		
-		//HP
-		mItemHP5 = Bitmap.createScaledBitmap(mItemHP5, ITEM_IMAGE_WIDTH,
-				ITEM_IMAGE_HEIGHT, true);
-		mItemHP4 = Bitmap.createScaledBitmap(mItemHP4, ITEM_IMAGE_WIDTH,
-				ITEM_IMAGE_HEIGHT, true);
-		mItemHP3 = Bitmap.createScaledBitmap(mItemHP3, ITEM_IMAGE_WIDTH,
-				ITEM_IMAGE_HEIGHT, true);
-		mItemHP2 = Bitmap.createScaledBitmap(mItemHP2, ITEM_IMAGE_WIDTH,
-				ITEM_IMAGE_HEIGHT, true);
-		mItemHP1 = Bitmap.createScaledBitmap(mItemHP1, ITEM_IMAGE_WIDTH,
-				ITEM_IMAGE_HEIGHT, true);
+		if (Utils.isRingerEnable(mContext)) {
+			// BGMを流す
+			bgm.start();
+		}
 
 		mHandler = new Handler();
 	}
@@ -267,7 +249,15 @@ public class FieldSurfaceView extends SurfaceView implements
 					// 弾が敵に当たったら消える
 					if (invIsShooted) {
 						int invType = invader.getInvType();
-						Log.d("itemPattern", "itemnum"+invType);
+						Log.d("itemPattern", "itemnum" + invType);
+						if (invType == 5) {
+							BossHP--;
+							if (BossHP != 0) {
+								shot.remove();
+								break;
+							}
+							BossHP = mBossHPMAX; // boss複数出現時の暫定対応
+						}
 						invader.ItemAdd();
 						shot.remove();
 						invader.remove();
@@ -355,9 +345,14 @@ public class FieldSurfaceView extends SurfaceView implements
 				} else if (itemPattern == "G") {
 					mItemG = 1;
 				} else if (itemPattern == "P") {
-					Random ptn_rand = new Random();
-					int plus_score = ptn_rand.nextInt(5) * 100;
-					mScore += plus_score;
+					mHandler.post(new Runnable() {
+						public void run() {
+							Random ptn_rand = new Random();
+							Log.d("itemPattern", "itam" + ptn_rand.nextInt(4));
+							int plus_score = (ptn_rand.nextInt(4) + 1) * 100;
+							mGameListener.addScore(plus_score);
+						}
+					});
 				}
 			}
 			// アイテムが画面上からはみ出るまで表示させ続ける
@@ -412,6 +407,14 @@ public class FieldSurfaceView extends SurfaceView implements
 		}
 		mCanvas.drawBitmap(mBitmap, invader.getInvaderPosX(),
 				invader.getInvaderPosY(), mPaint);
+		if (invType == Invader.INV_BOSS) {
+			Path path = new Path();
+			mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+			// Log.d("itemPattern", "boss" + BossHP);
+			mCanvas.drawPath(invader.drawBossHPMeter(path,
+					invader.getInvaderPosX(), invader.getInvaderPosY(), BossHP,
+					mBossHPMAX), mPaint);
+		}
 	}
 
 	// 自機の弾描画
@@ -456,7 +459,6 @@ public class FieldSurfaceView extends SurfaceView implements
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			se.start();
 			// 弾発射
 			Shot shot = new Shot(mPlayer.getPlayerPosX(),
 					mPlayer.getPlayerPosY());
@@ -486,7 +488,9 @@ public class FieldSurfaceView extends SurfaceView implements
 		mExecFlg = true;
 		mThread = new Thread(this);
 		mThread.start();
-		bgm.start();
+		if (Utils.isRingerEnable(mContext)) {
+			bgm.start();
+		}
 	}
 
 	/**

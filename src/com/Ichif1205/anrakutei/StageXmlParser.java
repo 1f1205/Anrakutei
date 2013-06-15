@@ -32,9 +32,9 @@ public class StageXmlParser {
 	 * 
 	 * @return
 	 */
-	public SparseArray<StageInfo> parseStageXml() {
+	public void parseStageXml() {
 		final XmlPullParser xmlPullParser = Xml.newPullParser();
-		final SparseArray<StageInfo> stages = new SparseArray<StageInfo>();
+		final SparseArray<StageInfo> stages = StageInfos.getInstance();
 		final AssetManager assets = mContext.getResources().getAssets();
 
 		try {
@@ -62,8 +62,6 @@ public class StageXmlParser {
 			// AssetsManagerをクローズ
 			// assets.close();
 		}
-
-		return stages;
 	}
 
 	/**
@@ -74,6 +72,7 @@ public class StageXmlParser {
 	 */
 	private StageInfo addStage(XmlPullParser parser) {
 		StageInfo data = new StageInfo();
+		data.invTypeArray = new ArrayList<Integer>();
 
 		while (true) {
 			try {
@@ -111,26 +110,22 @@ public class StageXmlParser {
 					}
 				}
 
-				// invTyoeArrayを格納
+				// invTypeArrayを格納
 				if (eventType == XmlPullParser.START_TAG
 						&& "invTypeArray".equals(parser.getName())) {
 					eventType = parser.next();
 					if (eventType == XmlPullParser.TEXT) {
 						String invStr = parser.getText();
 						String[] invStrArr = invStr.split(",", 0);
-						int count = 0;
-						int[] array = {};
+								System.out.println("[ubvStrArr]"+invStrArr[0]);
 						for (int i = 0; i < invStrArr.length; i++) {
 							int typeCount = Integer.parseInt(invStrArr[i]);
 							for (int j = 0; j < typeCount; j++) {
-								System.out
-										.println("[inttypearray]" + typeCount);
-								array[count++] = i;
-								count++;
+								System.out.println("[i]"+i+"[j]"+j);
+								data.invTypeArray.add(i);
+								System.out.println("[i]"+i+"[j]"+j);
 							}
 						}
-						System.out.println("[finished]");
-						data.invTypeArray = array;
 					}
 				}
 

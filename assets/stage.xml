@@ -14,8 +14,8 @@
     </Stage>
     <Stage>
     	<Id>3</Id>
-    	<MaxInvader>3</MaxInvader>
+    	<MaxInvader>1</MaxInvader>
     	<Boss>3</Boss>
-    	<invTypeArray>0,0,0,0,0,3</invTypeArray>
+    	<invTypeArray>0,0,0,0,0,1</invTypeArray>
     </Stage>
 </StageSets>
