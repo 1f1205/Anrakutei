@@ -39,7 +39,7 @@ public class Invader {
 	private float HPX;
 	private float HPY;
 
-	Invader(float x, float y, InvarderListener li) {
+	Invader(float x, float y, int invtype, InvarderListener li) {
 		posX = getRandomPosition(x);
 		posY = getRandomPosition(y);
 		width = 36;
@@ -49,8 +49,9 @@ public class Invader {
 		speedX = spd;
 		speedY = spd;
 		existFlag = true;
-		Random type_rand = new Random();
-		type = type_rand.nextInt(6);
+		//Random type_rand = new Random();
+		//type = type_rand.nextInt(6);
+		type = invtype;
 		System.out.println("[TYPE]" + type + "(" + posX + ", " + posY + ")");
 		mv_pattern = Math.random();
 		mIl = li;
