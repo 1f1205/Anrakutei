@@ -4,19 +4,19 @@
     	<Id>1</Id>
     	<MaxInvader>3</MaxInvader>
     	<Boss>3</Boss>
-    	<invTypeArray>3,0,0,0,0,0</invTypeArray>
+    	<invTypeArray>2,0,1,0,0,0</invTypeArray>
     </Stage>
     <Stage>
     	<Id>2</Id>
     	<MaxInvader>3</MaxInvader>
     	<Boss>3</Boss>
-    	<invTypeArray>1,1,1,0,0,0</invTypeArray>
+    	<invTypeArray>0,1,0,1,1,0</invTypeArray>
     </Stage>
     <Stage>
     	<Id>3</Id>
-    	<MaxInvader>3</MaxInvader>
+    	<MaxInvader>4</MaxInvader>
     	<Boss>3</Boss>
-    	<invTypeArray>0,1,0,1,1,0</invTypeArray>
+    	<invTypeArray>2,0,0,2,0,0</invTypeArray>
     </Stage>
     <Stage>
     	<Id>4</Id>
@@ -32,21 +32,21 @@
     </Stage>
     <Stage>
     	<Id>6</Id>
-    	<MaxInvader>3</MaxInvader>
+    	<MaxInvader>8</MaxInvader>
     	<Boss>3</Boss>
-    	<invTypeArray>1,0,1,0,0,1</invTypeArray>
+    	<invTypeArray>1,2,1,2,2,0</invTypeArray>
     </Stage>
     <Stage>
     	<Id>7</Id>
-    	<MaxInvader>4</MaxInvader>
+    	<MaxInvader>3</MaxInvader>
     	<Boss>3</Boss>
-    	<invTypeArray>0,1,1,0,1,1</invTypeArray>
+    	<invTypeArray>0,0,1,1,0,1</invTypeArray>
     </Stage>
     <Stage>
     	<Id>8</Id>
     	<MaxInvader>4</MaxInvader>
     	<Boss>3</Boss>
-    	<invTypeArray>0,0,1,1,0,2</invTypeArray>
+    	<invTypeArray>1,0,1,0,0,2</invTypeArray>
     </Stage>
     <Stage>
     	<Id>9</Id>
