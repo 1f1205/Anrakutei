@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,11 +22,22 @@ public class ResultActivity extends Activity {
 
 		Intent intent = getIntent();
 		int score = intent.getIntExtra("score", 0);
+		int clearflg = intent.getIntExtra("clearflg", 0);
+		TextView resultTitle = null;
+		//Log.d("itemPattern", "clea" + clearflg);
 
 		TextView resultScore = (TextView) findViewById(R.id.result_score);
-		TextView resultTitle = (TextView) findViewById(R.id.result_title);
+		if (clearflg == 1) {
+			resultTitle = (TextView) findViewById(R.id.clear_title);
+		} else {
+			Log.d("itemPattern", "clear" + clearflg);
+			resultTitle = (TextView) findViewById(R.id.result_title);
+		}
+		resultTitle.setVisibility(View.VISIBLE);
 		Button topButton = (Button) findViewById(R.id.top_button);
 		// Set Font
+
+		Log.d("itemPattern", "clea" + resultTitle);
 		Typeface face = Utils.getFonts(getApplicationContext());
 		resultScore.setTypeface(face);
 		resultTitle.setTypeface(face);
@@ -35,7 +47,8 @@ public class ResultActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(ResultActivity.this, HomeActivity.class);
+				Intent intent = new Intent(ResultActivity.this,
+						HomeActivity.class);
 				startActivity(intent);
 				finish();
 			}

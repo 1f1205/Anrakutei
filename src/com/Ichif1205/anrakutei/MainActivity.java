@@ -25,7 +25,6 @@ public class MainActivity extends Activity implements GameEventLiestener {
 	private SparseArray<StageInfo> mStageInfos = null;
 
 	private final String STAGE_FORMAT = "STAGE%03d";
-	
 
 	/**
 	 * Extra
@@ -48,7 +47,7 @@ public class MainActivity extends Activity implements GameEventLiestener {
 			@Override
 			public void run() {
 				mStageInfos = StageInfos.getInstance();
-				
+
 				mFieldSurfaceView.setStageInfo(mStageInfos.get(mStageId));
 				mFieldSurfaceView.setScore(mScore);
 			}
@@ -179,12 +178,13 @@ public class MainActivity extends Activity implements GameEventLiestener {
 	}
 
 	@Override
-	public void endGame(int score) {
+	public void endGame(int score, int clearflg) {
 		// ゲーム終了
 		mGameEndFlg = true;
 		// Result画面へ遷移
 		Intent intent = new Intent(this, ResultActivity.class);
 		intent.putExtra("score", mScore);
+		intent.putExtra("clearflg", clearflg);
 		startActivity(intent);
 	}
 
@@ -200,10 +200,10 @@ public class MainActivity extends Activity implements GameEventLiestener {
 		mNextStageFlg = true;
 		// ステージを繰り上げる
 		mStageId++;
-		
+
 		// 最終ステージまでクリアしたら結果画面に遷移
 		if (mStageInfos.indexOfKey(mStageId) < 0) {
-			endGame(mScore);
+			endGame(mScore, 1);
 			return;
 		}
 

@@ -295,7 +295,7 @@ public class FieldSurfaceView extends SurfaceView implements
 				invBeam.remove();
 				mPlayer.remove();
 				bgm.stop();
-				mGameListener.endGame(mScore);
+				mGameListener.endGame(mScore, 0);
 			}
 			// ガードにあたったら消える
 			if (pIsGurded) {
@@ -571,7 +571,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		 * 
 		 * @param mScore
 		 */
-		public void endGame(int score);
+		public void endGame(int score, int clearflg);
 
 		/**
 		 * スコア増加イベント
