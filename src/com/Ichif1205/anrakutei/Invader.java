@@ -108,7 +108,7 @@ public class Invader {
 		float rate;
 		while (true) {
 			rate = (float) Math.random();
-			if (rate > 0.1 && rate < 0.9) {
+			if (rate > 0.15 && rate < 0.85) {
 				break;
 			}
 		}
@@ -132,7 +132,7 @@ public class Invader {
 	}
 
 	public boolean isOverBoundaryHeight(int h) {
-		if (posY > h - height || posY <= 10) {
+		if (posY > h - height - 16 || posY <= 16) {
 			return true;
 		}
 		return false;
