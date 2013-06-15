@@ -10,12 +10,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.view.Menu;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 public class RankingActivity extends Activity {

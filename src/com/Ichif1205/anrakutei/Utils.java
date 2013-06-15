@@ -3,7 +3,6 @@ package com.Ichif1205.anrakutei;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.media.AudioManager;
-import android.util.Log;
 
 public class Utils {
 	private static final String TAG = Utils.class.getSimpleName();

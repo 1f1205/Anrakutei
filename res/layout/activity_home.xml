@@ -12,6 +12,13 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="Welcome!!" />
+    
+    <ImageView
+        android:id="@+id/title_icon_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:contentDescription="Anrakutei" />
 
     <Button
         android:id="@+id/play"
