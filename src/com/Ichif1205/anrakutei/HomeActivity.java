@@ -65,8 +65,6 @@ public class HomeActivity extends Activity {
 	
 	@Override
 	protected void onStop() {
-		// Singletonの開放
-//		StageInfos.remove();
 		super.onStop();
 	}
 
@@ -95,6 +93,7 @@ public class HomeActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
+			// 処理する内容
 			final StageXmlParser xmlParser = new StageXmlParser(getApplicationContext());
 			xmlParser.parseStageXml();
 			return null;
@@ -102,14 +101,14 @@ public class HomeActivity extends Activity {
 		
 		@Override
 		protected void onProgressUpdate(Integer... values) {
+			// プログレスの更新
 			mProgress.incrementProgressBy(values[0]);
 		}
 		
 		@Override
 		protected void onPostExecute(Boolean result) {
+			// 実行終了時
 			mProgress.dismiss();
 		}
-		
 	}
-
 }
