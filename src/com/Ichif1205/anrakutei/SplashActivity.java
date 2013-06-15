@@ -2,6 +2,7 @@ package com.Ichif1205.anrakutei;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -25,7 +26,11 @@ public class SplashActivity extends Activity {
 		if (intent.hasExtra(MainActivity.EXTRA_STAGE)) {
 			stageNum = intent.getIntExtra(MainActivity.EXTRA_STAGE, 0);
 		}
+		
 		stageName.setText(String.format(STAGE_FORMAT, stageNum));
+		// Font
+		Typeface face = Utils.getFonts(getApplicationContext());
+		stageName.setTypeface(face);
 
 		Handler hdl = new Handler();
 		hdl.postDelayed(new splashHandler(), WAIT_TIME);
