@@ -8,10 +8,10 @@ import android.util.SparseArray;
 public class StageInfos {
 	private static SparseArray<StageInfo> instance;
 	
-	public StageInfos() {
-		instance = null;
-	}
-	
+	/**
+	 * StageInfosのインスタンスを取得
+	 * @return
+	 */
 	public static SparseArray<StageInfo> getInstance() {
 		if (instance == null) {
 			instance = new SparseArray<StageInfo>();
@@ -19,5 +19,11 @@ public class StageInfos {
 		return instance;
 	}
 	
+	/**
+	 * インスタンスの開放
+	 */
+	public static void remove() {
+		instance = null;
+	}
 	
 }
