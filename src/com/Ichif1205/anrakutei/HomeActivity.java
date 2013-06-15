@@ -1,5 +1,7 @@
 package com.Ichif1205.anrakutei;
 
+import jp.beyond.bead.Bead;
+import jp.beyond.bead.Bead.ContentsOrientation;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -12,25 +14,35 @@ import android.view.View;
 import android.widget.Button;
 
 public class HomeActivity extends Activity {
+	
+	// Bead広告
+	private Bead mBeadOptional = null;
+	private Bead mBeadExit = null;
+	private static final String BEAD_SID = "47ec4bc31331a871e04e9fb57aa683cd3f75a53afd31b820";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 		
+		// 	BEAD広告読み込み
+		mBeadOptional = Bead.createOptionalInstance(BEAD_SID, 3, ContentsOrientation.Portrait);
+		mBeadExit = Bead.createExitInstance(BEAD_SID, ContentsOrientation.Portrait);
+		mBeadOptional.requestAd(this);
+		mBeadExit.requestAd(this);
+
+		// ステージ情報を読み込む
 		final ReadStageInfoTask task = new ReadStageInfoTask(HomeActivity.this);
-				task.execute();
+		task.execute();
 
 		// init
 		Button button_play = (Button) findViewById(R.id.play);
 		Button button_rank = (Button) findViewById(R.id.ranking);
-		Button button_result = (Button) findViewById(R.id.result);
 
 		// Setting Font
 		Typeface face = Utils.getFonts(getApplicationContext());
 		button_play.setTypeface(face);
 		button_rank.setTypeface(face);
-		button_result.setTypeface(face);
 
 		// Setting Listener
 		button_play.setOnClickListener(new View.OnClickListener() {
@@ -51,35 +63,42 @@ public class HomeActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-		button_result.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View view) {
-				Intent intent = new Intent(HomeActivity.this,
-						ResultActivity.class);
-				intent.putExtra("score", 30);
-				intent.putExtra("date", 20120301);
-				startActivity(intent);
-			}
-		});
-
 	}
-	
+
 	@Override
 	protected void onStop() {
 		super.onStop();
+	}
+	
+	@Override
+	protected void onUserLeaveHint() {
+		mBeadOptional.showAd(this);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		mBeadOptional.endAd();
+		mBeadExit.endAd();
+		super.onDestroy();
+	}
+	
+	@Override
+	public void onBackPressed() {
+		mBeadExit.showAd(this);
 	}
 
 	/**
 	 * ステージ情報をバックグラウンドで読み込む
 	 */
-	private class ReadStageInfoTask extends AsyncTask<Void, Integer, Boolean>{
+	private class ReadStageInfoTask extends AsyncTask<Void, Integer, Boolean> {
 		private Activity mActivity;
 		private ProgressDialog mProgress;
-		
+
 		public ReadStageInfoTask(Activity activity) {
 			super();
 			mActivity = activity;
 		}
-		
+
 		@Override
 		protected void onPreExecute() {
 			// Progres barの初期設定
@@ -94,17 +113,18 @@ public class HomeActivity extends Activity {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			// 処理する内容
-			final StageXmlParser xmlParser = new StageXmlParser(getApplicationContext());
+			final StageXmlParser xmlParser = new StageXmlParser(
+					getApplicationContext());
 			xmlParser.parseStageXml();
 			return null;
 		}
-		
+
 		@Override
 		protected void onProgressUpdate(Integer... values) {
 			// プログレスの更新
 			mProgress.incrementProgressBy(values[0]);
 		}
-		
+
 		@Override
 		protected void onPostExecute(Boolean result) {
 			// 実行終了時
