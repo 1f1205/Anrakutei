@@ -43,11 +43,11 @@ public class MainActivity extends Activity implements GameEventLiestener {
 		mFieldSurfaceView = (FieldSurfaceView) findViewById(R.id.FieldSurfaceView_id);
 		mFieldSurfaceView.setEventListener(this);
 
-		// TODO XMLの読み込みが終わるまでActivityを止めておく必要がある
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				mStageInfos = StageInfos.getInstance();
+				
 				mFieldSurfaceView.setStageInfo(mStageInfos.get(mStageId));
 				mFieldSurfaceView.setScore(mScore);
 			}
