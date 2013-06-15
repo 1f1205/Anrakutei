@@ -37,6 +37,16 @@
         android:id="@+id/rank_list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/ad"
         android:layout_below="@id/column_header" />
+
+    <jp.co.imobile.android.AdView
+        android:id="@id/ad"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        asid="113358"
+        mid="59161" />
 
 </RelativeLayout>
