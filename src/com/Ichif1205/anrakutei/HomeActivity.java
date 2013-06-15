@@ -66,7 +66,7 @@ public class HomeActivity extends Activity {
 	@Override
 	protected void onStop() {
 		// Singletonの開放
-		StageInfos.remove();
+//		StageInfos.remove();
 		super.onStop();
 	}
 
@@ -108,7 +108,6 @@ public class HomeActivity extends Activity {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			mProgress.dismiss();
-			
 		}
 		
 	}
