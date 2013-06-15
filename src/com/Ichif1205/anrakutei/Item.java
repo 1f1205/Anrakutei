@@ -80,7 +80,7 @@ public class Item {
 		if (flg.nextInt(2) == 1) {
 			item_pattern = ptn_rand.nextInt(5);
 			// debug用
-			 item_pattern=4;
+			// item_pattern=4;
 			if (item_pattern == 0) {
 				select_item = "M";
 			} else if (item_pattern == 1) {

@@ -39,6 +39,9 @@ public class Invader {
 	private float HPX;
 	private float HPY;
 
+	private int mBossHPMAX = 10; // BossのHPのMax
+	private int BossHP = mBossHPMAX; // BossのHP
+
 	Invader(float x, float y, int invtype, InvarderListener li) {
 		posX = getRandomPosition(x);
 		posY = getRandomPosition(y);
@@ -49,9 +52,10 @@ public class Invader {
 		speedX = spd;
 		speedY = spd;
 		existFlag = true;
-		//Random type_rand = new Random();
-		//type = type_rand.nextInt(6);
+		// Random type_rand = new Random();
+		// type = type_rand.nextInt(6);
 		type = invtype;
+
 		System.out.println("[TYPE]" + type + "(" + posX + ", " + posY + ")");
 		mv_pattern = Math.random();
 		mIl = li;
@@ -129,7 +133,7 @@ public class Invader {
 		while (true) {
 			rate = (float) Math.random();
 			System.out.println("[RATE]" + rate);
-			if (rate > 0.2 && rate < 0.8) {
+			if (rate > 0.1 && rate < 0.9) {
 				break;
 			}
 		}
@@ -313,9 +317,8 @@ public class Invader {
 	}
 
 	// ボスHP描画のパス
-	public Path drawBossHPMeter(Path path, float x, float y, int BossHP,
-			int HPMax) {
-		int HPwidth = 50 / HPMax * BossHP;
+	public Path drawBossHPMeter(Path path, float x, float y) {
+		int HPwidth = 50 / mBossHPMAX * BossHP;
 		int HPheight = 8;
 		HPX = x + 36; // widht/2
 		HPY = y - 20; // 適当
@@ -332,5 +335,21 @@ public class Invader {
 		path.lineTo(HPX - HPwidth, HPY + HPheight);
 
 		return path;
+	}
+
+	public int BossCheck() {
+		int continueflg = 0;
+		int invType = getInvType();
+		Log.d("itemPattern", "itemnum" + invType + INV_BOSS);
+		if (invType == INV_BOSS) {
+			BossHP--;
+			if (BossHP != 0) {
+				Log.d("itemPattern", "bhp" + BossHP);
+				continueflg = 1;
+			}
+		} else {
+			continueflg = 0;
+		}
+		return continueflg;
 	}
 }
