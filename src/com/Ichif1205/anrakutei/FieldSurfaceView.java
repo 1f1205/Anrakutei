@@ -19,7 +19,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.TextView;
 
 import com.Ichif1205.anrakutei.Invader.InvarderListener;
 
@@ -36,6 +35,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	private static double PLAYER_INIT_WIDTH_RATE = 0.5;
 	private static double PLAYER_INIT_HEIGHT_RATE = 0.84375; // =27/32
 	private Bitmap mBitmap;
+	private Invader mInvader;
 	private Bitmap mInvImage1 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.invader);
 	private Bitmap mInvImage2 = BitmapFactory.decodeResource(getResources(),
@@ -48,10 +48,6 @@ public class FieldSurfaceView extends SurfaceView implements
 			R.drawable.invader5);
 	private Bitmap mInvImage6 = BitmapFactory.decodeResource(getResources(),
 			R.drawable.invader6);
-	public static int INV_IMAGE_WIDTH = 36;
-	public static int INV_IMAGE_HEIGHT = 36;
-	public static int INVBOSS_IMAGE_WIDTH = 72;
-	public static int INVBOSS_IMAGE_HEIGHT = 72;
 	private Bitmap mItemMImage = BitmapFactory.decodeResource(getResources(),
 			R.drawable.item1);
 	private Bitmap mItemBImage = BitmapFactory.decodeResource(getResources(),
@@ -111,7 +107,6 @@ public class FieldSurfaceView extends SurfaceView implements
 	public void setStageInfo(StageInfo info) {
 		MAX_INVADER_NUM = info.maxInvader;
 		invaderType = info.invTypeArray;
-		System.out.println("[INVTYPEARRAY]" + invaderType);
 	}
 
 	/**
@@ -169,18 +164,19 @@ public class FieldSurfaceView extends SurfaceView implements
 			mInvaderList.add(invader);
 		}
 		// 　敵の画像セット
-		mInvImage1 = Bitmap.createScaledBitmap(mInvImage1, INV_IMAGE_WIDTH,
-				INV_IMAGE_HEIGHT, true);
-		mInvImage2 = Bitmap.createScaledBitmap(mInvImage2, INV_IMAGE_WIDTH,
-				INV_IMAGE_HEIGHT, true);
-		mInvImage3 = Bitmap.createScaledBitmap(mInvImage3, INV_IMAGE_WIDTH,
-				INV_IMAGE_HEIGHT, true);
-		mInvImage4 = Bitmap.createScaledBitmap(mInvImage4, INV_IMAGE_WIDTH,
-				INV_IMAGE_HEIGHT, true);
-		mInvImage5 = Bitmap.createScaledBitmap(mInvImage5, INV_IMAGE_WIDTH,
-				INV_IMAGE_HEIGHT, true);
-		mInvImage6 = Bitmap.createScaledBitmap(mInvImage6, INVBOSS_IMAGE_WIDTH,
-				INVBOSS_IMAGE_HEIGHT, true);
+		mInvImage1 = Bitmap.createScaledBitmap(mInvImage1,
+				mInvader.INV_IMAGE_WIDTH, mInvader.INV_IMAGE_HEIGHT, true);
+		mInvImage2 = Bitmap.createScaledBitmap(mInvImage2,
+				mInvader.INV_IMAGE_WIDTH, mInvader.INV_IMAGE_HEIGHT, true);
+		mInvImage3 = Bitmap.createScaledBitmap(mInvImage3,
+				mInvader.INV_IMAGE_WIDTH, mInvader.INV_IMAGE_HEIGHT, true);
+		mInvImage4 = Bitmap.createScaledBitmap(mInvImage4,
+				mInvader.INV_IMAGE_WIDTH, mInvader.INV_IMAGE_HEIGHT, true);
+		mInvImage5 = Bitmap.createScaledBitmap(mInvImage5,
+				mInvader.INV_IMAGE_WIDTH, mInvader.INV_IMAGE_HEIGHT, true);
+		mInvImage6 = Bitmap.createScaledBitmap(mInvImage6,
+				mInvader.INVBOSS_IMAGE_WIDTH, mInvader.INVBOSS_IMAGE_HEIGHT,
+				true);
 		// アイテム
 		mItemMImage = Bitmap.createScaledBitmap(mItemMImage, ITEM_IMAGE_WIDTH,
 				ITEM_IMAGE_HEIGHT, true);
@@ -504,17 +500,20 @@ public class FieldSurfaceView extends SurfaceView implements
 		Log.d(TAG, "BEAM EVENT");
 		if (invType == Invader.INV_BOSS) {
 			InvaderBeam invBeam = new InvaderBeam(shotX, shotY
-					+ INVBOSS_IMAGE_HEIGHT / 2, invType);
+					+ mInvader.INVBOSS_IMAGE_HEIGHT / 2, invType);
 			mInvBeamList.add(invBeam);
-			InvaderBeam invBeam2 = new InvaderBeam(shotX + INVBOSS_IMAGE_WIDTH
-					/ 2, shotY + INVBOSS_IMAGE_HEIGHT / 2, invType);
+			InvaderBeam invBeam2 = new InvaderBeam(shotX
+					+ mInvader.INVBOSS_IMAGE_WIDTH / 2, shotY
+					+ mInvader.INVBOSS_IMAGE_HEIGHT / 2, invType);
 			mInvBeamList.add(invBeam2);
-			InvaderBeam invBeam3 = new InvaderBeam(shotX + INVBOSS_IMAGE_WIDTH,
-					shotY + INVBOSS_IMAGE_HEIGHT / 2, invType);
+			InvaderBeam invBeam3 = new InvaderBeam(shotX
+					+ mInvader.INVBOSS_IMAGE_WIDTH, shotY
+					+ mInvader.INVBOSS_IMAGE_HEIGHT / 2, invType);
 			mInvBeamList.add(invBeam3);
 		} else {
-			InvaderBeam invBeam = new InvaderBeam(shotX + INV_IMAGE_WIDTH / 2,
-					shotY + INV_IMAGE_HEIGHT, invType);
+			InvaderBeam invBeam = new InvaderBeam(shotX
+					+ mInvader.INV_IMAGE_WIDTH / 2, shotY
+					+ mInvader.INV_IMAGE_HEIGHT, invType);
 			mInvBeamList.add(invBeam);
 		}
 	}
