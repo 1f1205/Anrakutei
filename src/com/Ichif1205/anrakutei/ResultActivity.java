@@ -18,6 +18,7 @@ public class ResultActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_result);
+		setTitle("Result");
 
 		Intent intent = getIntent();
 		int score = intent.getIntExtra("score", 0);

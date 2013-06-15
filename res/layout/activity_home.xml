@@ -32,7 +32,6 @@
         android:layout_below="@id/play"
         android:layout_marginTop="20dp"
         android:text="Ranking" />
-
     <jp.co.imobile.android.AdView
         android:id="@+id/ad"
         android:layout_width="fill_parent"
