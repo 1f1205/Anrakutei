@@ -117,13 +117,10 @@ public class StageXmlParser {
 					if (eventType == XmlPullParser.TEXT) {
 						String invStr = parser.getText();
 						String[] invStrArr = invStr.split(",", 0);
-								System.out.println("[ubvStrArr]"+invStrArr[0]);
 						for (int i = 0; i < invStrArr.length; i++) {
 							int typeCount = Integer.parseInt(invStrArr[i]);
 							for (int j = 0; j < typeCount; j++) {
-								System.out.println("[i]"+i+"[j]"+j);
 								data.invTypeArray.add(i);
-								System.out.println("[i]"+i+"[j]"+j);
 							}
 						}
 					}
