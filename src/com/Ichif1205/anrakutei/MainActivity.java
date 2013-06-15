@@ -25,6 +25,7 @@ public class MainActivity extends Activity implements GameEventLiestener {
 	private SparseArray<StageInfo> mStageInfos = null;
 
 	private final String STAGE_FORMAT = "STAGE%03d";
+	
 
 	/**
 	 * Extra

@@ -33,5 +33,15 @@
         android:layout_below="@id/ranking"
         android:layout_marginTop="20dp"
         android:text="Result" />
+    
+    <jp.co.imobile.android.AdView
+       	android:id="@+id/ad"
+       	android:layout_width="fill_parent" 
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        asid="112558"
+        mid="59161"
+        android:layout_centerInParent="true"
+        />
 
 </RelativeLayout>
