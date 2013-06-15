@@ -35,7 +35,7 @@ public class Invader {
 	public static final int INV_ORANGE = 3;
 	public static final int INV_GREEN = 4;
 	public static final int INV_BOSS = 5;
-
+	// 敵の画像の大きさ
 	public static final int INV_IMAGE_WIDTH = 36;
 	public static final int INV_IMAGE_HEIGHT = 36;
 	public static final int INVBOSS_IMAGE_WIDTH = 72;
@@ -43,7 +43,7 @@ public class Invader {
 
 	private float HPX;
 	private float HPY;
-	private int mBossHPMAX; // BossのHPのMax
+	private static final int BOSSHPMAX = 10; // BossのHPのMax
 	private int BossHP; // BossのHP
 
 	Invader(float x, float y, int invtype, InvarderListener li) {
@@ -81,8 +81,7 @@ public class Invader {
 		if (type == INV_BOSS) {
 			width = INVBOSS_IMAGE_WIDTH;
 			height = INVBOSS_IMAGE_HEIGHT;
-			mBossHPMAX = 10;
-			BossHP = mBossHPMAX;
+			BossHP = BOSSHPMAX;
 		}
 
 		mShootTimer = new Timer();
@@ -97,40 +96,12 @@ public class Invader {
 		return posY;
 	}
 
-	public int getInvaderWidth() {
-		return width;
-	}
-
-	public int getInvaderHeight() {
-		return height;
-	}
-
 	public int getInvType() {
 		return type;
 	}
 
 	public boolean isExisted() {
 		return existFlag;
-	}
-
-	public void setInvaderPosX(int x) {
-		posX = x;
-	}
-
-	public void setInvaderPosY(int y) {
-		posY = y;
-	}
-
-	public void setInvaderWidth(int w) {
-		width = w;
-	}
-
-	public void setInvaderHeight(int h) {
-		height = h;
-	}
-
-	public void setInvaderExistFlag(boolean exflag) {
-		existFlag = exflag;
 	}
 
 	public float getRandomPosition(float length) {
@@ -322,7 +293,7 @@ public class Invader {
 
 	// ボスHP描画のパス
 	public Path drawBossHPMeter(Path path, float x, float y) {
-		int HPwidth = 50 / mBossHPMAX * BossHP;
+		int HPwidth = 50 / BOSSHPMAX * BossHP;
 		int HPheight = 8;
 		HPX = x + 36; // width/2
 		HPY = y - 20; // 適当
