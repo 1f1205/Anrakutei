@@ -18,7 +18,8 @@ public class HomeActivity extends Activity {
 	// Bead広告
 	private Bead mBeadOptional = null;
 	private Bead mBeadExit = null;
-	private static final String BEAD_SID = "47ec4bc31331a871e04e9fb57aa683cd3f75a53afd31b820";
+	private static final String BEAD_EXIT_SID = "47ec4bc31331a871e04e9fb57aa683cd3f75a53afd31b820";
+	private static final String BEAD_HOME_SID = "47ec4bc31331a871a1a6ca67d264b1a4f7e3db816af9e295";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +27,8 @@ public class HomeActivity extends Activity {
 		setContentView(R.layout.activity_home);
 		
 		// 	BEAD広告読み込み
-		mBeadOptional = Bead.createOptionalInstance(BEAD_SID, 3, ContentsOrientation.Portrait);
-		mBeadExit = Bead.createExitInstance(BEAD_SID, ContentsOrientation.Portrait);
+		mBeadOptional = Bead.createOptionalInstance(BEAD_HOME_SID, 3, ContentsOrientation.Portrait);
+		mBeadExit = Bead.createExitInstance(BEAD_EXIT_SID, ContentsOrientation.Portrait);
 		mBeadOptional.requestAd(this);
 		mBeadExit.requestAd(this);
 
