@@ -82,9 +82,6 @@ public class FieldSurfaceView extends SurfaceView implements
 	public int mItemS = 0;
 	public int mItemG = 0;
 
-	private int mBossHPMAX = 10; // BossのHPのMax
-	private int BossHP = mBossHPMAX; // BossのHP
-
 	MediaPlayer bgm = MediaPlayer.create(getContext(), R.raw.bgm);
 
 	private boolean mExecFlg = true;
@@ -114,7 +111,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	public void setStageInfo(StageInfo info) {
 		MAX_INVADER_NUM = info.maxInvader;
 		invaderType = info.invTypeArray;
-		System.out.println("[INVTYPEARRAY]"+invaderType);
+		System.out.println("[INVTYPEARRAY]" + invaderType);
 	}
 
 	/**
@@ -167,7 +164,8 @@ public class FieldSurfaceView extends SurfaceView implements
 		mItemInfo = new HashMap<String, String>();
 		// 複数の敵を表示
 		for (int i = 0; i < MAX_INVADER_NUM; i++) {
-			Invader invader = new Invader(getWidth(), getHeight() / 2, invaderType.get(i), this);
+			Invader invader = new Invader(getWidth(), getHeight() / 2,
+					invaderType.get(i), this);
 			mInvaderList.add(invader);
 		}
 		// 　敵の画像セット
@@ -247,18 +245,13 @@ public class FieldSurfaceView extends SurfaceView implements
 							shot.getShotPosX(), shot.getShotPosY());
 					// 弾が敵に当たったら消える
 					if (invIsShooted) {
-						int invType = invader.getInvType();
-						Log.d("itemPattern", "itemnum" + invType);
-						if (invType == invader.INV_BOSS) {
-							BossHP--;
-							if (BossHP != 0) {
-								shot.remove();
-								break;
-							}
-							BossHP = mBossHPMAX; // boss複数出現時の暫定対応
+						shot.remove();
+						int check = invader.BossCheck();
+						Log.d("itemPattern", "bossd" + check);
+						if (check == 1) {
+							break;
 						}
 						invader.ItemAdd();
-						shot.remove();
 						invader.remove();
 						mDestoryInvaderCount++;
 						mHandler.post(new Runnable() {
@@ -411,8 +404,7 @@ public class FieldSurfaceView extends SurfaceView implements
 			mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 			// Log.d("itemPattern", "boss" + BossHP);
 			mCanvas.drawPath(invader.drawBossHPMeter(path,
-					invader.getInvaderPosX(), invader.getInvaderPosY(), BossHP,
-					mBossHPMAX), mPaint);
+					invader.getInvaderPosX(), invader.getInvaderPosY()), mPaint);
 		}
 	}
 
