@@ -7,4 +7,5 @@ public class StageInfo {
 	public int id;
 	public int maxInvader;
 	public int boss;
+	public int[] invTypeArray;
 }

@@ -22,24 +22,25 @@ public class StageXmlParser {
 	private Context mContext;
 	private static final String STAGE_XML_NAME = "stage.xml";
 	private static final String STAGE_TAG = "Stage";
-	
+
 	public StageXmlParser(Context context) {
 		mContext = context;
 	}
-	
+
 	/**
 	 * StageXmlをパースする
+	 * 
 	 * @return
 	 */
 	public SparseArray<StageInfo> parseStageXml() {
 		final XmlPullParser xmlPullParser = Xml.newPullParser();
 		final SparseArray<StageInfo> stages = new SparseArray<StageInfo>();
 		final AssetManager assets = mContext.getResources().getAssets();
-		
+
 		try {
 			final InputStream is = assets.open(STAGE_XML_NAME);
 			final InputStreamReader isr = new InputStreamReader(is);
-			
+
 			xmlPullParser.setInput(isr);
 			int eventType;
 			while ((eventType = xmlPullParser.next()) != XmlPullParser.END_DOCUMENT) {
@@ -59,14 +60,15 @@ public class StageXmlParser {
 		} finally {
 			Log.d(TAG, "AssetsManager Close");
 			// AssetsManagerをクローズ
-//			assets.close();
+			// assets.close();
 		}
-		
+
 		return stages;
 	}
-	
+
 	/**
 	 * パース結果をStageInfoオブジェクトとして返す
+	 * 
 	 * @param parser
 	 * @return
 	 */
@@ -109,28 +111,51 @@ public class StageXmlParser {
 					}
 				}
 
+				// invTyoeArrayを格納
+				if (eventType == XmlPullParser.START_TAG
+						&& "invTypeArray".equals(parser.getName())) {
+					eventType = parser.next();
+					if (eventType == XmlPullParser.TEXT) {
+						String invStr = parser.getText();
+						String[] invStrArr = invStr.split(",", 0);
+						int count = 0;
+						int[] array = {};
+						for (int i = 0; i < invStrArr.length; i++) {
+							int typeCount = Integer.parseInt(invStrArr[i]);
+							for (int j = 0; j < typeCount; j++) {
+								System.out
+										.println("[inttypearray]" + typeCount);
+								array[count++] = i;
+								count++;
+							}
+						}
+						System.out.println("[finished]");
+						data.invTypeArray = array;
+					}
+				}
+
 				// TODO 要素増やしたら修正
-//				if (eventType == XmlPullParser.START_TAG
-//						&& "date".equals(parser.getName())) {
-//					eventType = parser.next();
-//					if (eventType == XmlPullParser.TEXT) {
-//						data.setDate(parser.getText());
-//					}
-//				}
-//
-//				if (eventType == XmlPullParser.START_TAG
-//						&& "bookmarkcount".equals(parser.getName())) {
-//					eventType = parser.next();
-//					if (eventType == XmlPullParser.TEXT) {
-//						data.setUsers(parser.getText());
-//					}
-//				}
+				// if (eventType == XmlPullParser.START_TAG
+				// && "date".equals(parser.getName())) {
+				// eventType = parser.next();
+				// if (eventType == XmlPullParser.TEXT) {
+				// data.setDate(parser.getText());
+				// }
+				// }
+				//
+				// if (eventType == XmlPullParser.START_TAG
+				// && "bookmarkcount".equals(parser.getName())) {
+				// eventType = parser.next();
+				// if (eventType == XmlPullParser.TEXT) {
+				// data.setUsers(parser.getText());
+				// }
+				// }
 			} catch (XmlPullParserException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		return data;	
+		return data;
 	}
 }

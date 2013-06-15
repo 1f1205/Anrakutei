@@ -25,10 +25,10 @@ import com.Ichif1205.anrakutei.Invader.InvarderListener;
 
 public class FieldSurfaceView extends SurfaceView implements
 		SurfaceHolder.Callback, Runnable, InvarderListener {
-	//wkodate
 	private final String TAG = FieldSurfaceView.class.getSimpleName();
 	private final Context mContext;
-	private int MAX_INVADER_NUM = 12;
+	private int MAX_INVADER_NUM;
+	private int[] INVADER_TYPE;
 	private SurfaceHolder mHolder;
 	private Canvas mCanvas = null;
 	private Paint mPaint;
@@ -124,6 +124,8 @@ public class FieldSurfaceView extends SurfaceView implements
 	 */
 	public void setStageInfo(StageInfo info) {
 		MAX_INVADER_NUM = info.maxInvader;
+		INVADER_TYPE = info.invTypeArray;
+		//INVADER_TYPE = new int[] {0, 1, 2, 3, 4};
 	}
 
 	/**
@@ -176,10 +178,10 @@ public class FieldSurfaceView extends SurfaceView implements
 		mItemInfo = new HashMap<String, String>();
 		// 複数の敵を表示
 		for (int i = 0; i < MAX_INVADER_NUM; i++) {
-			Invader invader = new Invader(getWidth(), getHeight() / 2, this);
+			Invader invader = new Invader(getWidth(), getHeight() / 2, INVADER_TYPE[i], this);
 			mInvaderList.add(invader);
 		}
-		// 　敵をランダムで決定
+		// 　敵の画像セット
 		mInvImage1 = Bitmap.createScaledBitmap(mInvImage1, INV_IMAGE_WIDTH,
 				INV_IMAGE_HEIGHT, true);
 		mInvImage2 = Bitmap.createScaledBitmap(mInvImage2, INV_IMAGE_WIDTH,

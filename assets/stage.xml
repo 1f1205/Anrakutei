@@ -2,17 +2,20 @@
 <StageSets>
     <Stage>
     	<Id>1</Id>
-    	<MaxInvader>5</MaxInvader>
+    	<MaxInvader>3</MaxInvader>
     	<Boss>3</Boss>
+    	<invTypeArray>3,0,0,0,0,0</invTypeArray>
     </Stage>
     <Stage>
     	<Id>2</Id>
-    	<MaxInvader>8</MaxInvader>
+    	<MaxInvader>5</MaxInvader>
     	<Boss>3</Boss>
+    	<invTypeArray>1,1,1,1,1,0</invTypeArray>
     </Stage>
     <Stage>
     	<Id>3</Id>
-    	<MaxInvader>10</MaxInvader>
+    	<MaxInvader>3</MaxInvader>
     	<Boss>3</Boss>
+    	<invTypeArray>0,0,0,0,0,3</invTypeArray>
     </Stage>
 </StageSets>
