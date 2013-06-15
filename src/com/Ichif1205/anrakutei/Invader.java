@@ -134,14 +134,7 @@ public class Invader {
 	}
 
 	public boolean isOverBoundaryHeight(int h) {
-			if(type == INV_LIGHTBLUE) {
-		System.out.println("[POSY]"+posY);
-			}
 		if (posY > h - height || posY < 0) {
-			if(type == INV_LIGHTBLUE) {
-		System.out.println("[POSY_OUT]"+posY);
-		
-			}
 			return true;
 		}
 		return false;
@@ -152,7 +145,7 @@ public class Invader {
 	}
 
 	public void reverseSpeedYDirection() {
-		if(type == INV_LIGHTBLUE) {
+		if (type == INV_LIGHTBLUE) {
 			speedX = -speedX;
 		} else {
 			speedY = -speedY;
@@ -262,12 +255,12 @@ public class Invader {
 	class ShootTask extends TimerTask {
 		public void run() {
 			mIl.shootBeamEvent(posX, posY, type);
-			Random beam_rand = new Random();
+			Random binterval_rand = new Random();
 			int randBeam;
 			if (type == INV_BOSS) {
-				randBeam = 1000 + (100 * beam_rand.nextInt(5));
+				randBeam = 1000 + (100 * binterval_rand.nextInt(5));
 			} else {
-				randBeam = 1500 + (500 * beam_rand.nextInt(5));
+				randBeam = 1500 + (500 * binterval_rand.nextInt(5));
 			}
 			mShootTimer.schedule(new ShootTask(), randBeam);
 		}

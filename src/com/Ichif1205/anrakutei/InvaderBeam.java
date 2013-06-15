@@ -12,11 +12,15 @@ public class InvaderBeam {
 	private int invType;
 	private int width = 5;
 	private int height = 20;
+	private double mv_pattern;
 	private int speed;
 	private int beamType;
 	private float centerX;
 	private float dy;
 	private Invader mInvader;
+	private static final int BEAM_STRAIGHT = 0;
+	private static final int BEAM_SINWAVE = 1;
+	private static final int BEAM_20SKEW = 2;
 
 	InvaderBeam(float x, float y, int type) {
 		posX = x;
@@ -25,8 +29,9 @@ public class InvaderBeam {
 		Random speed_rand = new Random();
 		speed = speed_rand.nextInt(3) + 3;
 		Random beam_rand = new Random();
-		beamType = beam_rand.nextInt(4);
-		if (beamType >= 1) {
+		beamType = beam_rand.nextInt(3);
+		mv_pattern = Math.random();
+		if (beamType == BEAM_SINWAVE || beamType == BEAM_20SKEW) {
 			centerX = posX;
 		}
 		if (invType == mInvader.INV_BOSS) {
@@ -42,36 +47,8 @@ public class InvaderBeam {
 		return posY;
 	}
 
-	public int getInvBeamWidth() {
-		return width;
-	}
-
-	public int getInvBeamHeight() {
-		return height;
-	}
-
-	public int getInvBeamSpeed() {
-		return speed;
-	}
-
 	public int getInvType() {
 		return invType;
-	}
-
-	public void setInvBeamPosX(float x) {
-		posX = x;
-	}
-
-	public void setInvBeamPosY(float y) {
-		posY = y;
-	}
-
-	public void setInvBeamWidth(int w) {
-		width = w;
-	}
-
-	public void setInvBeamHeight(int h) {
-		height = h;
 	}
 
 	public boolean isInsideScreen(int windowHeight) {
@@ -83,18 +60,30 @@ public class InvaderBeam {
 
 	public void updatePosition() {
 		// patternによって移動パターン決定
-		if (beamType == 0) {
-			posY += speed;
-		} else if (beamType == 1) {
-			posY += speed;
-			posX = 60 * FloatMath.cos(posY / 60) + centerX;
-		} else if (beamType == 2) {
-			posY += speed;
-			dy += speed * (float) Math.tan(Math.PI / 9);
+		if (beamType == BEAM_STRAIGHT) {
+			moveStraight();
+		} else if (beamType == BEAM_SINWAVE) {
+			moveSinWave();
+		} else {
+			move20Skew();
+		}
+	}
+
+	public void moveStraight() {
+		posY += speed;
+	}
+
+	public void moveSinWave() {
+		posY += speed;
+		posX = 60 * FloatMath.cos(posY / 60) + centerX;
+	}
+
+	public void move20Skew() {
+		posY += speed;
+		dy += speed * (float) Math.tan(Math.PI / 9);
+		if (mv_pattern > 0.5) {
 			posX = dy + centerX;
 		} else {
-			posY += speed;
-			dy += speed * (float) Math.tan(Math.PI / 9);
 			posX = -dy + centerX;
 		}
 	}

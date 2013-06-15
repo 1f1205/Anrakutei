@@ -374,7 +374,7 @@ public class FieldSurfaceView extends SurfaceView implements
 			invader.reverseSpeedXDirection();
 		}
 		if (invader
-				.isOverBoundaryHeight((int)(getHeight() * PLAYER_INIT_HEIGHT_RATE))) {
+				.isOverBoundaryHeight((int) (getHeight() * PLAYER_INIT_HEIGHT_RATE))) {
 			invader.reverseSpeedYDirection();
 		}
 		invader.updatePosition();
