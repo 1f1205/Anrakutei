@@ -115,7 +115,6 @@ public class FieldSurfaceView extends SurfaceView implements
 		MAX_INVADER_NUM = info.maxInvader;
 		invaderType = info.invTypeArray;
 		System.out.println("[INVTYPEARRAY]"+invaderType);
-		//INVADER_TYPE = new int[] {0, 1, 2, 3, 4};
 	}
 
 	/**
@@ -250,7 +249,7 @@ public class FieldSurfaceView extends SurfaceView implements
 					if (invIsShooted) {
 						int invType = invader.getInvType();
 						Log.d("itemPattern", "itemnum" + invType);
-						if (invType == 5) {
+						if (invType == invader.INV_BOSS) {
 							BossHP--;
 							if (BossHP != 0) {
 								shot.remove();

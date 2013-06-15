@@ -8,14 +8,56 @@
     </Stage>
     <Stage>
     	<Id>2</Id>
+    	<MaxInvader>3</MaxInvader>
+    	<Boss>3</Boss>
+    	<invTypeArray>1,1,1,0,0,0</invTypeArray>
+    </Stage>
+    <Stage>
+    	<Id>3</Id>
+    	<MaxInvader>3</MaxInvader>
+    	<Boss>3</Boss>
+    	<invTypeArray>0,1,0,1,1,0</invTypeArray>
+    </Stage>
+    <Stage>
+    	<Id>4</Id>
     	<MaxInvader>5</MaxInvader>
     	<Boss>3</Boss>
     	<invTypeArray>1,1,1,1,1,0</invTypeArray>
     </Stage>
     <Stage>
-    	<Id>3</Id>
+    	<Id>5</Id>
     	<MaxInvader>1</MaxInvader>
     	<Boss>3</Boss>
     	<invTypeArray>0,0,0,0,0,1</invTypeArray>
+    </Stage>
+    <Stage>
+    	<Id>6</Id>
+    	<MaxInvader>3</MaxInvader>
+    	<Boss>3</Boss>
+    	<invTypeArray>1,0,1,0,0,1</invTypeArray>
+    </Stage>
+    <Stage>
+    	<Id>7</Id>
+    	<MaxInvader>4</MaxInvader>
+    	<Boss>3</Boss>
+    	<invTypeArray>0,1,1,0,1,1</invTypeArray>
+    </Stage>
+    <Stage>
+    	<Id>8</Id>
+    	<MaxInvader>4</MaxInvader>
+    	<Boss>3</Boss>
+    	<invTypeArray>0,0,1,1,0,2</invTypeArray>
+    </Stage>
+    <Stage>
+    	<Id>9</Id>
+    	<MaxInvader>5</MaxInvader>
+    	<Boss>3</Boss>
+    	<invTypeArray>0,1,0,1,1,2</invTypeArray>
+    </Stage>
+    <Stage>
+    	<Id>10</Id>
+    	<MaxInvader>8</MaxInvader>
+    	<Boss>3</Boss>
+    	<invTypeArray>1,1,1,1,1,3</invTypeArray>
     </Stage>
 </StageSets>

@@ -16,6 +16,7 @@ public class InvaderBeam {
 	private int beamType;
 	private float centerX;
 	private float dy;
+	private Invader mInvader;
 
 	InvaderBeam(float x, float y, int type) {
 		posX = x;
@@ -28,8 +29,8 @@ public class InvaderBeam {
 		if (beamType >= 1) {
 			centerX = posX;
 		}
-		if (invType == 5) {
-			speed = 8;
+		if (invType == mInvader.INV_BOSS) {
+			speed = 7;
 		}
 	}
 
