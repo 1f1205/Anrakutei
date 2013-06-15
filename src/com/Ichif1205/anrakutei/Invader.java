@@ -67,14 +67,16 @@ public class Invader {
 			Random r_rand = new Random();
 			int r_times = r_rand.nextInt(3);
 			radius = 50 * (2 + r_times);
+			// centerの位置座標によってthetaの初期値を決定
+			// 例えば画面の右下が初期位置ならthetaの開始は円の左上
 			if (centerX <= x / 2 && centerY > y / 2) {
-				theta = (float) (Math.PI / 4);
-			} else if (centerX > x / 2 && centerY > y / 2) {
-				theta = (float) (3 * Math.PI / 4);
-			} else if (centerX > x / 2 && centerY <= y / 2) {
-				theta = (float) (5 * Math.PI / 4);
-			} else {
 				theta = (float) (7 * Math.PI / 4);
+			} else if (centerX > x / 2 && centerY > y / 2) {
+				theta = (float) (5 * Math.PI / 4);
+			} else if (centerX > x / 2 && centerY <= y / 2) {
+				theta = (float) (3 * Math.PI / 4);
+			} else {
+				theta = (float) (Math.PI / 4);
 			}
 		}
 		// ボスの設定
@@ -125,14 +127,21 @@ public class Invader {
 	}
 
 	public boolean isOverBoundaryWidth(int w) {
-		if (posX > w - width || posX <= 0) {
+		if (posX > w - width || posX < 0) {
 			return true;
 		}
 		return false;
 	}
 
 	public boolean isOverBoundaryHeight(int h) {
-		if (posY > h - height - 16 || posY <= 16) {
+			if(type == INV_LIGHTBLUE) {
+		System.out.println("[POSY]"+posY);
+			}
+		if (posY > h - height || posY < 0) {
+			if(type == INV_LIGHTBLUE) {
+		System.out.println("[POSY_OUT]"+posY);
+		
+			}
 			return true;
 		}
 		return false;
@@ -143,7 +152,11 @@ public class Invader {
 	}
 
 	public void reverseSpeedYDirection() {
-		speedY = -speedY;
+		if(type == INV_LIGHTBLUE) {
+			speedX = -speedX;
+		} else {
+			speedY = -speedY;
+		}
 	}
 
 	public void updatePosition() {
