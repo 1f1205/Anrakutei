@@ -2,6 +2,8 @@ package com.Ichif1205.anrakutei;
 
 import jp.beyond.bead.Bead;
 import jp.beyond.bead.Bead.ContentsOrientation;
+import jp.maru.mrd.IconCell;
+import jp.maru.mrd.IconLoader;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -14,6 +16,8 @@ import android.widget.ImageView;
 
 public class HomeActivity extends Activity {
 	private static final String TAG = HomeActivity.class.getSimpleName();
+	private static final String ASTRSK_MEDIA_CODE = "Ichif1205.anrakutei";
+	IconLoader<Integer> mIconLoader = null;
 	
 	// Bead広告
 	private Bead mBeadExit = null;
@@ -27,6 +31,16 @@ public class HomeActivity extends Activity {
 		// 	BEAD広告読み込み
 		mBeadExit = Bead.createExitInstance(BEAD_EXIT_SID, ContentsOrientation.Portrait);
 		mBeadExit.requestAd(this);
+		
+		// アスタ広告読み込み
+		if (mIconLoader == null) {
+			mIconLoader = new IconLoader<Integer>(ASTRSK_MEDIA_CODE, this);
+			((IconCell) findViewById(R.id.iconAd1)).addToIconLoader(mIconLoader);
+			((IconCell) findViewById(R.id.iconAd2)).addToIconLoader(mIconLoader);
+			((IconCell) findViewById(R.id.iconAd3)).addToIconLoader(mIconLoader);
+			((IconCell) findViewById(R.id.iconAd4)).addToIconLoader(mIconLoader);
+			mIconLoader.setRefreshInterval(60);
+		}
 
 		// ステージ情報を読み込む
 		final ReadStageInfoTask task = new ReadStageInfoTask(HomeActivity.this);
@@ -62,6 +76,18 @@ public class HomeActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mIconLoader.startLoading();
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mIconLoader.stopLoading();
 	}
 
 	@Override
