@@ -9,7 +9,8 @@ import android.util.FloatMath;
 import android.util.Log;
 
 public class Invader {
-
+	
+	private final String TAG = FieldSurfaceView.class.getSimpleName();
 	private float posX;
 	private float posY;
 	private int width;
@@ -20,6 +21,7 @@ public class Invader {
 	private InvarderListener mIl;
 	private int mTerm = 1000;
 	private Timer mShootTimer;
+		private Player player;
 	// 敵の動き関係
 	private int speedX;
 	private int speedY;
@@ -110,7 +112,7 @@ public class Invader {
 		float rate;
 		while (true) {
 			rate = (float) Math.random();
-			if (rate > 0.15 && rate < 0.85) {
+			if (rate > 0.20 && rate < 0.80) {
 				break;
 			}
 		}
@@ -152,7 +154,7 @@ public class Invader {
 		}
 	}
 
-	public void updatePosition() {
+	public void updatePosition(float playerPosX) {
 		// インベーダーの種類によって動き異なる
 		if (type == INV_PURPLE) {
 			moveLR();
@@ -165,7 +167,7 @@ public class Invader {
 		} else if (type == INV_GREEN) {
 			move30Skew();
 		} else {
-			moveVibration();
+			moveVibration(playerPosX);
 		}
 	}
 
@@ -227,16 +229,27 @@ public class Invader {
 		}
 	}
 
-	private void moveVibration() {
+	private void moveVibration(float pposx) {
 		double mvvi = Math.random();
-		if (mvvi < 0.03125) {
-			posX += speedX + 4;
-		} else if (mvvi < 0.0625) {
-			posX -= speedX + 4;
-		} else if (mvvi < 0.09375) {
+		// 1/8 の確率で移動
+		// そのうち各方向に移動する確率は 上: 2/8, 下: 2/8,
+		// 自機の方向: 3/8, 自機と逆方向: 1/8
+		if (mvvi < 0.03125) {		
 			posY += speedY + 4;
-		} else if (mvvi < 0.125) {
+		} else if (mvvi < 0.0625) {
 			posY -= speedY + 4;
+		} else if (mvvi < 0.09375) {
+			if (posX > pposx) {
+				posX -= speedX + 4;
+			} else {
+				posX += speedX + 4;
+			}
+		} else if (mvvi < 0.0625) {
+			if (posX > pposx) {
+				posX += speedX + 4;
+			} else {
+				posX -= speedX + 4;
+			}
 		}
 	}
 

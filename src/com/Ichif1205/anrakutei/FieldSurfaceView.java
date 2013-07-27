@@ -379,7 +379,7 @@ public class FieldSurfaceView extends SurfaceView implements
 				.isOverBoundaryHeight((int) (getHeight() * PLAYER_INIT_HEIGHT_RATE))) {
 			invader.reverseSpeedYDirection();
 		}
-		invader.updatePosition();
+		invader.updatePosition(mPlayer.getPlayerPosX());
 
 		int invType = invader.getInvType();
 		if (invType == Invader.INV_PURPLE) {
