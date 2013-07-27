@@ -255,6 +255,8 @@ public class FieldSurfaceView extends SurfaceView implements
 								mGameListener.addScore(invader.getPoint());
 							}
 						});
+						/*Log.d("itemPattern", "debugMAX" + MAX_INVADER_NUM);
+						Log.d("itemPattern", "debugDestory" + mDestoryInvaderCount);*/
 						if (MAX_INVADER_NUM == mDestoryInvaderCount) {
 							// 次のステージへ遷移
 							mHandler.post(new Runnable() {

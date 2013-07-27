@@ -241,7 +241,7 @@ public class Invader {
 	}
 
 	public void remove() {
-		posY = 1000;
+		posY = -1000;
 		existFlag = false;
 		mShootTimer.cancel();
 	}
