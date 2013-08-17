@@ -18,19 +18,11 @@ public class HomeActivity extends Activity {
 	private static final String TAG = HomeActivity.class.getSimpleName();
 	private static final String ASTRSK_MEDIA_CODE = "Ichif1205.anrakutei";
 	IconLoader<Integer> mIconLoader = null;
-	
-	// Bead広告
-	private Bead mBeadExit = null;
-	private static final String BEAD_EXIT_SID = "47ec4bc31331a871e04e9fb57aa683cd3f75a53afd31b820";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-		
-		// 	BEAD広告読み込み
-		mBeadExit = Bead.createExitInstance(BEAD_EXIT_SID, ContentsOrientation.Portrait);
-		mBeadExit.requestAd(this);
 		
 		// アスタ広告読み込み
 		if (mIconLoader == null) {
@@ -97,13 +89,7 @@ public class HomeActivity extends Activity {
 	
 	@Override
 	protected void onDestroy() {
-		mBeadExit.endAd();
 		super.onDestroy();
-	}
-	
-	@Override
-	public void onBackPressed() {
-		mBeadExit.showAd(this);
 	}
 
 	/**
