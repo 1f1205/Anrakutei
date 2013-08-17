@@ -12,11 +12,11 @@
         android:layout_above="@+id/result_score"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="110dp"
         android:text="RESULT"
         android:visibility="gone"
         android:textColor="#ffff56"
-        android:textSize="50sp" />
+        android:textSize="60sp" />
 
     <TextView
         android:id="@+id/clear_title"
@@ -29,7 +29,7 @@
         android:visibility="gone"
         android:text="Congraturation!"
         android:textColor="#ffff56"
-        android:textSize="50sp" />
+        android:textSize="52sp" />
 
     <TextView
         android:id="@id/result_score"
@@ -43,8 +43,15 @@
     <Button
         android:id="@+id/top_button"
         style="@style/CommonButtonStyle"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="80dp"
+        android:layout_below="@id/result_score"
+        android:layout_marginTop="60dp"
         android:text="TOP" />
-
+    
+    <LinearLayout 
+        android:id="@+id/footer_ad"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/top_button"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+		/>
 </RelativeLayout>

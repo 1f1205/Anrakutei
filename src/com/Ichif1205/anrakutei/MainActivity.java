@@ -178,11 +178,11 @@ public class MainActivity extends Activity implements GameEventLiestener {
 	}
 
 	@Override
-	public void endGame(int score, int clearflg) {
+	public void endGame(int score, boolean clearflg) {
 		// ゲーム終了
 		mGameEndFlg = true;
-		// Result画面へ遷移
-		Intent intent = new Intent(this, ResultActivity.class);
+		
+		final Intent intent = new Intent(this, ResultActivity.class);
 		intent.putExtra("score", mScore);
 		intent.putExtra("clearflg", clearflg);
 		startActivity(intent);
@@ -203,7 +203,7 @@ public class MainActivity extends Activity implements GameEventLiestener {
 
 		// 最終ステージまでクリアしたら結果画面に遷移
 		if (mStageInfos.indexOfKey(mStageId) < 0) {
-			endGame(mScore, 1);
+			endGame(mScore, true);
 			return;
 		}
 

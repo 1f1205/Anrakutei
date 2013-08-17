@@ -1,15 +1,18 @@
 package com.Ichif1205.anrakutei;
 
+import jp.co.imobile.android.AdView;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.LinearGradient;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class ResultActivity extends Activity {
@@ -21,28 +24,33 @@ public class ResultActivity extends Activity {
 		setTitle("Result");
 
 		Intent intent = getIntent();
-		int score = intent.getIntExtra("score", 0);
-		int clearflg = intent.getIntExtra("clearflg", 0);
-		TextView resultTitle = null;
-		//Log.d("itemPattern", "clea" + clearflg);
+		final int score = intent.getIntExtra("score", 0);
+		final boolean clearflg = intent.getBooleanExtra("clearflg", false);
 
-		TextView resultScore = (TextView) findViewById(R.id.result_score);
-		if (clearflg == 1) {
+		TextView resultTitle = null;
+		if (clearflg) {
 			resultTitle = (TextView) findViewById(R.id.clear_title);
+			// ad
+			LinearLayout footerAd = (LinearLayout) findViewById(R.id.footer_ad);
+			AdView adView = AdView.create(this, 59161, 125290);
+			footerAd.addView(adView);
+			adView.start();
 		} else {
 			Log.d("itemPattern", "clear" + clearflg);
 			resultTitle = (TextView) findViewById(R.id.result_title);
 		}
 		resultTitle.setVisibility(View.VISIBLE);
-		Button topButton = (Button) findViewById(R.id.top_button);
+
 		// Set Font
-
-		Log.d("itemPattern", "clea" + resultTitle);
 		Typeface face = Utils.getFonts(getApplicationContext());
+		final TextView resultScore = (TextView) findViewById(R.id.result_score);
 		resultScore.setTypeface(face);
-		resultTitle.setTypeface(face);
-		topButton.setTypeface(face);
+		resultScore.setText(Integer.toString(score));
 
+		resultTitle.setTypeface(face);
+
+		final Button topButton = (Button) findViewById(R.id.top_button);
+		topButton.setTypeface(face);
 		topButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -53,8 +61,6 @@ public class ResultActivity extends Activity {
 				finish();
 			}
 		});
-
-		resultScore.setText(Integer.toString(score));
 
 		saveScore(score, System.currentTimeMillis());
 	}
