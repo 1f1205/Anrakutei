@@ -31,14 +31,17 @@
         </activity>
         <activity
             android:name="com.Ichif1205.anrakutei.RankingActivity"
+            android:screenOrientation="portrait"
             android:configChanges="orientation" >
         </activity>
         <activity
             android:name="com.Ichif1205.anrakutei.SelectPlayer"
+            android:screenOrientation="portrait"
             android:configChanges="orientation" >
         </activity>
         <activity
             android:name="com.Ichif1205.anrakutei.ResultActivity"
+            android:screenOrientation="portrait"
             android:configChanges="orientation" >
         </activity>
         <activity

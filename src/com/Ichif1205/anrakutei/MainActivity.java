@@ -181,16 +181,10 @@ public class MainActivity extends Activity implements GameEventLiestener {
 	public void endGame(int score, boolean clearflg) {
 		// ゲーム終了
 		mGameEndFlg = true;
-		final Intent intent;
-
-		if (clearflg) {
-			intent = new Intent(this, );
-		} else {
-			// Result画面へ遷移
-			intent = new Intent(this, ResultActivity.class);
-			intent.putExtra("score", mScore);
-			intent.putExtra("clearflg", clearflg);
-		}
+		
+		final Intent intent = new Intent(this, ResultActivity.class);
+		intent.putExtra("score", mScore);
+		intent.putExtra("clearflg", clearflg);
 		startActivity(intent);
 	}
 
