@@ -1,7 +1,5 @@
 package com.Ichif1205.anrakutei;
 
-import jp.beyond.bead.Bead;
-import jp.beyond.bead.Bead.ContentsOrientation;
 import jp.maru.mrd.IconCell;
 import jp.maru.mrd.IconLoader;
 import android.app.Activity;
@@ -68,6 +66,7 @@ public class HomeActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+		
 	}
 	
 	@Override
