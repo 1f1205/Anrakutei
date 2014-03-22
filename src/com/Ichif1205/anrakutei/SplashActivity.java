@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.widget.TextView;
 
 public class SplashActivity extends Activity {
+	@SuppressWarnings("unused")
 	private static final String TAG = SplashActivity.class.getSimpleName();
 	private static final int WAIT_TIME = 2000;
 	private static final String STAGE_FORMAT = "STAGE %03d";

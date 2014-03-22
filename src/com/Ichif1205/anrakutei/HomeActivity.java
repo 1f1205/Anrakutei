@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 public class HomeActivity extends Activity {
+	@SuppressWarnings("unused")
 	private static final String TAG = HomeActivity.class.getSimpleName();
 	private static final String ASTRSK_MEDIA_CODE = "Ichif1205.anrakutei";
 	IconLoader<Integer> mIconLoader = null;

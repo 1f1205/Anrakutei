@@ -2,16 +2,17 @@ package com.Ichif1205.anrakutei;
 
 import java.util.ArrayList;
 
-import android.graphics.Bitmap;
+import com.Ichif1205.anrakutei.beam.BaseBeam;
+import com.Ichif1205.anrakutei.invader.BaseInvader;
+import com.Ichif1205.anrakutei.shot.Shot;
 
 /**
  * ゲーム状態を保存するオブジェクト
  */
 public class Status {
-	public Bitmap bitmap;
 	public ArrayList<Shot> shotList;
-	public ArrayList<InvaderBeam> invBeamList;
-	public ArrayList<Invader> invaderList;
+	public ArrayList<BaseBeam> invBeamList;
+	public ArrayList<BaseInvader> invaderList;
 	public ArrayList<Item> item;
 	public boolean pauseFlg;
 }

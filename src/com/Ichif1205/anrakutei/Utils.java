@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.media.AudioManager;
 
 public class Utils {
+	@SuppressWarnings("unused")
 	private static final String TAG = Utils.class.getSimpleName();
 
 	/**

@@ -6,13 +6,15 @@ import android.graphics.RectF;
 import android.util.FloatMath;
 
 public class Item {
+	public static final int ITEM_IMAGE_WIDTH = 36;
+	public static final int ITEM_IMAGE_HEIGHT = 36;
+	private static final int SPEED = 4;
+	private static final int width = 5;
+	private static final int height = 20;
 
 	private float posX;
 	private float posY;
-	private int width = 5;
-	private int height = 20;
-	private int speed = 4;
-	private int pattern;
+	private int mPattern;
 	private float centerX;
 	private float dy;
 	private String select_item;
@@ -22,8 +24,8 @@ public class Item {
 		posX = x;
 		posY = y;
 		Random ptn_rand = new Random();
-		pattern = ptn_rand.nextInt(4);
-		if (pattern >= 1) {
+		mPattern = ptn_rand.nextInt(4);
+		if (mPattern >= 1) {
 			centerX = posX;
 		}
 	}
@@ -36,34 +38,6 @@ public class Item {
 		return posY;
 	}
 
-	public int getItemWidth() {
-		return width;
-	}
-
-	public int getItemHeight() {
-		return height;
-	}
-
-	public int getItemSpeed() {
-		return speed;
-	}
-
-	public void setItemPosX(float x) {
-		posX = x;
-	}
-
-	public void setItemPosY(float y) {
-		posY = y;
-	}
-
-	public void setItemWidth(int w) {
-		width = w;
-	}
-
-	public void setItemHeight(int h) {
-		height = h;
-	}
-
 	public boolean isInsideScreen(int windowHeight) {
 		if (posY <= windowHeight && posY >= 0) {
 			return true;
@@ -73,9 +47,10 @@ public class Item {
 
 	public String selectItem() {
 		if (item_pattern != -1) {
+			// 既にアイテムを決まってる
 			return select_item;
 		}
-		Random ptn_rand = new Random();
+		final Random ptn_rand = new Random();
 		Random flg = new Random();
 		if (flg.nextInt(3) == 1) {
 			item_pattern = ptn_rand.nextInt(5);
@@ -100,26 +75,20 @@ public class Item {
 
 	public void updatePosition() {
 		// patternによって移動パターン決定
-		if (pattern == 0) {
-			posY += speed;
-		} else if (pattern == 1) {
-			posY += speed;
+		if (mPattern == 0) {
+			posY += SPEED;
+		} else if (mPattern == 1) {
+			posY += SPEED;
 			posX = 60 * FloatMath.cos(posY / 60) + centerX;
-		} else if (pattern == 2) {
-			posY += speed;
-			dy += speed * (float) Math.tan(Math.PI / 9);
+		} else if (mPattern == 2) {
+			posY += SPEED;
+			dy += SPEED * (float) Math.tan(Math.PI / 9);
 			posX = dy + centerX;
 		} else {
-			posY += speed;
-			dy += speed * (float) Math.tan(Math.PI / 9);
+			posY += SPEED;
+			dy += SPEED * (float) Math.tan(Math.PI / 9);
 			posX = -dy + centerX;
 		}
-	}
-
-	public RectF createRectangle() {
-		RectF rectf = new RectF(posX - width / 2, posY - height / 2, posX
-				+ width / 2, posY + height / 2);
-		return rectf;
 	}
 
 	public void remove() {
