@@ -12,6 +12,8 @@ import android.util.FloatMath;
 import com.Ichif1205.anrakutei.Player;
 
 public abstract class BaseItem {
+	@SuppressWarnings("unused")
+	private static final String TAG = BaseItem.class.getSimpleName();
 	/**
 	 * 総移動パターン
 	 */
@@ -58,6 +60,8 @@ public abstract class BaseItem {
 	private float mCenterX;
 	
 	private float mDynamic;
+	
+	protected final ItemMediator mMediator;
 
 	/**
 	 * @param positionX
@@ -65,15 +69,24 @@ public abstract class BaseItem {
 	 * @param positionY
 	 *            アイテムの表示開始位置(Y座標)
 	 */
-	public BaseItem(Context context, float positionX, float positionY) {
+	public BaseItem(Context context, ItemMediator mediator, float positionX, float positionY) {
+		mCenterX = positionX;
+		mMediator = mediator;
 		mPositionX = positionX;
 		mPositionY = positionY;
 
-		mCenterX = positionX;
 		mItemBitmap = createBitmap(context);
 		mMovePattern = fixedMovePattern();
 	}
 	
+	public float getPositionX() {
+		return mPositionX;
+	}
+	
+	public float getPositionY() {
+		return mPositionY;
+	}
+
 	/**
 	 * アイテムの位置を更新する
 	 */
@@ -110,7 +123,7 @@ public abstract class BaseItem {
 	/**
 	 * アイテムの効果を適応する
 	 */
-	protected abstract void adjustEffective();
+	public abstract void adjustEffective();
 	
 	/**
 	 * アイテムを描画する
@@ -118,10 +131,11 @@ public abstract class BaseItem {
 	 * @param canvas
 	 * @param paint
 	 */
-	public void onDraw(Canvas canvas, Paint paint, Player player, int windowWidth) {
-		if (!isInsideScreen(windowWidth)) {
+	public void onDraw(Canvas canvas, Paint paint, Player player, int windowHeight) {
+		if (!isInsideScreen(windowHeight)) {
 			// 画面外なら終了処理
 			remove();
+			return;
 		}
 		
 		if (isGetItem(player)) {
@@ -185,7 +199,7 @@ public abstract class BaseItem {
 	 * @return true:画面内 false:画面外
 	 */
 	private boolean isInsideScreen(int windowHeight) {
-		if (mPositionY <= windowHeight && mPositionY >= 0) {
+		if (0 <= mPositionY && mPositionY <= windowHeight) {
 			return true;
 		}
 

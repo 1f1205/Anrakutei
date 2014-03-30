@@ -1,24 +1,24 @@
 package com.Ichif1205.anrakutei.item;
 
-import android.content.Context;
-
 import com.Ichif1205.anrakutei.R;
 
-public class BeamItem extends BaseItem {
+import android.content.Context;
 
-	public BeamItem(Context context, ItemMediator mediator, float positionX, float positionY) {
+public class AddScore extends BaseItem {
+
+	public AddScore(Context context, ItemMediator mediator, float positionX,
+			float positionY) {
 		super(context, mediator, positionX, positionY);
 	}
 
-
 	@Override
 	public void adjustEffective() {
-		mMediator.updateShotWidht();
+		mMediator.addScore();
 	}
 
 	@Override
 	protected int getItemResource() {
-		return R.drawable.item2;
+		return R.drawable.item5;
 	}
 
 }

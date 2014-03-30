@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.Ichif1205.anrakutei.beam.BaseBeam;
 import com.Ichif1205.anrakutei.invader.BaseInvader;
+import com.Ichif1205.anrakutei.item.BaseItem;
 import com.Ichif1205.anrakutei.shot.Shot;
 
 /**
@@ -13,6 +14,6 @@ public class Status {
 	public ArrayList<Shot> shotList;
 	public ArrayList<BaseBeam> invBeamList;
 	public ArrayList<BaseInvader> invaderList;
-	public ArrayList<Item> item;
+	public ArrayList<BaseItem> item;
 	public boolean pauseFlg;
 }

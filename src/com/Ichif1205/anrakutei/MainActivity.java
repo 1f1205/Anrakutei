@@ -35,7 +35,6 @@ public class MainActivity extends Activity implements GameEventLiestener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(TAG, "onCreate");
 		setContentView(R.layout.activity_main);
 
 		// ステージIDやスコアのViewを設定
@@ -53,9 +52,6 @@ public class MainActivity extends Activity implements GameEventLiestener {
 			}
 		});
 		thread.start();
-
-		Log.d(TAG, "Start FindView");
-		Log.d(TAG, "End FindView");
 	}
 
 	/**
@@ -86,7 +82,6 @@ public class MainActivity extends Activity implements GameEventLiestener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.d(TAG, "onResume");
 	}
 
 	@Override
@@ -196,7 +191,6 @@ public class MainActivity extends Activity implements GameEventLiestener {
 
 	@Override
 	public void nextStage(int score) {
-		Log.d(TAG, "Game Clear");
 		mNextStageFlg = true;
 		// ステージを繰り上げる
 		mStageId++;

@@ -24,6 +24,9 @@ import com.Ichif1205.anrakutei.beam.BaseBeam;
 import com.Ichif1205.anrakutei.invader.BaseInvader;
 import com.Ichif1205.anrakutei.invader.BaseInvader.InvarderListener;
 import com.Ichif1205.anrakutei.invader.InvaderFactory;
+import com.Ichif1205.anrakutei.item.BaseItem;
+import com.Ichif1205.anrakutei.item.ItemFactory;
+import com.Ichif1205.anrakutei.item.ItemMediator;
 import com.Ichif1205.anrakutei.shot.Shot;
 
 public class FieldSurfaceView extends SurfaceView implements
@@ -38,32 +41,21 @@ public class FieldSurfaceView extends SurfaceView implements
 	private Paint mPaint;
 	private Player mPlayer;
 
-	private Bitmap mItemMImage = BitmapFactory.decodeResource(getResources(),
-			R.drawable.item1);
-	private Bitmap mItemBImage = BitmapFactory.decodeResource(getResources(),
-			R.drawable.item2);
-	private Bitmap mItemSImage = BitmapFactory.decodeResource(getResources(),
-			R.drawable.item3);
-	private Bitmap mItemGImage = BitmapFactory.decodeResource(getResources(),
-			R.drawable.item4);
-	private Bitmap mItemPImage = BitmapFactory.decodeResource(getResources(),
-			R.drawable.item5);
-
 	private Thread mThread;
 	private ArrayList<Shot> mShotList;
 	private ArrayList<BaseBeam> mInvBeamList;
 	private ArrayList<BaseInvader> mInvaderList;
-	private ArrayList<Item> mItemList;
+
 	private Status mStatus = null; // ゲームの状態を保存
 	private boolean mPauseFlg = false;
 	private GameEventLiestener mGameListener = null;
 	private int mDestoryInvaderCount = 0;
-	HashMap<String, String> mItemInfo;
+	
+	private ArrayList<BaseItem> mItemList;
+	private ItemMediator mMediator;
+	
 	private int mScore = 0;
 	private Handler mHandler;
-	private int mItemM = 0;
-	private int mItemS = 0;
-	private int mItemG = 0;
 
 	MediaPlayer bgm = MediaPlayer.create(getContext(), R.raw.bgm);
 
@@ -146,15 +138,19 @@ public class FieldSurfaceView extends SurfaceView implements
 		mPaint.setAntiAlias(true);
 		mPlayer = new Player(
 				(int) (getWidth() * Player.PLAYER_INIT_WIDTH_RATE),
-				(int) (getHeight() * Player.PLAYER_INIT_HEIGHT_RATE));
+				(int) (getHeight() * Player.PLAYER_INIT_HEIGHT_RATE),
+				getWidth(),
+				getHeight()
+				);
 		setOnTouchListener(mPlayer);
 		mPlayer.setPlayerListener(mPlayerEvent);
 
 		mInvBeamList = new ArrayList<BaseBeam>();
 		mShotList = new ArrayList<Shot>();
 		mInvaderList = new ArrayList<BaseInvader>();
-		mItemList = new ArrayList<Item>();
-		mItemInfo = new HashMap<String, String>();
+
+		mItemList = new ArrayList<BaseItem>();
+		mMediator = new ItemMediator(mPlayer, mInvBeamList);
 
 		// 複数の敵を表示
 		for (int i = 0; i < MAX_INVADER_NUM; i++) {
@@ -162,18 +158,6 @@ public class FieldSurfaceView extends SurfaceView implements
 			mInvaderList.add(InvaderFactory.create(mContext, getWidth(),
 					getHeight(), this, invType));
 		}
-
-		// アイテム
-		mItemMImage = Bitmap.createScaledBitmap(mItemMImage,
-				Item.ITEM_IMAGE_WIDTH, Item.ITEM_IMAGE_HEIGHT, true);
-		mItemBImage = Bitmap.createScaledBitmap(mItemBImage,
-				Item.ITEM_IMAGE_WIDTH, Item.ITEM_IMAGE_HEIGHT, true);
-		mItemSImage = Bitmap.createScaledBitmap(mItemSImage,
-				Item.ITEM_IMAGE_WIDTH, Item.ITEM_IMAGE_HEIGHT, true);
-		mItemGImage = Bitmap.createScaledBitmap(mItemGImage,
-				Item.ITEM_IMAGE_WIDTH, Item.ITEM_IMAGE_HEIGHT, true);
-		mItemPImage = Bitmap.createScaledBitmap(mItemPImage,
-				Item.ITEM_IMAGE_WIDTH, Item.ITEM_IMAGE_HEIGHT, true);
 
 		bgm.setLooping(true);
 		if (Utils.isRingerEnable(mContext)) {
@@ -209,12 +193,8 @@ public class FieldSurfaceView extends SurfaceView implements
 		}
 		mCanvas.drawColor(Color.BLACK);
 		// 自機の描画
-		mPlayer.onDraw(mCanvas, mPaint, mItemS);
+		mPlayer.onDraw(mCanvas, mPaint);
 
-		// ガードの描画
-		if (mItemG == 1) {
-			drawGurd();
-		}
 		// 自機の弾の描画
 		for (int i = 0; i < mShotList.size(); i++) {
 			final Shot shot = mShotList.get(i);
@@ -284,82 +264,46 @@ public class FieldSurfaceView extends SurfaceView implements
 
 			invBeam.onDraw(mCanvas, mPaint, getHeight());
 		}
-		// ItemMをとった場合
-		if (mItemM == 1) {
-			// 敵ビームの描画
-			for (int i = 0; i < mInvBeamList.size(); i++) {
-				BaseBeam invBeam = mInvBeamList.get(i);
-				invBeam.remove();
-			}
-			mItemM = 0;
-		}
+
 		// アイテムの描画
 		for (int i = 0; i < mItemList.size(); i++) {
-			Item item = mItemList.get(i);
-			String itemPattern = mItemInfo.get(String.valueOf(i));
-			boolean pIsShooted = mPlayer.isItemted(item.getItemPosX(),
-					item.getItemPosY());
-			// アイテムが自機に当たったら消える
-			if (pIsShooted) {
-				item.remove();
-				if (itemPattern == "M") {
-					mItemM = 1;
-				} else if (itemPattern == "B") {
-					mPlayer.setItemB(true);
-				} else if (itemPattern == "S") {
-					mItemS = 1;
-				} else if (itemPattern == "G") {
-					mItemG = 1;
-				} else if (itemPattern == "P") {
-					mHandler.post(new Runnable() {
-						public void run() {
-							Random ptn_rand = new Random();
-							Log.d("itemPattern", "itam" + ptn_rand.nextInt(4));
-							int plus_score = (ptn_rand.nextInt(4) + 1) * 100;
-							mGameListener.addScore(plus_score);
-						}
-					});
-				}
-			}
+			final BaseItem item = mItemList.get(i);
+			item.onDraw(mCanvas, mPaint, mPlayer, getHeight());
+		}
+
+//		for (int i = 0; i < mItemList.size(); i++) {
+//			Item item = mItemList.get(i);
+//			String itemPattern = mItemInfo.get(String.valueOf(i));
+//			boolean pIsShooted = mPlayer.isItemted(item.getItemPosX(),
+//					item.getItemPosY());
+//			// アイテムが自機に当たったら消える
+//			if (pIsShooted) {
+//				item.remove();
+//				if (itemPattern == "M") {
+//					mItemM = 1;
+//				} else if (itemPattern == "B") {
+//					mPlayer.mItemB = true;
+//				} else if (itemPattern == "S") {
+//					mItemS = 1;
+//				} else if (itemPattern == "G") {
+//				} else if (itemPattern == "P") {
+//					mHandler.post(new Runnable() {
+//						public void run() {
+//							Random ptn_rand = new Random();
+//							Log.d("itemPattern", "itam" + ptn_rand.nextInt(4));
+//							int plus_score = (ptn_rand.nextInt(4) + 1) * 100;
+//							mGameListener.addScore(plus_score);
+//						}
+//					});
+//				}
+//			}
 			// アイテムが画面上からはみ出るまで表示させ続ける
-			if (item.isInsideScreen(getHeight())) {
-				String num = String.valueOf(i);
-				drawItem(item, num);
-			}
-		}
+//			if (item.isInsideScreen(getHeight())) {
+//				String num = String.valueOf(i);
+//				drawItem(item, num);
+//			}
+//		}
 		getHolder().unlockCanvasAndPost(mCanvas);
-	}
-
-	// ガード描画
-	protected void drawGurd() {
-		Path path = new Path();
-		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-		mCanvas.drawPath(
-				mPlayer.drawGurd(path, getWidth() / 2, getHeight() * 3 / 4),
-				mPaint);
-	}
-
-	// Item生成
-	protected void drawItem(Item item, String num) {
-		item.updatePosition();
-		mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-		String itemPattern = mItemInfo.get(num);
-		if (itemPattern == "M") {
-			mCanvas.drawBitmap(mItemMImage, item.getItemPosX(),
-					item.getItemPosY(), mPaint);
-		} else if (itemPattern == "B") {
-			mCanvas.drawBitmap(mItemBImage, item.getItemPosX(),
-					item.getItemPosY(), mPaint);
-		} else if (itemPattern == "S") {
-			mCanvas.drawBitmap(mItemSImage, item.getItemPosX(),
-					item.getItemPosY(), mPaint);
-		} else if (itemPattern == "G") {
-			mCanvas.drawBitmap(mItemGImage, item.getItemPosX(),
-					item.getItemPosY(), mPaint);
-		} else if (itemPattern == "P") {
-			mCanvas.drawBitmap(mItemPImage, item.getItemPosX(),
-					item.getItemPosY(), mPaint);
-		}
 	}
 
 	@Override
@@ -401,16 +345,11 @@ public class FieldSurfaceView extends SurfaceView implements
 
 	@Override
 	public void Item(float shotX, float shotY) {
-		Item item = new Item(shotX, shotY);
-		mItemList.add(item);
-		String num = String.valueOf(mItemList.size());
-		if (!mItemInfo.containsKey(num)) {
-			final String itemPattern = item.selectItem();
-			if (TextUtils.isEmpty(itemPattern)) {
-				return;
-			}
-			mItemInfo.put(num, itemPattern);
+		BaseItem item = ItemFactory.create(mContext, mMediator, shotX, shotY);
+		if (item == null) {
+			return;
 		}
+		mItemList.add(item);
 	}
 
 	/**

@@ -17,17 +17,27 @@ public class Player implements OnTouchListener{
 
 	private float posX;
 	private float posY;
+
+	private final int mWindowWidth;
+	private final int mWindowHeight;
+	
 	private int width = 50;
 	private int height = 30;
 	private boolean isExist;
 	private float gurdX;
 	private float gurdY;
 	
-	private boolean mItemB = false;
+	public boolean mItemB = false;
+	public boolean mItemS = false;
+	public boolean mIsGuard = false;
 
-	Player(int x, int y) {
+	Player(int x, int y, int windowWidth, int windowHeight) {
 		posX = x;
 		posY = y;
+		
+		mWindowWidth = windowWidth;
+		mWindowHeight = windowHeight;
+		
 		isExist = true;
 	}
 
@@ -50,18 +60,31 @@ public class Player implements OnTouchListener{
 	public void setPlayerPosX(float x) {
 		posX = x;
 	}
-	
-	public void setItemB(boolean isItemB) {
-		mItemB = isItemB;
-	}
-	
-	public boolean getItemB() {
-		return mItemB;
-	}
 
-	private Path draw(Path path, int itemSFlg) {
+	/**
+	 * プレイヤーを描画する
+	 */
+	public void onDraw(Canvas canvas, Paint paint) {
+		if (!isExist) {
+			return;
+		}
+		
+		final Path path = new Path();
+		paint.setStyle(Paint.Style.FILL_AND_STROKE);
+		
+		if (mIsGuard) {
+			// ガードの描画
+			canvas.drawPath(
+					drawGurd(path, mWindowWidth / 2, mWindowHeight * 3 / 4),
+					paint);
+		}
+		
+		canvas.drawPath(draw(path), paint);
+	}
+	
+	private Path draw(Path path) {
 		// itemSをとった場合
-		if (itemSFlg == 1) {
+		if (mItemS) {
 			width = 15;
 		}
 
@@ -81,7 +104,7 @@ public class Player implements OnTouchListener{
 	}
 
 	// ガード描画のパス
-	public Path drawGurd(Path path, float x, float y) {
+	private Path drawGurd(Path path, float x, float y) {
 		gurdX = x;
 		gurdY = y;
 		path.moveTo(gurdX, gurdY);
@@ -107,22 +130,6 @@ public class Player implements OnTouchListener{
 		return false;
 	}
 
-	/**
-	 * itemのあたり判定
-	 * TODO BaseItemに移動したほうがよさげ
-	 * 
-	 * @param shotX
-	 * @param shotY
-	 * @return
-	 */
-	public boolean isItemted(float shotX, float shotY) {
-		if ((posX - width / 2 <= shotX && posX + width / 2 >= shotX)
-				&& (posY - height <= shotY && posY + height >= shotY)) {
-			return true;
-		}
-		return false;
-	}
-
 	// guard判定
 	public boolean isGurded(float shotX, float shotY) {
 		if ((gurdX - width <= shotX && gurdX + width >= shotX)
@@ -132,24 +139,14 @@ public class Player implements OnTouchListener{
 		return false;
 	}
 
+	/**
+	 * 弾に当たった時の終了処理
+	 */
 	public void remove() {
 		posY = -100;
 		isExist = false;
 	}
-	
-	/**
-	 * プレイヤーを描画する
-	 */
-	public void onDraw(Canvas canvas, Paint paint, int itemSFlg) {
-		if (!isExist) {
-			return;
-		}
-		
-		final Path path = new Path();
-		paint.setStyle(Paint.Style.FILL_AND_STROKE);
-		canvas.drawPath(draw(path, itemSFlg), paint);
-	}
-	
+
 	private PlayerEventListener playerListener;
 	
 	/**
