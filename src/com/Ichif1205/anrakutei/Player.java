@@ -15,14 +15,22 @@ public class Player implements OnTouchListener{
 	public static final double PLAYER_INIT_WIDTH_RATE = 0.5;
 	public static final double PLAYER_INIT_HEIGHT_RATE = 0.84375; // =27/32
 
+	/**
+	 * ガードのデフォルトサイズ
+	 * プレイヤーのデフォルトサイズと同じ
+	 */
+	private static final int DEFAULT_GUARD_WIDTH = 50;
+	private static final int DEFAULT_GAURD_HEIGHT = 30;
+
 	private float posX;
 	private float posY;
 
 	private final int mWindowWidth;
 	private final int mWindowHeight;
 	
-	private int width = 50;
-	private int height = 30;
+	private int mPlayerWidth = 50;
+	private int mPlayerHeight = 30;
+
 	private boolean isExist;
 	private float gurdX;
 	private float gurdY;
@@ -50,11 +58,11 @@ public class Player implements OnTouchListener{
 	}
 	
 	public int getWidth() {
-		return width;
+		return mPlayerWidth;
 	}
 	
 	public int getHeight() {
-		return height;
+		return mPlayerHeight;
 	}
 
 	public void setPlayerPosX(float x) {
@@ -69,36 +77,37 @@ public class Player implements OnTouchListener{
 			return;
 		}
 		
-		final Path path = new Path();
+		final Path guardPath = new Path();
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);
 		
 		if (mIsGuard) {
 			// ガードの描画
 			canvas.drawPath(
-					drawGurd(path, mWindowWidth / 2, mWindowHeight * 3 / 4),
+					drawGurd(guardPath, mWindowWidth / 2, mWindowHeight * 3 / 4),
 					paint);
 		}
 		
-		canvas.drawPath(draw(path), paint);
+		final Path playerPath = new Path();
+		canvas.drawPath(draw(playerPath), paint);
 	}
 	
 	private Path draw(Path path) {
 		// itemSをとった場合
 		if (mItemS) {
-			width = 15;
+			mPlayerWidth = 15;
 		}
 
 		path.moveTo(posX, posY);
 		// 左下から反時計回りに描画
-		path.lineTo(posX - width / 2, posY + height / 4);
-		path.lineTo(posX + width / 2, posY + height / 4);
-		path.lineTo(posX + width / 2, posY - height / 4);
-		path.lineTo(posX + width / 6, posY - height / 4);
-		path.lineTo(posX + width / 6, posY - height * 3 / 4);
-		path.lineTo(posX - width / 6, posY - height * 3 / 4);
-		path.lineTo(posX - width / 6, posY - height / 4);
-		path.lineTo(posX - width / 2, posY - height / 4);
-		path.lineTo(posX - width / 2, posY + height / 4);
+		path.lineTo(posX - mPlayerWidth / 2, posY + mPlayerHeight / 4);
+		path.lineTo(posX + mPlayerWidth / 2, posY + mPlayerHeight / 4);
+		path.lineTo(posX + mPlayerWidth / 2, posY - mPlayerHeight / 4);
+		path.lineTo(posX + mPlayerWidth / 6, posY - mPlayerHeight / 4);
+		path.lineTo(posX + mPlayerWidth / 6, posY - mPlayerHeight * 3 / 4);
+		path.lineTo(posX - mPlayerWidth / 6, posY - mPlayerHeight * 3 / 4);
+		path.lineTo(posX - mPlayerWidth / 6, posY - mPlayerHeight / 4);
+		path.lineTo(posX - mPlayerWidth / 2, posY - mPlayerHeight / 4);
+		path.lineTo(posX - mPlayerWidth / 2, posY + mPlayerHeight / 4);
 
 		return path;
 	}
@@ -108,23 +117,24 @@ public class Player implements OnTouchListener{
 		gurdX = x;
 		gurdY = y;
 		path.moveTo(gurdX, gurdY);
+	
 		// 左下から反時計回りに描画
-		path.lineTo(gurdX - width, gurdY + height / 4);
-		path.lineTo(gurdX + width, gurdY + height / 4);
-		path.lineTo(gurdX + width, gurdY - height / 4);
-		path.lineTo(gurdX + width, gurdY - height / 4);
-		path.lineTo(gurdX + width, gurdY - height * 3 / 4);
-		path.lineTo(gurdX - width, gurdY - height * 3 / 4);
-		path.lineTo(gurdX - width, gurdY - height / 4);
-		path.lineTo(gurdX - width, gurdY - height / 4);
-		path.lineTo(gurdX - width, gurdY + height / 4);
+		path.lineTo(gurdX - DEFAULT_GUARD_WIDTH, gurdY + DEFAULT_GAURD_HEIGHT / 4);
+		path.lineTo(gurdX + DEFAULT_GUARD_WIDTH, gurdY + DEFAULT_GAURD_HEIGHT / 4);
+		path.lineTo(gurdX + DEFAULT_GUARD_WIDTH, gurdY - DEFAULT_GAURD_HEIGHT / 4);
+		path.lineTo(gurdX + DEFAULT_GUARD_WIDTH, gurdY - DEFAULT_GAURD_HEIGHT / 4);
+		path.lineTo(gurdX + DEFAULT_GUARD_WIDTH, gurdY - DEFAULT_GAURD_HEIGHT * 3 / 4);
+		path.lineTo(gurdX - DEFAULT_GUARD_WIDTH, gurdY - DEFAULT_GAURD_HEIGHT * 3 / 4);
+		path.lineTo(gurdX - DEFAULT_GUARD_WIDTH, gurdY - DEFAULT_GAURD_HEIGHT / 4);
+		path.lineTo(gurdX - DEFAULT_GUARD_WIDTH, gurdY - DEFAULT_GAURD_HEIGHT / 4);
+		path.lineTo(gurdX - DEFAULT_GUARD_WIDTH, gurdY + DEFAULT_GAURD_HEIGHT / 4);
 
 		return path;
 	}
 
 	public boolean isShooted(float shotX, float shotY) {
-		if ((posX - width / 2 <= shotX && posX + width / 2 >= shotX)
-				&& (posY - height / 2 <= shotY && posY + height / 2 >= shotY)) {
+		if ((posX - mPlayerWidth / 2 <= shotX && posX + mPlayerWidth / 2 >= shotX)
+				&& (posY - mPlayerHeight / 2 <= shotY && posY + mPlayerHeight / 2 >= shotY)) {
 			return true;
 		}
 		return false;
@@ -132,8 +142,8 @@ public class Player implements OnTouchListener{
 
 	// guard判定
 	public boolean isGurded(float shotX, float shotY) {
-		if ((gurdX - width <= shotX && gurdX + width >= shotX)
-				&& (gurdY - height <= shotY && gurdY + height >= shotY)) {
+		if ((gurdX - DEFAULT_GUARD_WIDTH <= shotX && gurdX + DEFAULT_GUARD_WIDTH >= shotX)
+				&& (gurdY - DEFAULT_GAURD_HEIGHT <= shotY && gurdY + DEFAULT_GAURD_HEIGHT >= shotY)) {
 			return true;
 		}
 		return false;
