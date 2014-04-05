@@ -1,5 +1,7 @@
 package com.Ichif1205.anrakutei;
 
+import com.Ichif1205.anrakutei.score.Score;
+
 import jp.maru.mrd.IconCell;
 import jp.maru.mrd.IconLoader;
 import android.app.Activity;
@@ -48,10 +50,14 @@ public class HomeActivity extends Activity {
 		button_play.setTypeface(face);
 		button_rank.setTypeface(face);
 
-		// Setting Listener
+		// Playボタンの動作
 		button_play.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				Intent intent = new Intent(HomeActivity.this,
+				// スコアの初期化
+				final Score score = Score.getInstance();
+				score.initializeScore();
+				
+				final Intent intent = new Intent(HomeActivity.this,
 						MainActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP
 						| Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -59,6 +65,8 @@ public class HomeActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+		
+		// ランキングボタンの動作
 		button_rank.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				Intent intent = new Intent(HomeActivity.this,

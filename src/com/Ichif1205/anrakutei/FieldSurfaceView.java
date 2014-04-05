@@ -1,21 +1,14 @@
 package com.Ichif1205.anrakutei;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.media.MediaPlayer;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -27,10 +20,12 @@ import com.Ichif1205.anrakutei.invader.InvaderFactory;
 import com.Ichif1205.anrakutei.item.BaseItem;
 import com.Ichif1205.anrakutei.item.ItemFactory;
 import com.Ichif1205.anrakutei.item.ItemMediator;
+import com.Ichif1205.anrakutei.score.Score;
 import com.Ichif1205.anrakutei.shot.Shot;
 
 public class FieldSurfaceView extends SurfaceView implements
 		SurfaceHolder.Callback, Runnable, InvarderListener {
+
 	@SuppressWarnings("unused")
 	private final String TAG = FieldSurfaceView.class.getSimpleName();
 	private final Context mContext;
@@ -54,7 +49,6 @@ public class FieldSurfaceView extends SurfaceView implements
 	private ArrayList<BaseItem> mItemList;
 	private ItemMediator mMediator;
 	
-	private int mScore = 0;
 	private Handler mHandler;
 
 	MediaPlayer bgm = MediaPlayer.create(getContext(), R.raw.bgm);
@@ -85,15 +79,6 @@ public class FieldSurfaceView extends SurfaceView implements
 	public void setStageInfo(StageInfo info) {
 		MAX_INVADER_NUM = info.maxInvader;
 		invaderType = info.invTypeArray;
-	}
-
-	/**
-	 * 前のステージのスコアを引き継ぐ
-	 * 
-	 * @param score
-	 */
-	public void setScore(int score) {
-		mScore = score;
 	}
 
 	@Override
@@ -226,7 +211,7 @@ public class FieldSurfaceView extends SurfaceView implements
 							@Override
 							public void run() {
 								bgm.stop();
-								mGameListener.nextStage(mScore);
+								mGameListener.nextStage();
 							}
 						});
 					}
@@ -255,7 +240,7 @@ public class FieldSurfaceView extends SurfaceView implements
 				invBeam.remove();
 				mPlayer.remove();
 				bgm.stop();
-				mGameListener.endGame(mScore, false);
+				mGameListener.endGame(false);
 			}
 			// ガードにあたったら消える
 			if (pIsGurded) {
@@ -271,38 +256,6 @@ public class FieldSurfaceView extends SurfaceView implements
 			item.onDraw(mCanvas, mPaint, mPlayer, getHeight());
 		}
 
-//		for (int i = 0; i < mItemList.size(); i++) {
-//			Item item = mItemList.get(i);
-//			String itemPattern = mItemInfo.get(String.valueOf(i));
-//			boolean pIsShooted = mPlayer.isItemted(item.getItemPosX(),
-//					item.getItemPosY());
-//			// アイテムが自機に当たったら消える
-//			if (pIsShooted) {
-//				item.remove();
-//				if (itemPattern == "M") {
-//					mItemM = 1;
-//				} else if (itemPattern == "B") {
-//					mPlayer.mItemB = true;
-//				} else if (itemPattern == "S") {
-//					mItemS = 1;
-//				} else if (itemPattern == "G") {
-//				} else if (itemPattern == "P") {
-//					mHandler.post(new Runnable() {
-//						public void run() {
-//							Random ptn_rand = new Random();
-//							Log.d("itemPattern", "itam" + ptn_rand.nextInt(4));
-//							int plus_score = (ptn_rand.nextInt(4) + 1) * 100;
-//							mGameListener.addScore(plus_score);
-//						}
-//					});
-//				}
-//			}
-			// アイテムが画面上からはみ出るまで表示させ続ける
-//			if (item.isInsideScreen(getHeight())) {
-//				String num = String.valueOf(i);
-//				drawItem(item, num);
-//			}
-//		}
 		getHolder().unlockCanvasAndPost(mCanvas);
 	}
 
@@ -393,7 +346,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		 * 
 		 * @param mScore
 		 */
-		public void endGame(int score, boolean clearflg);
+		public void endGame(boolean clearflg);
 
 		/**
 		 * スコア増加イベント
@@ -405,7 +358,7 @@ public class FieldSurfaceView extends SurfaceView implements
 		/**
 		 * 次のステージへのフラグ
 		 */
-		public void nextStage(int score);
+		public void nextStage();
 	}
 
 }

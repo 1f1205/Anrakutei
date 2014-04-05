@@ -1,4 +1,4 @@
-package com.Ichif1205.anrakutei;
+package com.Ichif1205.anrakutei.score;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

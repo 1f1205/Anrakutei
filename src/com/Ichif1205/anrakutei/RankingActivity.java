@@ -3,6 +3,8 @@ package com.Ichif1205.anrakutei;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.Ichif1205.anrakutei.score.ScoreDBOpenHelper;
+
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;

@@ -7,23 +7,28 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.Ichif1205.anrakutei.score.Score;
+import com.Ichif1205.anrakutei.score.ScoreDBOpenHelper;
+
 public class ResultActivity extends Activity {
+	private Score mScore;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_result);
+		
+		mScore = Score.getInstance();
+		
 		setTitle("Result");
 
 		Intent intent = getIntent();
-		final int score = intent.getIntExtra("score", 0);
 		final boolean clearflg = intent.getBooleanExtra("clearflg", false);
 
 		TextView resultTitle = null;
@@ -35,7 +40,6 @@ public class ResultActivity extends Activity {
 			footerAd.addView(adView);
 			adView.start();
 		} else {
-			Log.d("itemPattern", "clear" + clearflg);
 			resultTitle = (TextView) findViewById(R.id.result_title);
 		}
 		resultTitle.setVisibility(View.VISIBLE);
@@ -44,7 +48,7 @@ public class ResultActivity extends Activity {
 		Typeface face = Utils.getFonts(getApplicationContext());
 		final TextView resultScore = (TextView) findViewById(R.id.result_score);
 		resultScore.setTypeface(face);
-		resultScore.setText(Integer.toString(score));
+		resultScore.setText(mScore.toString());
 
 		resultTitle.setTypeface(face);
 
@@ -61,21 +65,20 @@ public class ResultActivity extends Activity {
 			}
 		});
 
-		saveScore(score, System.currentTimeMillis());
+		saveScore(System.currentTimeMillis());
 	}
 
 	/**
 	 * スコアをDBに保存
 	 * 
-	 * @param Score
 	 * @param Date
 	 */
-	private void saveScore(int Score, long Date) {
+	private void saveScore(long Date) {
 		ScoreDBOpenHelper helper = new ScoreDBOpenHelper(this);
 		SQLiteDatabase db = helper.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(ScoreDBOpenHelper.COLUMN_SCORE, Score);
+		values.put(ScoreDBOpenHelper.COLUMN_SCORE, mScore.getScore());
 		values.put(ScoreDBOpenHelper.COLUMN_DATE, Date);
 		db.insert("score_table", null, values);
 

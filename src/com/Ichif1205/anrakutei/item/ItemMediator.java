@@ -5,6 +5,7 @@ import java.util.Random;
 
 import com.Ichif1205.anrakutei.Player;
 import com.Ichif1205.anrakutei.beam.BaseBeam;
+import com.Ichif1205.anrakutei.score.Score;
 
 public class ItemMediator {
 	@SuppressWarnings("unused")
@@ -20,9 +21,15 @@ public class ItemMediator {
 	 */
 	private final ArrayList<BaseBeam> mInvBeams;
 	
+	/**
+	 * スコアオブジェクト
+	 */
+	private final Score mScore;
+	
 	public ItemMediator(Player player, ArrayList<BaseBeam> invBeams) {
 		mPlayer = player;
 		mInvBeams = invBeams;
+		mScore = Score.getInstance();
 	}
 	
 
@@ -49,11 +56,11 @@ public class ItemMediator {
 	
 	/**
 	 * スコアアイテムの取得
-	 * TODO どうすっか
 	 */
 	public void addScore() {
 		final Random rand = new Random();
 		final int addScore = (rand.nextInt(4) + 1) * 100;
+		mScore.addScore(addScore);
 	}
 	
 	/**

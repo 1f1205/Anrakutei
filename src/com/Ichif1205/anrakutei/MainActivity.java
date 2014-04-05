@@ -6,21 +6,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseArray;
 import android.widget.TextView;
 
 import com.Ichif1205.anrakutei.FieldSurfaceView.GameEventLiestener;
+import com.Ichif1205.anrakutei.score.Score;
 
 public class MainActivity extends Activity implements GameEventLiestener {
+	@SuppressWarnings("unused")
 	private static String TAG = MainActivity.class.getSimpleName();
+
 	private FieldSurfaceView mFieldSurfaceView;
 	private TextView mScoreView = null;
 	private boolean mPauseFlg = false;
 	private boolean mGameEndFlg = false;
 	private boolean mNextStageFlg = false;
 	private int mStageId = 1;
-	private int mScore = 0;
+	private Score mScore;
 	private Status mStatus;
 	private SparseArray<StageInfo> mStageInfos = null;
 
@@ -37,6 +39,8 @@ public class MainActivity extends Activity implements GameEventLiestener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		mScore = Score.getInstance();
+
 		// ステージIDやスコアのViewを設定
 		setView();
 		mFieldSurfaceView = (FieldSurfaceView) findViewById(R.id.FieldSurfaceView_id);
@@ -48,7 +52,6 @@ public class MainActivity extends Activity implements GameEventLiestener {
 				mStageInfos = StageInfos.getInstance();
 
 				mFieldSurfaceView.setStageInfo(mStageInfos.get(mStageId));
-				mFieldSurfaceView.setScore(mScore);
 			}
 		});
 		thread.start();
@@ -65,16 +68,11 @@ public class MainActivity extends Activity implements GameEventLiestener {
 			mStageId = intent.getIntExtra(EXTRA_STAGE, 1);
 		}
 
-		// スコアを設定
-		if (intent.hasExtra(EXTRA_SCORE)) {
-			mScore = intent.getIntExtra(EXTRA_SCORE, 0);
-		}
-
 		Typeface face = Utils.getFonts(getApplicationContext());
 		TextView stageView = (TextView) findViewById(R.id.stageView_id);
 		mScoreView = (TextView) findViewById(R.id.scoreView_id);
 		mScoreView.setTypeface(face);
-		mScoreView.setText(String.valueOf(mScore));
+		mScoreView.setText(mScore.toString());
 		stageView.setTypeface(face);
 		stageView.setText(String.format(STAGE_FORMAT, mStageId));
 	}
@@ -173,31 +171,30 @@ public class MainActivity extends Activity implements GameEventLiestener {
 	}
 
 	@Override
-	public void endGame(int score, boolean clearflg) {
+	public void endGame(boolean clearflg) {
 		// ゲーム終了
 		mGameEndFlg = true;
 		
 		final Intent intent = new Intent(this, ResultActivity.class);
-		intent.putExtra("score", mScore);
 		intent.putExtra("clearflg", clearflg);
 		startActivity(intent);
 	}
 
 	@Override
 	public void addScore(int score) {
-		mScore += score;
-		mScoreView.setText(Integer.toString(mScore));
+		mScore.addScore(score);
+		mScoreView.setText(mScore.toString());
 	}
 
 	@Override
-	public void nextStage(int score) {
+	public void nextStage() {
 		mNextStageFlg = true;
 		// ステージを繰り上げる
 		mStageId++;
 
 		// 最終ステージまでクリアしたら結果画面に遷移
 		if (mStageInfos.indexOfKey(mStageId) < 0) {
-			endGame(mScore, true);
+			endGame(true);
 			return;
 		}
 
@@ -205,7 +202,6 @@ public class MainActivity extends Activity implements GameEventLiestener {
 		Intent stageIntent = new Intent(getApplicationContext(),
 				SplashActivity.class);
 
-		stageIntent.putExtra(EXTRA_SCORE, mScore);
 		stageIntent.putExtra(EXTRA_STAGE, mStageId);
 
 		startActivity(stageIntent);
