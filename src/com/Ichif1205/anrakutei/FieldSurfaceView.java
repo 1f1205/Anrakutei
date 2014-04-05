@@ -20,8 +20,8 @@ import com.Ichif1205.anrakutei.invader.InvaderFactory;
 import com.Ichif1205.anrakutei.item.BaseItem;
 import com.Ichif1205.anrakutei.item.ItemFactory;
 import com.Ichif1205.anrakutei.item.ItemMediator;
-import com.Ichif1205.anrakutei.score.Score;
 import com.Ichif1205.anrakutei.shot.Shot;
+import com.Ichif1205.anrakutei.stage.StageInfo;
 
 public class FieldSurfaceView extends SurfaceView implements
 		SurfaceHolder.Callback, Runnable, InvarderListener {
@@ -31,7 +31,7 @@ public class FieldSurfaceView extends SurfaceView implements
 	private final Context mContext;
 	private int MAX_INVADER_NUM;
 	private ArrayList<Integer> invaderType;
-	private SurfaceHolder mHolder;
+	private final SurfaceHolder mHolder;
 	private Canvas mCanvas = null;
 	private Paint mPaint;
 	private Player mPlayer;
@@ -54,14 +54,6 @@ public class FieldSurfaceView extends SurfaceView implements
 	MediaPlayer bgm = MediaPlayer.create(getContext(), R.raw.bgm);
 
 	private boolean mExecFlg = true;
-
-	public FieldSurfaceView(Context context) {
-		super(context);
-		mContext = context;
-		mHolder = getHolder();
-		mHolder.addCallback(this);
-		mHolder.setFixedSize(getWidth(), getHeight());
-	}
 
 	public FieldSurfaceView(Context context, AttributeSet attrs) {
 		super(context, attrs);

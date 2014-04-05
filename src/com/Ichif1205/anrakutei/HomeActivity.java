@@ -1,6 +1,7 @@
 package com.Ichif1205.anrakutei;
 
 import com.Ichif1205.anrakutei.score.Score;
+import com.Ichif1205.anrakutei.stage.StageXmlParser;
 
 import jp.maru.mrd.IconCell;
 import jp.maru.mrd.IconLoader;

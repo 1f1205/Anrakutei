@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.Ichif1205.anrakutei.FieldSurfaceView.GameEventLiestener;
 import com.Ichif1205.anrakutei.score.Score;
+import com.Ichif1205.anrakutei.stage.StageInfo;
+import com.Ichif1205.anrakutei.stage.StageInfos;
 
 public class MainActivity extends Activity implements GameEventLiestener {
 	@SuppressWarnings("unused")

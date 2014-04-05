@@ -1,4 +1,4 @@
-package com.Ichif1205.anrakutei;
+package com.Ichif1205.anrakutei.stage;
 
 import android.util.SparseArray;
 
